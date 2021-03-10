@@ -46,4 +46,10 @@ func (wc *WangYiYunCrawler) GetPlayListIDs() ([]string, error) {
 	return strSet.Iterator(), nil
 }
 
-func (wc *WangYiYunCrawler) ConverMusicWithPlaylistID(id string) []model.Music
+func (wc *WangYiYunCrawler) getWangYiYunResult() {
+
+}
+
+func (wc *WangYiYunCrawler) ConversionToMusicWithPlaylistID(id string) ([]model.Music, error) {
+
+}
