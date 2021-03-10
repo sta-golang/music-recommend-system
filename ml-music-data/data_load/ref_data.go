@@ -21,3 +21,10 @@ type Artist struct {
 	ID int `json:"id"`
 
 }
+
+type Album struct {
+	Name string `json:"name"`
+	BlurPicUrl string `json:"blurPicUrl"`
+	PublishTime int `json:"publishTime"`
+}
+

@@ -1,0 +1,21 @@
+server:
+  music-data
+
+log:
+  file_dir: ./log
+  file_name: sta
+  day_age: 15
+  log_level: 1 # 1为 INFO 0为DEBUG
+  pre_fix: "[STA:Music-Data]"
+  alone_writer:
+    - INFO
+    - ERROR
+    - FATAL
+database:
+  music_recommend_test:
+    db_name: music_recommend_test
+    username: testuser
+    password: qwe123456
+    target: cdb-obyudb1e.bj.tencentcdb.com:10049
+    driver_name: mysql
+    args: charset=utf8&loc=Local
