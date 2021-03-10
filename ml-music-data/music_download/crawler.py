@@ -3,6 +3,7 @@ from lxml import etree
 from urllib3 import disable_warnings
 import requests
 import json
+import sys
 
 class Wangyiyun(object):
 
@@ -93,3 +94,4 @@ if __name__ == '__main__':
     link_set = set(music.all_link)
     bys = json.dumps(music.all_link)
     print(bys)
+    sys.stdout.flush()

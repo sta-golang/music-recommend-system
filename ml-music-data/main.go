@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	command, err := cmd.ExecCmd("python","./music_download/download.py")
+	command, err := cmd.ExecCmd("python","./music_download/crawler.py")
 	fmt.Println(err)
 	fmt.Println(command.OutInfo())
 }
