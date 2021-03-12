@@ -13,6 +13,7 @@ type Music struct {
 	Title       string  `json:"title" db:"title"`
 	HotScore    float64 `json:"hot_score" db:"hot_score"`
 	CreatorID   int     `json:"creator_id" db:"creator_id"`
+	MusicUrl    string  `json:"music_url" db:"music_url"`
 	PlayTime    int     `json:"play_time" db:"play_time"`
 	TagIDs      string  `json:"tag_ids" db:"tag_ids"`
 	TagNames    string  `json:"tag_names" db:"tag_names"`
@@ -35,9 +36,9 @@ func NewMusicMysql() *musicMysql {
 }
 
 func (md *musicMysql) InsertMusic(music *Music) error {
-	sql := fmt.Sprintf("insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?)", tableMusic)
+	sql := fmt.Sprintf("insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?,?)", tableMusic)
 	_, err := client(dbMusicRecommendNameTest).Exec(sql, music.ID, music.Name, music.Status,
-		music.Title, music.HotScore, music.CreatorID, music.PlayTime,
+		music.Title, music.HotScore, music.CreatorID,music.MusicUrl, music.PlayTime,
 		music.TagIDs, music.TagNames, music.ImageUrl, music.PublishTime, tm.GetNowDateTimeStr())
 	if err != nil {
 		log.Error(err)
@@ -47,9 +48,9 @@ func (md *musicMysql) InsertMusic(music *Music) error {
 
 func (md *musicMysql) UpdateMusic(music *Music) (affected bool, err error) {
 	sql := fmt.Sprintf("update %s set status=?, hot_score=?, "+
-		"tag_ids=?, tag_names=?, image_url=?, update_time=？ wher id = ?", tableMusic)
+		"tag_ids=?, tag_names=?, image_url=?, update_time=?, music_url=? wher id = ?", tableMusic)
 	res, err := client(dbMusicRecommendNameTest).Exec(sql, music.Status, music.HotScore, music.TagIDs,
-		music.TagNames, music.ImageUrl, tm.GetNowDateTimeStr(), music.ID)
+		music.TagNames, music.ImageUrl, tm.GetNowDateTimeStr(),music.MusicUrl, music.ID)
 	if err != nil {
 		log.Error(err)
 		return false, err
