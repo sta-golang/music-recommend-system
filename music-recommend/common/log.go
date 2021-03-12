@@ -6,7 +6,7 @@ import (
 )
 
 func InitLog(conf *log.FileLogConfig) {
-	log.FrameworkLogger = log.NewConsoleLog(log.DEBUG, "[STA:Music-Recommend-Console]")
-	logger := log.NewFileLogAndAsync(conf, time.Second * 3)
+	log.ConsoleLogger = log.NewConsoleLog(log.DEBUG, "[STA:Music-Recommend-Console]")
+	logger := log.NewFileLogAndAsync(conf, time.Second*3)
 	log.SetGlobalLogger(logger)
 }

@@ -19,7 +19,7 @@ class Wangyiyun(object):
         self.offset = 35 * self.pages - self.limit
         # 这是请求的url
         self.url = "https://music.163.com/discover/playlist/?"
-        self.all_link = []
+        self.all_link = ['/playlist?id=19723756','/playlist?id=3779629','/playlist?id=2884035','/playlist?id=3778678','/playlist?id=991319590',]
 
 
     # 设置请求头部信息(可扩展：不同的User - Agent)

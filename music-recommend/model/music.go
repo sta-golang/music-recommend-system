@@ -1,43 +1,63 @@
 package model
 
 import (
+	"fmt"
 	"github.com/sta-golang/go-lib-utils/log"
 	tm "github.com/sta-golang/go-lib-utils/time"
 )
 
 type Music struct {
-	ID int `json:"id" db:"id"`
-	Name string `json:"name" db:"name"`
-	Status int32 `json:"status" db:"status"`
-	Title string `json:"title" db:"title"`
-	HotScore float64 `json:"hot_score" db:"hot_score"`
-	CreatorID int `json:"creator_id" db:"creator_id"`
-	CreatorName string `json:"creator_name" db:"creator_name"`
-	PlayTime int `json:"play_time" db:"play_time"`
-	ImageUrl string `json:"image_url" db:"image_url"`
-	PublishTime string `json:"publish_time" db:"publish_time"`
-	UpdateTime string `json:"update_time" db:"update_time"`
+	ID          int     `json:"id" db:"id"`
+	Name        string  `json:"name" db:"name"`
+	Status      int32   `json:"status" db:"status"`
+	Title       string  `json:"title" db:"title"`
+	HotScore    float64 `json:"hot_score" db:"hot_score"`
+	CreatorID   int     `json:"creator_id" db:"creator_id"`
+	PlayTime    int     `json:"play_time" db:"play_time"`
+	TagIDs      string  `json:"tag_ids" db:"tag_ids"`
+	TagNames    string  `json:"tag_names" db:"tag_names"`
+	ImageUrl    string  `json:"image_url" db:"image_url"`
+	PublishTime string  `json:"publish_time" db:"publish_time"`
+	UpdateTime  string  `json:"update_time" db:"update_time"`
 }
 
 const (
-	dbMusicRecommendNameTest = "music_recommend_test"
+	tableMusic = "music"
 )
 
-type musicDB struct {
+type musicMysql struct {
 }
 
-var onceMusicDB = musicDB{}
+var onceMusicMysql = musicMysql{}
 
-func NewMusicDB() *musicDB {
-	return &onceMusicDB
+func NewMusicMysql() *musicMysql {
+	return &onceMusicMysql
 }
 
-func (md *musicDB) InsertMusic(music *Music) error {
-	sql := "insert ignore into music values(?,?,?,?,?,?,?,?,?,?,?)"
-	_, err := client(dbMusicRecommendNameTest).Exec(sql,music.ID, music.Name,music.Status,music.Title,music.HotScore,
-		music.CreatorID,music.CreatorName,music.PlayTime, music.ImageUrl,music.PublishTime, tm.GetNowDateTimeStr())
+func (md *musicMysql) InsertMusic(music *Music) error {
+	sql := fmt.Sprintf("insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?)", tableMusic)
+	_, err := client(dbMusicRecommendNameTest).Exec(sql, music.ID, music.Name, music.Status,
+		music.Title, music.HotScore, music.CreatorID, music.PlayTime,
+		music.TagIDs, music.TagNames, music.ImageUrl, music.PublishTime, tm.GetNowDateTimeStr())
 	if err != nil {
 		log.Error(err)
 	}
 	return err
+}
+
+func (md *musicMysql) UpdateMusic(music *Music) (affected bool, err error) {
+	sql := fmt.Sprintf("update %s set status=?, hot_score=?, "+
+		"tag_ids=?, tag_names=?, image_url=?, update_time=？ wher id = ?", tableMusic)
+	res, err := client(dbMusicRecommendNameTest).Exec(sql, music.Status, music.HotScore, music.TagIDs,
+		music.TagNames, music.ImageUrl, tm.GetNowDateTimeStr(), music.ID)
+	if err != nil {
+		log.Error(err)
+		return false, err
+	}
+	rows, err := res.RowsAffected()
+	if err != nil {
+		log.Error(err)
+		return false, err
+	}
+	return rows > 0, err
 }
