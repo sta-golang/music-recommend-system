@@ -38,13 +38,11 @@ func NewMusicMysql() *musicMysql {
 }
 
 func (md *musicMysql) InsertMusic(music *Music) error {
-	if music == nil {
-		return nil
-	}
+
 	sql := fmt.Sprintf("insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?,?)", tableMusic)
 	_, err := client(dbMusicRecommendNameTest).Exec(sql, music.ID, music.Name, music.Status,
-		music.Title, music.HotScore, music.CreatorID, music.ImageUrl, music.TagIDs, music.TagNames,
-		music.PlayTime, music.ImageUrl, music.PublishTime, tm.GetNowDateTimeStr())
+		music.Title, music.HotScore, music.CreatorID, music.MusicUrl, music.PlayTime,
+		music.TagIDs, music.TagNames, music.ImageUrl, music.PublishTime, tm.GetNowDateTimeStr())
 	if err != nil {
 		log.Error(err)
 	}
@@ -59,6 +57,7 @@ func (md *musicMysql) UpdateMusic(music *Music) (affected bool, err error) {
 		"tag_ids=?, tag_names=?, image_url=?,music_url=?, update_time=? where id=?", tableMusic)
 	res, err := client(dbMusicRecommendNameTest).Exec(sql, music.Status, music.HotScore, music.TagIDs,
 		music.TagNames, music.ImageUrl, music.MusicUrl, tm.GetNowDateTimeStr(), music.ID)
+
 	if err != nil {
 		log.Error(err)
 		return false, err

@@ -9,7 +9,7 @@ create table `music` (
     `title` varchar(255) not null DEFAULT '' COMMENT '歌曲标题',
     `hot_score` double not null DEFAULT 0.0 COMMENT '热度打分',
     `creator_id` int not null COMMENT '作者id',
-    `music_url` varchar(255) not null DEFAULT '' COMMENT '音乐地址',
+    `music_url` varchar(255) not null DEFAULT '' COMMENT '音乐的地址',
     `tag_ids` varchar(255) not null DEFAULT '标签id集合' COMMENT '标签ID集合',
     `tag_names` varchar(255) not null DEFAULT '标签名字集合' COMMENT '标签名字集合',
     `play_time` int(11) not null DEFAULT 0 COMMENT '播放时长',
