@@ -28,6 +28,9 @@ func NewTagMysql() *tagMysql {
 }
 
 func (t *tagMysql) Insert(tag *Tag) error {
+	if tag == nil || tag.Name == "" {
+		return nil
+	}
 	sql := fmt.Sprintf("insert ignore into %s(name,status,update_time) values(?,?,?)", tableTag)
 	_, err := client(dbMusicRecommendNameTest).Exec(sql, tag.Name, tag.Status, tm.GetNowDateTimeStr())
 	if err != nil {
@@ -36,8 +39,30 @@ func (t *tagMysql) Insert(tag *Tag) error {
 	return err
 }
 
-func (t *tagMysql) SelectTag(id int) (ret *Tag, err error) {
+func (t *tagMysql) SelectTag(id int) (*Tag, error) {
+	var ret Tag
 	sql := fmt.Sprintf("select * from %s where id = ?", tableTag)
-	err = client(dbMusicRecommendNameTest).Get(&ret, sql, id)
-	return
+	err := client(dbMusicRecommendNameTest).Get(&ret, sql, id)
+	if err == noResultErr {
+		return nil, nil
+	}
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return &ret, nil
+}
+
+func (t *tagMysql) SelectTagForName(name string) (*Tag, error) {
+	var ret Tag
+	sql := fmt.Sprintf("select * from %s where name = ?", tableTag)
+	err := client(dbMusicRecommendNameTest).Get(&ret, sql, name)
+	if err == noResultErr {
+		return nil, nil
+	}
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return &ret, nil
 }

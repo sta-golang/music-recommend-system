@@ -6,20 +6,21 @@ import (
 	"github.com/sta-golang/go-lib-utils/cmd"
 	"github.com/sta-golang/go-lib-utils/codec"
 	"github.com/sta-golang/go-lib-utils/log"
-	"github.com/sta-golang/go-lib-utils/str"
 	tm "github.com/sta-golang/go-lib-utils/time"
 	"github.com/sta-golang/music-recommend/model"
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
 const (
 	pythonCmd                = "python"
 	pyCmd                    = "py"
 	crawlerMusicPythonPath   = "./music_crawler/music_crawler.py"
-	crawlerCreatorPythonPath = "./music_crawler/creator_crawler.py"
+	crawlerCreatorPythonPath = "./music_crawler/creator.py"
 	playlistBaseUrlFmt       = "https://music.163.com/api/playlist/detail?id=%s"
+	creatorResultFile        = "result.txt"
 )
 
 type MusicRecommendData struct {
@@ -99,6 +100,7 @@ func (wc *WangYiYunCrawler) ConversionToDataWithPlaylistID(id string) (*MusicRec
 		log.Error(err)
 		return nil, err
 	}
+	// 作者出了点问题
 	creators, err := wc.wangYiYunResultToCreator(res)
 	if err != nil {
 		log.Error(err)
@@ -113,56 +115,83 @@ func (wc *WangYiYunCrawler) wangYiYunResultToCreator(refRes *WangYiYunResult) ([
 	if refRes == nil {
 		return nil, nil
 	}
+	//if wc.creatorIDSet == nil {
+	//	wc.creatorIDSet = set.NewStringSet(3000)
+	//}
+	//ret := make([]model.Creator, 0, len(refRes.Result.Tracks))
+	//for _, track := range refRes.Result.Tracks {
+	//
+	//	if wc.creatorIDSet.Contains(fmt.Sprintf("%d", track.Artists[0].ID)) {
+	//		continue
+	//	}
+	//	command, err := cmd.ExecCmd(pyCmd, crawlerCreatorPythonPath, fmt.Sprintf("%d", track.Artists[0].ID))
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	if command.RunErr != nil {
+	//		log.Warn(command.RunErr)
+	//	}
+	//	// 不知道这里为什么控制台输出一直有问题
+	//	//if len(command.OutMessage) <= 0 {
+	//	//	continue
+	//	//}
+	//	fileOut, err := ioutil.ReadFile(creatorResultFile)
+	//	if err != nil {
+	//		log.Error(err)
+	//		return nil, err
+	//	}
+	//	var creatorCrawler CrawlerCreator
+	//	err = codec.API.JsonAPI.Unmarshal(fileOut, &creatorCrawler)
+	//	if err != nil {
+	//		log.Error(err)
+	//		return nil, err
+	//	}
+	//	fmt.Println(string(fileOut))
+	//
+	//	similarCreatorStr := ""
+	//	if len(creatorCrawler.SimilarCreator) > 0 {
+	//		bytes, err := codec.API.JsonAPI.Marshal(creatorCrawler.SimilarCreator)
+	//		if err != nil {
+	//			log.Error(err)
+	//			return nil, err
+	//		}
+	//		similarCreatorStr = str.BytesToString(bytes)
+	//	}
+	//
+	//	ty := model.MusicianType
+	//	if creatorCrawler.Superstar {
+	//		ty = model.SuperstarType
+	//	}
+	//	ret = append(ret, model.Creator{
+	//		ID:             track.Artists[0].ID,
+	//		Name:           track.Artists[0].Name,
+	//		Status:         0,
+	//		ImageUrl:       creatorCrawler.ImageUrl,
+	//		Description:    creatorCrawler.Description,
+	//		SimilarCreator: similarCreatorStr,
+	//		FansNum:        creatorCrawler.FansNum,
+	//		Type:           ty,
+	//		UpdateTime:     tm.GetNowDateTimeStr(),
+	//	})
+	//	fmt.Println(creatorCrawler.Description)
+	//	wc.creatorIDSet.Add(fmt.Sprintf("%d", track.Artists[0].ID))
+	//}
+	ret := make([]model.Creator, 0)
 	if wc.creatorIDSet == nil {
-		wc.creatorIDSet = set.NewStringSet(3000)
+		wc.creatorIDSet = set.NewStringSet(50000)
 	}
-	ret := make([]model.Creator, 0, len(refRes.Result.Tracks))
 	for _, track := range refRes.Result.Tracks {
-		if wc.creatorIDSet.Contains(fmt.Sprintf("%d", track.Artists[0].ID)) {
-			continue
-		}
-		command, err := cmd.ExecCmd(pyCmd, crawlerCreatorPythonPath, fmt.Sprintf("%d", track.Artists[0].ID))
-		if err != nil {
-			return nil, err
-		}
-		if command.RunErr != nil {
-			log.Warn(command.RunErr)
-		}
-		if len(command.OutMessage) <= 0 {
-			continue
-		}
-		var creatorCrawler CrawlerCreator
-		err = codec.API.JsonAPI.Unmarshal(command.OutMessage, &creatorCrawler)
-		if err != nil {
-			log.Error(err)
-			return nil, err
-		}
-		similarCreatorStr := ""
-		if len(creatorCrawler.SimilarCreator) > 0 {
-			bytes, err := codec.API.JsonAPI.Marshal(creatorCrawler.SimilarCreator)
-			if err != nil {
-				log.Error(err)
-				return nil, err
-			}
-			similarCreatorStr = str.BytesToString(bytes)
-		}
-		ty := model.MusicianType
-		if creatorCrawler.Superstar {
-			ty = model.SuperstarType
-		}
-		ret = append(ret, model.Creator{
-			ID:             track.Artists[0].ID,
-			Name:           track.Artists[0].Name,
-			Status:         0,
-			ImageUrl:       creatorCrawler.ImageUrl,
-			Description:    creatorCrawler.Description,
-			SimilarCreator: similarCreatorStr,
-			Type:           ty,
-			UpdateTime:     tm.GetNowDateTimeStr(),
-		})
-		wc.creatorIDSet.Add(fmt.Sprintf("%d", track.Artists[0].ID))
+		creatorKey := fmt.Sprintf("%v-%v", track.Artists[0].ID, track.Artists[0].Name)
+		wc.creatorIDSet.Add(creatorKey)
 	}
 	return ret, nil
+}
+
+func (wc WangYiYunCrawler) GetCreatorKeys() []string {
+	if wc.creatorIDSet == nil {
+		return nil
+	}
+	return wc.creatorIDSet.Iterator()
 }
 
 func (wc *WangYiYunCrawler) wangYiYunResultToMusic(refRes *WangYiYunResult) []model.Music {
@@ -174,14 +203,16 @@ func (wc *WangYiYunCrawler) wangYiYunResultToMusic(refRes *WangYiYunResult) []mo
 	for _, track := range refRes.Result.Tracks {
 
 		ret = append(ret, model.Music{
-			ID:          track.ID,
-			Name:        track.Name,
-			Status:      0,
-			Title:       track.Album.Name,
+			ID:     track.ID,
+			Name:   track.Name,
+			Status: 0,
+			Title:  track.Album.Name,
+
 			CreatorID:   track.Artists[0].ID,
+			TagNames:    strings.Join(refRes.Result.Tags, model.TagDelimiter),
 			PlayTime:    track.Duration,
 			ImageUrl:    track.Album.BlurPicUrl,
-			PublishTime: fmt.Sprintf("%d", track.Album.PublishTime),
+			PublishTime: tm.ParseDataTimeToStr(time.Unix(int64(track.Album.PublishTime)/1000, 0)),
 			UpdateTime:  tm.GetNowDateStr(),
 		})
 	}

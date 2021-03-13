@@ -25,7 +25,7 @@ type Artist struct {
 type Album struct {
 	Name        string `json:"name"`
 	BlurPicUrl  string `json:"blurPicUrl"`
-	PublishTime int    `json:"publishTime"`
+	PublishTime int64  `json:"publishTime"`
 }
 
 type CrawlerCreator struct {

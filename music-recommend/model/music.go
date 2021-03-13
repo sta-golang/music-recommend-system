@@ -13,6 +13,7 @@ type Music struct {
 	Title       string  `json:"title" db:"title"`
 	HotScore    float64 `json:"hot_score" db:"hot_score"`
 	CreatorID   int     `json:"creator_id" db:"creator_id"`
+	MusicUrl    string  `json:"music_url" db:"music_url"`
 	PlayTime    int     `json:"play_time" db:"play_time"`
 	TagIDs      string  `json:"tag_ids" db:"tag_ids"`
 	TagNames    string  `json:"tag_names" db:"tag_names"`
@@ -22,7 +23,9 @@ type Music struct {
 }
 
 const (
-	tableMusic = "music"
+	tableMusic                = "music"
+	MusicDefaultStatus        = 0
+	MusicHasUrlMusicUrlStatus = 1
 )
 
 type musicMysql struct {
@@ -35,10 +38,13 @@ func NewMusicMysql() *musicMysql {
 }
 
 func (md *musicMysql) InsertMusic(music *Music) error {
-	sql := fmt.Sprintf("insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?)", tableMusic)
+	if music == nil {
+		return nil
+	}
+	sql := fmt.Sprintf("insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?,?)", tableMusic)
 	_, err := client(dbMusicRecommendNameTest).Exec(sql, music.ID, music.Name, music.Status,
-		music.Title, music.HotScore, music.CreatorID, music.PlayTime,
-		music.TagIDs, music.TagNames, music.ImageUrl, music.PublishTime, tm.GetNowDateTimeStr())
+		music.Title, music.HotScore, music.CreatorID, music.ImageUrl, music.TagIDs, music.TagNames,
+		music.PlayTime, music.ImageUrl, music.PublishTime, tm.GetNowDateTimeStr())
 	if err != nil {
 		log.Error(err)
 	}
@@ -46,10 +52,13 @@ func (md *musicMysql) InsertMusic(music *Music) error {
 }
 
 func (md *musicMysql) UpdateMusic(music *Music) (affected bool, err error) {
+	if music == nil {
+		return false, nil
+	}
 	sql := fmt.Sprintf("update %s set status=?, hot_score=?, "+
-		"tag_ids=?, tag_names=?, image_url=?, update_time=？ wher id = ?", tableMusic)
+		"tag_ids=?, tag_names=?, image_url=?,music_url=?, update_time=? where id=?", tableMusic)
 	res, err := client(dbMusicRecommendNameTest).Exec(sql, music.Status, music.HotScore, music.TagIDs,
-		music.TagNames, music.ImageUrl, tm.GetNowDateTimeStr(), music.ID)
+		music.TagNames, music.ImageUrl, music.MusicUrl, tm.GetNowDateTimeStr(), music.ID)
 	if err != nil {
 		log.Error(err)
 		return false, err
@@ -60,4 +69,17 @@ func (md *musicMysql) UpdateMusic(music *Music) (affected bool, err error) {
 		return false, err
 	}
 	return rows > 0, err
+}
+
+func (md *musicMysql) SelectByID(id int) (*Music, error) {
+	var ret Music
+	sql := fmt.Sprintf("select * from %s where id = ?", tableMusic)
+	err := client(dbMusicRecommendNameTest).Get(&ret, sql, id)
+	if err == noResultErr {
+		return nil, nil
+	}
+	if err != nil {
+		log.Error(err)
+	}
+	return &ret, err
 }

@@ -5,6 +5,7 @@ import requests
 import sys, getopt
 from lxml import html
 import json
+import traceback
 
 class CreatorCrawler(object):
 
@@ -18,7 +19,7 @@ class CreatorCrawler(object):
     # 设置请求头部信息(可扩展：不同的User - Agent)
     def set_header(self):
         self.header = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",
             "Referer": "https://music.163.com/",
             "Upgrade-Insecure-Requests": '1',
         }
@@ -37,6 +38,9 @@ class CreatorCrawler(object):
 
         tree3 = html.tostring(page[0], encoding='utf-8').decode('utf-8')
         # # 标题
+
+        self.tmp = page.xpath('//p[@class="note s-fc3"]/text()')
+
         self.image = page.xpath('//meta[@property="og:image"]/@content')
 
         self.description = page.xpath('//meta[@name="description"]/@content')
@@ -88,12 +92,24 @@ class CreatorCrawler(object):
         ).text
 
     def to_json(self):
+
+        if len(self.tmp) > 1:
+            info = {
+                    "image_url" : 'http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg',
+                    "description" : '未知歌手,可能为用户上传',
+                    "similar_creator" : '[]',
+                    "superstar": False,
+                    "fans_num": 0,
+                    "unknow": True,
+
+                }
+            return json.dumps(info)
+
         info = {"image_url":self.image[0],
                 "description": self.description[0],
                 "similar_creator":self.similar_creator,
                 "superstar":self.superstar,
-                "fans_num":self.fans_num
-                }
+                "fans_num":self.fans_num}
         bys = json.dumps(info)
         return bys
 
@@ -101,7 +117,7 @@ class CreatorCrawler(object):
 
 
 def main(argv):
-    print("进来了")
+    print(argv[0])
     music = CreatorCrawler(argv[0])
     music.set_header()  # 调用头部方法，构造请求头信息
     music.set_froms()  # 调用froms方法，构造froms信息
@@ -109,7 +125,11 @@ def main(argv):
     music.parsing_codes()  # 处理源码，获取指定数据
     bys = music.to_json()
     print(bys)
+    sys.stdout.flush()
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    try:
+        main(sys.argv[1:])
+    except Exception as e:
+        print(e)
     sys.stdout.flush()

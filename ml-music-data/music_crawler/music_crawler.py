@@ -53,7 +53,6 @@ class Wangyiyun(object):
         self.listen = page.xpath('//span[@class="nb"]/text()')
         # 歌单链接
         self.link = page.xpath('//div[@class="u-cover u-cover-1"]/a[@href]/@href')
-        # 将数据保存为csv文件
         self.all_link.extend([x for x in self.link])
 
     # 获取网页源代码
