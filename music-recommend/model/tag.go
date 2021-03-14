@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"github.com/jmoiron/sqlx"
 	"github.com/sta-golang/go-lib-utils/log"
 	tm "github.com/sta-golang/go-lib-utils/time"
 )
@@ -28,11 +29,16 @@ func NewTagMysql() *tagMysql {
 }
 
 func (t *tagMysql) Insert(tag *Tag) error {
+
+	return t.doInsert(client(dbMusicRecommendNameTest), tag)
+}
+
+func (t *tagMysql) doInsert(db sqlx.Execer, tag *Tag) error {
 	if tag == nil || tag.Name == "" {
 		return nil
 	}
 	sql := fmt.Sprintf("insert ignore into %s(name,status,update_time) values(?,?,?)", tableTag)
-	_, err := client(dbMusicRecommendNameTest).Exec(sql, tag.Name, tag.Status, tm.GetNowDateTimeStr())
+	_, err := db.Exec(sql, tag.Name, tag.Status, tm.GetNowDateTimeStr())
 	if err != nil {
 		log.Error(err)
 	}

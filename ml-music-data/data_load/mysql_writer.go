@@ -3,10 +3,14 @@ package data_load
 import (
 	"fmt"
 	"github.com/sta-golang/go-lib-utils/algorithm/data_structure/set"
+	"github.com/sta-golang/go-lib-utils/async/group"
 	"github.com/sta-golang/go-lib-utils/log"
+	tm "github.com/sta-golang/go-lib-utils/time"
 	"github.com/sta-golang/music-recommend/model"
+	"runtime"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type MysqlDataWriter struct {
@@ -52,7 +56,6 @@ func (ml *MysqlDataWriter) WriterMusic(musics []model.Music) error {
 		if stringSet.Size() == oldLen {
 			continue
 		}
-
 		ids := stringSet.Iterator()
 		names, err := ml.getTagNames(ids)
 		if err != nil {
@@ -86,6 +89,84 @@ func (ml *MysqlDataWriter) WriterCreator(creators []model.Creator) error {
 	return nil
 }
 
+// LoadCreatorToMysql... 执行一次
+func (ml *MysqlDataWriter) LoadCreatorToMysql(creators []model.Creator) error {
+	asyncG := group.NewAsyncGroup(runtime.NumCPU())
+	defer asyncG.Close()
+
+	for _, creator := range creators {
+		tempCreator := creator
+		if addErr := asyncG.Add(fmt.Sprintf("%d", creator.ID), func() (interface{}, error) {
+			curCreator := &tempCreator
+			err := model.NewCreatorMysql().Insert(curCreator)
+			if err != nil {
+				log.Error("task ", err)
+				return nil, err
+			}
+
+			return nil, nil
+		}); addErr != nil {
+			log.Error(addErr)
+			return addErr
+		}
+	}
+	asyncG.Wait()
+	for _, tk := range asyncG.Iterator() {
+		_, err := tk.Ret()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	}
+	return nil
+}
+
+func (ml *MysqlDataWriter) LoadMusicToMysql(musics []APIMusicDetail) error {
+	asyncG := group.NewAsyncGroup(runtime.NumCPU(), 100000)
+	defer asyncG.Close()
+	for _, detail := range musics {
+		tempDetail := detail
+		if addErr := asyncG.Add(fmt.Sprintf("%d", tempDetail.ID), func() (interface{}, error) {
+			curDetail := &tempDetail
+			creatorIDs := make([]string, 0, len(curDetail.AR))
+			for _, ar := range curDetail.AR {
+				creatorIDs = append(creatorIDs, fmt.Sprintf("%d", ar.CreatorID))
+			}
+			err := model.NewMusicMysql().InsertMusicAndCreatorMusic(&model.Music{
+				ID:          curDetail.ID,
+				Name:        curDetail.Name,
+				Status:      0,
+				Title:       curDetail.AL.TitleName,
+				HotScore:    0,
+				CreatorIDs:  strings.Join(creatorIDs, model.CreatorDelimiter),
+				MusicUrl:    "",
+				PlayTime:    curDetail.Dt,
+				TagIDs:      "",
+				TagNames:    "",
+				ImageUrl:    curDetail.AL.TitleUrl,
+				PublishTime: tm.ParseDataTimeToStr(time.Unix(int64(curDetail.PublishTime)/1000, 0)),
+				UpdateTime:  "",
+			})
+			if err != nil {
+				log.Error(err)
+			}
+			return nil, err
+		}); addErr != nil {
+			log.Error(addErr)
+			return addErr
+		}
+	}
+	asyncG.Wait()
+	for _, tk := range asyncG.Iterator() {
+		_, err := tk.Ret()
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	}
+	return nil
+}
+
 func (ml *MysqlDataWriter) getTagNames(ids []string) ([]string, error) {
 	ret := make([]string, 0, len(ids))
 	for _, id := range ids {
@@ -99,6 +180,7 @@ func (ml *MysqlDataWriter) getTagNames(ids []string) ([]string, error) {
 			log.Error(err)
 			return nil, err
 		}
+
 		ret = append(ret, tag.Name)
 	}
 	return ret, nil
@@ -117,9 +199,7 @@ func (ml *MysqlDataWriter) getTagIDs(tagNames string) ([]string, error) {
 			log.Error(err)
 			return nil, err
 		}
-		if tag == nil {
-			log.ConsoleLogger.Debug(tagNames, " split : ", split)
-		}
+
 		ret = append(ret, fmt.Sprintf("%d", tag.ID))
 	}
 	return ret, nil

@@ -1,0 +1,17 @@
+[STA:Music-Data] 2021-03-15 00:12:56 [INFO] D:/毕设/music-recommend-system/music-recommend/main.go:43 ==> init addr :  :80
+[STA:Music-Data] 2021-03-15 00:13:46 [INFO] D:/毕设/music-recommend-system/music-recommend/main.go:43 ==> init addr :  :80
+[STA:Music-Data] 2021-03-15 00:16:58 [INFO] D:/毕设/music-recommend-system/music-recommend/main.go:43 ==> init addr :  :80
+[STA:Music-Data] 2021-03-15 00:18:02 [INFO] D:/毕设/music-recommend-system/music-recommend/main.go:47 ==> init addr :  :80
+[STA:Music-Data] 2021-03-15 00:22:40 [INFO] D:/毕设/music-recommend-system/music-recommend/main.go:43 ==> init addr :  :80
+[STA:Music-Data] 2021-03-15 00:23:41 [INFO] D:/毕设/music-recommend-system/music-recommend/controller/creator.go:41 ==> controller : GetCreator timing : 572 毫秒
+[STA:Music-Data] 2021-03-15 00:23:50 [INFO] D:/毕设/music-recommend-system/music-recommend/controller/creator.go:41 ==> controller : GetCreator timing : 104 毫秒
+[STA:Music-Data] 2021-03-15 00:23:58 [INFO] D:/毕设/music-recommend-system/music-recommend/controller/creator.go:41 ==> controller : GetCreator timing : 120 毫秒
+[STA:Music-Data] 2021-03-15 00:24:01 [INFO] D:/毕设/music-recommend-system/music-recommend/controller/creator.go:41 ==> controller : GetCreator timing : 128 毫秒
+[STA:Music-Data] 2021-03-15 00:31:10 [INFO] D:/毕设/music-recommend-system/music-recommend/main.go:43 ==> init addr :  :80
+[STA:Music-Data] 2021-03-15 00:31:17 [INFO] D:/毕设/music-recommend-system/music-recommend/controller/common.go:75 ==> controller : /creator/detail timing : 659 毫秒
+[STA:Music-Data] 2021-03-15 00:31:28 [INFO] D:/毕设/music-recommend-system/music-recommend/controller/common.go:75 ==> controller : /creator/detail timing : 209 毫秒
+[STA:Music-Data] 2021-03-15 00:31:53 [INFO] D:/毕设/music-recommend-system/music-recommend/controller/common.go:75 ==> controller : /creator/detail timing : 247 毫秒
+[STA:Music-Data] 2021-03-15 00:32:13 [INFO] D:/毕设/music-recommend-system/music-recommend/controller/common.go:75 ==> controller : /creator/detail timing : 188 毫秒
+[STA:Music-Data] 2021-03-15 00:40:12 [INFO] D:/毕设/music-recommend-system/music-recommend/main.go:43 ==> init addr :  :80
+[STA:Music-Data] 2021-03-15 00:40:38 [INFO] D:/毕设/music-recommend-system/music-recommend/controller/common.go:75 ==> controller : /creator/detail timing : 550 毫秒
+[STA:Music-Data] 2021-03-15 00:41:12 [INFO] D:/毕设/music-recommend-system/music-recommend/controller/common.go:75 ==> controller : /creator/detail timing : 117 毫秒

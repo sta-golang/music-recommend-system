@@ -2,8 +2,11 @@ package model
 
 import (
 	"fmt"
+	"github.com/jmoiron/sqlx"
 	"github.com/sta-golang/go-lib-utils/log"
 	tm "github.com/sta-golang/go-lib-utils/time"
+	"strconv"
+	"strings"
 )
 
 type Music struct {
@@ -12,7 +15,7 @@ type Music struct {
 	Status      int32   `json:"status" db:"status"`
 	Title       string  `json:"title" db:"title"`
 	HotScore    float64 `json:"hot_score" db:"hot_score"`
-	CreatorID   int     `json:"creator_id" db:"creator_id"`
+	CreatorIDs  string  `json:"creator_ids" db:"creator_ids"`
 	MusicUrl    string  `json:"music_url" db:"music_url"`
 	PlayTime    int     `json:"play_time" db:"play_time"`
 	TagIDs      string  `json:"tag_ids" db:"tag_ids"`
@@ -26,6 +29,8 @@ const (
 	tableMusic                = "music"
 	MusicDefaultStatus        = 0
 	MusicHasUrlMusicUrlStatus = 1
+
+	insertSQLFmt = "insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?,?)"
 )
 
 type musicMysql struct {
@@ -39,9 +44,14 @@ func NewMusicMysql() *musicMysql {
 
 func (md *musicMysql) InsertMusic(music *Music) error {
 
-	sql := fmt.Sprintf("insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?,?)", tableMusic)
-	_, err := client(dbMusicRecommendNameTest).Exec(sql, music.ID, music.Name, music.Status,
-		music.Title, music.HotScore, music.CreatorID, music.MusicUrl, music.PlayTime,
+	return md.doInsertMusic(client(dbMusicRecommendNameTest), music)
+}
+
+func (md *musicMysql) doInsertMusic(db sqlx.Execer, music *Music) error {
+
+	sql := fmt.Sprintf(insertSQLFmt, tableMusic)
+	_, err := db.Exec(sql, music.ID, music.Name, music.Status,
+		music.Title, music.HotScore, music.CreatorIDs, music.MusicUrl, music.PlayTime,
 		music.TagIDs, music.TagNames, music.ImageUrl, music.PublishTime, tm.GetNowDateTimeStr())
 	if err != nil {
 		log.Error(err)
@@ -49,13 +59,61 @@ func (md *musicMysql) InsertMusic(music *Music) error {
 	return err
 }
 
+func (md *musicMysql) InsertMusicAndCreatorMusic(music *Music) error {
+	err := newMysqlTransaction().Transaction(func(tx *sqlx.Tx) error {
+		err := NewMusicMysql().doInsertMusic(tx, music)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		split := strings.Split(music.CreatorIDs, CreatorDelimiter)
+		for _, str := range split {
+			creatorID, err := strconv.Atoi(str)
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+			err = NewCreatorToMusicMysql().doInsert(tx, &CreatorToMusic{
+				CreatorID:  creatorID,
+				MusicID:    music.ID,
+				Status:     0,
+				UpdateTime: "",
+			})
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		log.Error(err)
+	}
+	return err
+}
+
 func (md *musicMysql) UpdateMusic(music *Music) (affected bool, err error) {
+	return md.doUpdateMusic(client(dbMusicRecommendNameTest), music)
+}
+
+func (md *musicMysql) SelectMusicForCreator(creatorID, pos, limit int) (musics []Music, err error) {
+	sql := fmt.Sprintf("select * from %s where id in "+
+		"(select music_id from %s where creator_id = ?) limit ?,?", tableMusic, tableCreatorToMusic)
+	err = client(dbMusicRecommendNameTest).Select(&musics, sql, creatorID, pos, limit)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return
+}
+
+func (md *musicMysql) doUpdateMusic(db sqlx.Execer, music *Music) (affected bool, err error) {
 	if music == nil {
 		return false, nil
 	}
 	sql := fmt.Sprintf("update %s set status=?, hot_score=?, "+
 		"tag_ids=?, tag_names=?, image_url=?,music_url=?, update_time=? where id=?", tableMusic)
-	res, err := client(dbMusicRecommendNameTest).Exec(sql, music.Status, music.HotScore, music.TagIDs,
+	res, err := db.Exec(sql, music.Status, music.HotScore, music.TagIDs,
 		music.TagNames, music.ImageUrl, music.MusicUrl, tm.GetNowDateTimeStr(), music.ID)
 
 	if err != nil {
