@@ -79,7 +79,7 @@ func (cm *creatorMysql) SelectCreatorForIDs(ids []string) (creators []Creator, e
 		tableCreator, strings.Join(ids, ","))
 	err = client(dbMusicRecommendNameTest).Select(&creators, sql)
 	if err != nil {
-		log.Error(err)
+		log.Error("ids : %v has err : %v", ids, err)
 		return nil, err
 	}
 	return
@@ -87,6 +87,16 @@ func (cm *creatorMysql) SelectCreatorForIDs(ids []string) (creators []Creator, e
 
 func (cm *creatorMysql) SelectCreators(pos, limit int) (creators []Creator, err error) {
 	sql := fmt.Sprintf("select id, name, image_url,type from %s limit ?,?", tableCreator)
+	err = client(dbMusicRecommendNameTest).Select(&creators, sql, pos, limit)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return
+}
+
+func (cm *creatorMysql) SelectCreatorsDetails(pos, limit int) (creators []Creator, err error) {
+	sql := fmt.Sprintf("select * from %s limit ?,?", tableCreator)
 	err = client(dbMusicRecommendNameTest).Select(&creators, sql, pos, limit)
 	if err != nil {
 		log.Error(err)

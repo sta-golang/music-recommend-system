@@ -1,7 +1,9 @@
 package common
 
 import "errors"
-
+/**
+业务错误的一些错误码定义。返回后方便定位错误位置
+ */
 const (
 	// 第一位为xxx 二三位为xxxx 四五位为xxxx
 	IdentifyingCurrencyErr = 50000

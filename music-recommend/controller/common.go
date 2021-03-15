@@ -15,7 +15,16 @@ const (
 	successCode            = 0
 
 	creatorDetailUrl = "/creator/detail"
+	creatorList = "/creator/list"
+	musicDetails = "/music/details"
+	creatorMusic = "/creator/music"
 )
+
+/**
+这里全是一些视图层需要返回的数据定义。方便一些
+ */
+
+var DebugLevelName = log.GetLevelName(log.DEBUG)
 
 type RetData struct {
 	Code    int         `json:"code"`
@@ -69,9 +78,13 @@ func WriterResp(ctx *fasthttp.RequestCtx, bys []byte) {
 
 func TimeController(controllerName string, fn fasthttp.RequestHandler) func(*fasthttp.RequestCtx) {
 	return func(ctx *fasthttp.RequestCtx) {
-		timing := tm.FuncTiming(func() {
+		if log.GetLevel() == DebugLevelName {
+			timing := tm.FuncTiming(func() {
+				fn(ctx)
+			})
+			log.Debugf("controller : %s timing : %v 毫秒", controllerName, timing.Milliseconds())
+		} else {
 			fn(ctx)
-		})
-		log.Debugf("controller : %s timing : %v 毫秒", controllerName, timing.Milliseconds())
+		}
 	}
 }

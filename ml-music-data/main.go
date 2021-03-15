@@ -19,12 +19,18 @@ const (
 )
 
 func main() {
+	fix()
 	//TestAysncG()
 	fmt.Println(ProcessCreatorAndMusic())
 	//ProcessSong()
 	//ProcessD()
 	//err := ProcessData()
 	//fmt.Println(err)
+}
+
+func fix() {
+	writer := data_load.MysqlDataWriter{}
+	fmt.Println(writer.FixMusic())
 }
 
 func TestAysncG() {
@@ -87,12 +93,12 @@ func ProcessCreatorAndMusic() error {
 			return err
 		}
 		log.ConsoleLogger.Infof("crawler creator ：%s music ok len : %d", creator.Name, len(details))
-		missCreatorIDs, err := mysqlWriter.LoadMusicToMysql(details)
+		err = mysqlWriter.LoadMusicToMysql(details)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
-		log.ConsoleLogger.Infof("LoadMusicToMysql ok ! miss : %v",missCreatorIDs)
+		log.ConsoleLogger.Infof("LoadMusicToMysql ok ! ")
 
 		_, err = model.NewCreatorMysql().UpdateCreatorsForStatus(model.StatusLoadMusicFinish, creator.ID)
 		if err != nil {

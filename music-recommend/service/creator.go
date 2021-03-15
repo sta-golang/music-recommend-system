@@ -5,7 +5,7 @@ import (
 	er "github.com/sta-golang/go-lib-utils/err"
 	"github.com/sta-golang/go-lib-utils/log"
 	"github.com/sta-golang/music-recommend/common"
-	"github.com/sta-golang/music-recommend/dto"
+	"github.com/sta-golang/music-recommend/controller/dto"
 	"github.com/sta-golang/music-recommend/model"
 	"math/rand"
 	"strings"
@@ -32,9 +32,6 @@ func (cs *creatorService) GetCreator(page int) ([]model.Creator, *er.Error) {
 		log.Error(err)
 		return nil, er.NewError(common.DBFindErr, err)
 	}
-	if len(creators) <= 0 {
-		return creators, er.NewError(common.NotFound, fmt.Errorf(common.NotFoundMessage))
-	}
 	return creators, nil
 }
 
@@ -47,12 +44,11 @@ func (cs *creatorService) GetCreatorWithType(tp int, page int) ([]model.Creator,
 		log.Error(err)
 		return nil, er.NewError(common.DBFindErr, err)
 	}
-	if len(creators) <= 0 {
-		return creators, er.NewError(common.NotFound, fmt.Errorf(common.NotFoundMessage))
-	}
+
 	return creators, nil
 }
 
+// GetCreatorDetail 获取作者详细信息
 func (cs *creatorService) GetCreatorDetail(id int) (*dto.CreatorAndSimilar, *er.Error) {
 	creator, err := model.NewCreatorMysql().SelectCreator(id)
 	if err != nil {
@@ -62,6 +58,7 @@ func (cs *creatorService) GetCreatorDetail(id int) (*dto.CreatorAndSimilar, *er.
 	if creator == nil {
 		return nil, er.NewError(common.NotFound, fmt.Errorf(common.NotFoundMessage))
 	}
+	// 相似作者
 	if creator.SimilarCreator != "" {
 		split := strings.Split(creator.SimilarCreator, model.CreatorDelimiter)
 
@@ -70,6 +67,9 @@ func (cs *creatorService) GetCreatorDetail(id int) (*dto.CreatorAndSimilar, *er.
 			log.Error(err)
 			return dto.NewCreatorAndSimilar(creator, nil), nil
 		}
+		// 如果一个作者的相似作者大于最大返回值
+		// 则使用洗牌算法将这数组打散。保证多次返回又不同的结果
+		// 使得看起来像是在变化
 		if len(similar) > maxSimilarNum {
 			rand.Shuffle(len(similar), func(i, j int) {
 				similar[i],similar[j] = similar[j],similar[i]
@@ -80,3 +80,4 @@ func (cs *creatorService) GetCreatorDetail(id int) (*dto.CreatorAndSimilar, *er.
 	}
 	return dto.NewCreatorAndSimilar(creator, nil), nil
 }
+

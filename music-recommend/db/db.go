@@ -35,6 +35,7 @@ func (sd *sqlxDB) Sync() error {
 
 var globalDB *sqlxDB
 
+// InitDB 初始化数据库 连接数据库使用
 func InitDB() error {
 	globalDB = &sqlxDB{dbMap: make(map[string]*sqlx.DB,1)}
 	source.Monitoring(globalDB)

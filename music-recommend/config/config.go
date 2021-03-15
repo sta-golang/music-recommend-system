@@ -7,6 +7,10 @@ import (
 	"io/ioutil"
 )
 
+/**
+配置类 通过解析yaml文件生成
+这个可以长久保存 直接复制粘贴拿来用
+ */
 type Config struct {
 	ServerName string               `yaml:"server"`
 	IP         string               `yaml:"ip"`
@@ -36,6 +40,11 @@ func (dc *DBConfig) String() string {
 	return fmt.Sprintf("DBName:%v, UserName:%v, Password:%v, Target:%v, DriverName:%v", dc.DBName, dc.UserName, psw, dc.Target, dc.DriverName)
 }
 
+/**
+这里就是用来初始化的
+读取文件的字节数组
+然后调用codec.API.YamlAPI.UnMarshal解析成需要的格式
+ */
 func InitConfig(path string) error {
 	var conf Config
 	bys, err := ioutil.ReadFile(path)

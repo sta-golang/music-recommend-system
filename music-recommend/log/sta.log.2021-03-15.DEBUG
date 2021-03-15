@@ -1,3 +1,0 @@
-[STA:Music-Data] 2021-03-15 18:47:04 [DEBUG] E:/sta-golang/music-recommend-system/music-recommend/controller/common.go:75 ==> controller : /creator/detail timing : 356 毫秒
-[STA:Music-Data] 2021-03-15 18:47:04 [DEBUG] E:/sta-golang/music-recommend-system/music-recommend/controller/common.go:75 ==> controller : /creator/detail timing : 5 毫秒
-[STA:Music-Data] 2021-03-15 18:47:05 [DEBUG] E:/sta-golang/music-recommend-system/music-recommend/controller/common.go:75 ==> controller : /creator/detail timing : 5 毫秒

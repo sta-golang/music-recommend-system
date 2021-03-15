@@ -7,11 +7,15 @@ import (
 	"github.com/valyala/fasthttp"
 )
 
+// GlobalRouter 返回 路由器
 func GlobalRouter() *fasthttprouter.Router {
 
 	router := fasthttprouter.New()
 	router.GET("/", Index)
 	router.GET(creatorDetailUrl, TimeController(creatorDetailUrl, NewCreatorController().GetCreator))
+	router.GET(creatorList, TimeController(creatorList, NewCreatorController().GetCreators))
+	router.GET(musicDetails, TimeController(musicDetails, NewMusicController().GetMusic))
+	router.GET(creatorMusic, TimeController(creatorMusic, NewMusicController().CreatorMusics))
 	return router
 }
 

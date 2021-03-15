@@ -5,6 +5,7 @@ import (
 	"github.com/sta-golang/go-lib-utils/algorithm/data_structure/set"
 	"github.com/sta-golang/go-lib-utils/async/group"
 	"github.com/sta-golang/go-lib-utils/log"
+	"github.com/sta-golang/go-lib-utils/pool/workerpool"
 	tm "github.com/sta-golang/go-lib-utils/time"
 	"github.com/sta-golang/music-recommend/model"
 	"runtime"
@@ -90,6 +91,92 @@ func (ml *MysqlDataWriter) WriterCreator(creators []model.Creator) error {
 	return nil
 }
 
+func (ml *MysqlDataWriter) FixMusic() error {
+	offset := 0
+	limit := 1000
+	workerP := workerpool.NewWithQueueSize(runtime.NumCPU(), 50000)
+	wg := sync.WaitGroup{}
+	for {
+		wg.Add(1)
+		tempOffset := offset
+		_ = workerP.Submit(func() {
+			funCOffset := tempOffset
+			defer wg.Done()
+			musics, err := model.NewMusicMysql().SelectMusics(funCOffset, limit)
+			if err != nil {
+				log.Errorf("offset : tempOffset has err : %v",err)
+			}
+			for _, music := range musics {
+				split := strings.Split(music.CreatorIDs, model.CreatorDelimiter)
+				arr := make([]string, 0, len(split))
+				for _, ss := range split {
+					if ss == "" {
+						continue
+					}
+					arr = append(arr, ss)
+				}
+				creators, err := model.NewCreatorMysql().SelectCreatorForIDs(arr)
+				if err != nil {
+					log.Errorf("music id : %d has err : %v",music.ID, err)
+				}
+				ids := make([]string, 0,len(creators))
+				names := make([]string,0, len(creators))
+				for _, creator := range creators {
+					ids = append(ids, fmt.Sprintf("%d", creator.ID))
+					names = append(names, creator.Name)
+				}
+				music.CreatorIDs = strings.Join(ids,model.CreatorDelimiter)
+				music.CreatorNames = strings.Join(names, model.MusicCreatorNameDelimiter)
+				err = model.NewMusicMysql().FixMusicCreator(&music)
+				if err != nil {
+					log.Errorf("music id : %d has err : %v",music.ID, err)
+				}
+			}
+			log.ConsoleLogger.Infof("offset : %d finish", funCOffset)
+		})
+		//目前总条数 294138
+		if offset > 294138 {
+			break
+		}
+		offset += limit
+
+	}
+	wg.Wait()
+	return nil
+}
+
+func (ml *MysqlDataWriter) FixCreator() error {
+	details, err := model.NewCreatorMysql().SelectCreatorsDetails(0, 9999999)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	for _, creator := range details {
+		split := strings.Split(creator.SimilarCreator, model.CreatorDelimiter)
+		newIDSet := set.NewStringSet()
+		for _, creatorIDStr := range split {
+			creatorID, _ := strconv.Atoi(creatorIDStr)
+			selectCreator, err := model.NewCreatorMysql().SelectCreator(creatorID)
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+			if selectCreator == nil {
+				continue
+			}
+			newIDSet.Add(creatorIDStr)
+
+		}
+		creator.SimilarCreator = strings.Join(newIDSet.Iterator(), model.CreatorDelimiter)
+		_, err = model.NewCreatorMysql().Update(&creator)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+	}
+	return nil
+}
+
 // LoadCreatorToMysql... 执行一次
 func (ml *MysqlDataWriter) LoadCreatorToMysql(creators []model.Creator) error {
 	asyncG := group.NewAsyncGroup(runtime.NumCPU(), 8192)
@@ -126,16 +213,17 @@ func (ml *MysqlDataWriter) LoadCreatorToMysql(creators []model.Creator) error {
 	return nil
 }
 
-func (ml *MysqlDataWriter) LoadMusicToMysql(musics []APIMusicDetail) ([]int, error) {
+func (ml *MysqlDataWriter) LoadMusicToMysql(musics []APIMusicDetail)  error {
 	asyncG := group.NewAsyncGroup(runtime.NumCPU(), 100000)
 	defer asyncG.Close()
-	lock := sync.Mutex{}
-	missCreatorIDs := make([]int, 0)
+
 	for _, detail := range musics {
 		tempDetail := detail
 		if addErr := asyncG.Add(fmt.Sprintf("%d", tempDetail.ID), func() (interface{}, error) {
 			curDetail := &tempDetail
 			creatorIDs := set.NewStringSet(len(curDetail.AR))
+			names := make([]string, 0)
+			ids := make([]string, 0)
 			for _, ar := range curDetail.AR {
 				if creatorIDs.Contains(fmt.Sprintf("%d", ar.CreatorID)) || ar.CreatorID == 0 {
 					continue
@@ -147,10 +235,10 @@ func (ml *MysqlDataWriter) LoadMusicToMysql(musics []APIMusicDetail) ([]int, err
 					return nil, err
 				}
 				if selectCreator == nil {
-					lock.Lock()
-					missCreatorIDs = append(missCreatorIDs, ar.CreatorID)
-					lock.Unlock()
+					continue
 				}
+				names = append(names, ar.CreatorName)
+				ids = append(ids, fmt.Sprintf("%d", ar.CreatorID))
 			}
 			err := model.NewMusicMysql().InsertMusicAndCreatorMusic(&model.Music{
 				ID:          curDetail.ID,
@@ -158,7 +246,8 @@ func (ml *MysqlDataWriter) LoadMusicToMysql(musics []APIMusicDetail) ([]int, err
 				Status:      0,
 				Title:       curDetail.AL.TitleName,
 				HotScore:    0,
-				CreatorIDs:  strings.Join(creatorIDs.Iterator(), model.CreatorDelimiter),
+				CreatorIDs:  strings.Join(ids, model.CreatorDelimiter),
+				CreatorNames: strings.Join(names, model.MusicCreatorNameDelimiter),
 				MusicUrl:    "",
 				PlayTime:    curDetail.Dt,
 				TagIDs:      "",
@@ -173,7 +262,7 @@ func (ml *MysqlDataWriter) LoadMusicToMysql(musics []APIMusicDetail) ([]int, err
 			return nil, err
 		}); addErr != nil {
 			log.Error(addErr)
-			return nil, addErr
+			return addErr
 		}
 	}
 	asyncG.Wait()
@@ -181,10 +270,10 @@ func (ml *MysqlDataWriter) LoadMusicToMysql(musics []APIMusicDetail) ([]int, err
 		_, err := tk.Ret()
 		if err != nil {
 			log.Error(err)
-			return nil, err
+			return err
 		}
 	}
-	return missCreatorIDs, nil
+	return nil
 }
 
 func (ml *MysqlDataWriter) getTagNames(ids []string) ([]string, error) {

@@ -2,6 +2,9 @@ package dto
 
 import "github.com/sta-golang/music-recommend/model"
 
+/**
+作用与视图层返回数据
+ */
 type CreatorAndSimilar struct {
 	ID             int             `json:"id"`
 	Name           string          `json:"name"`
