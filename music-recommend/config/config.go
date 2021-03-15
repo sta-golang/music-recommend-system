@@ -10,6 +10,7 @@ import (
 type Config struct {
 	ServerName string               `yaml:"server"`
 	IP         string               `yaml:"ip"`
+	PProf      string               `yaml:"pprof"`
 	Port       string               `yaml:"port"`
 	LogConfig  log.FileLogConfig    `yaml:"log"`
 	DBConfigs  map[string]*DBConfig `yaml:"database"`

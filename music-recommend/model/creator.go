@@ -29,6 +29,8 @@ type Creator struct {
 const (
 	tableCreator     = "creator"
 	CreatorDelimiter = "+"
+
+	StatusLoadMusicFinish = 1
 )
 
 type creatorMysql struct {
@@ -73,7 +75,6 @@ func (cm *creatorMysql) SelectCreator(id int) (*Creator, error) {
 }
 
 func (cm *creatorMysql) SelectCreatorForIDs(ids []string) (creators []Creator, err error) {
-	fmt.Println(ids)
 	sql := fmt.Sprintf("select id, name, image_url,type from %s where id in(%s)",
 		tableCreator, strings.Join(ids, ","))
 	err = client(dbMusicRecommendNameTest).Select(&creators, sql)
@@ -92,6 +93,31 @@ func (cm *creatorMysql) SelectCreators(pos, limit int) (creators []Creator, err 
 		return nil, err
 	}
 	return
+}
+
+func (cm *creatorMysql) SelectCreatorsForStatus(status, pos, limit int) (creators []Creator, err error) {
+	sql := fmt.Sprintf("select id, name, image_url,type from %s where status = ? limit ?,?", tableCreator)
+	err = client(dbMusicRecommendNameTest).Select(&creators, sql,status, pos, limit)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return
+}
+
+func (cm *creatorMysql) UpdateCreatorsForStatus(status int32, id int) (bool, error) {
+	sql := fmt.Sprintf("update %s set status = ? where id = ?", tableCreator)
+	res, err := client(dbMusicRecommendNameTest).Exec(sql, status, id)
+	if err != nil {
+		log.Error(err)
+		return false, err
+	}
+	rows, err := res.RowsAffected()
+	if err != nil {
+		log.Error(err)
+		return false, err
+	}
+	return rows > 0, err
 }
 
 func (cm *creatorMysql) SelectCreatorsForType(ty, pos, limit int) (creators []Creator, err error) {

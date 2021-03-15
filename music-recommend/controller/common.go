@@ -72,6 +72,6 @@ func TimeController(controllerName string, fn fasthttp.RequestHandler) func(*fas
 		timing := tm.FuncTiming(func() {
 			fn(ctx)
 		})
-		log.Infof("controller : %s timing : %v 毫秒", controllerName, timing.Milliseconds())
+		log.Debugf("controller : %s timing : %v 毫秒", controllerName, timing.Milliseconds())
 	}
 }

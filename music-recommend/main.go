@@ -10,6 +10,8 @@ import (
 	"github.com/sta-golang/music-recommend/controller"
 	"github.com/sta-golang/music-recommend/db"
 	"github.com/valyala/fasthttp"
+	"net/http"
+	_ "net/http/pprof"
 	"os"
 )
 
@@ -25,6 +27,7 @@ const (
 
 func main() {
 	flag.Parse()
+	log.SetLevel(log.DEBUG)
 	defer func() {
 		source.Sync()
 		if er := recover(); er != nil {
@@ -41,6 +44,12 @@ func main() {
 		*addr = defAddr
 	}
 	log.Info("init addr : ", *addr)
+	if config.GlobalConfig().PProf != "" {
+		go func() {
+			log.Info("PProf begin : ",config.GlobalConfig().PProf )
+			log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s",config.GlobalConfig().PProf), nil))
+		}()
+	}
 	router := controller.GlobalRouter()
 	log.Fatal(fasthttp.ListenAndServe(*addr, router.Handler))
 }

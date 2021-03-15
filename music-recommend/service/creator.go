@@ -7,6 +7,7 @@ import (
 	"github.com/sta-golang/music-recommend/common"
 	"github.com/sta-golang/music-recommend/dto"
 	"github.com/sta-golang/music-recommend/model"
+	"math/rand"
 	"strings"
 )
 
@@ -17,6 +18,7 @@ const (
 	creatorLimit = 30
 
 	maxSimilarNum = 6
+	maxSplitSimilarNum = 18
 )
 
 var PubCreatorService = &creatorService{}
@@ -61,14 +63,18 @@ func (cs *creatorService) GetCreatorDetail(id int) (*dto.CreatorAndSimilar, *er.
 		return nil, er.NewError(common.NotFound, fmt.Errorf(common.NotFoundMessage))
 	}
 	if creator.SimilarCreator != "" {
-		split := strings.SplitN(creator.SimilarCreator, model.CreatorDelimiter, maxSimilarNum+1)
-		if len(split) > maxSimilarNum {
-			split = split[:maxSimilarNum]
-		}
+		split := strings.Split(creator.SimilarCreator, model.CreatorDelimiter)
+
 		similar, err := model.NewCreatorMysql().SelectCreatorForIDs(split)
 		if err != nil {
 			log.Error(err)
 			return dto.NewCreatorAndSimilar(creator, nil), nil
+		}
+		if len(similar) > maxSimilarNum {
+			rand.Shuffle(len(similar), func(i, j int) {
+				similar[i],similar[j] = similar[j],similar[i]
+			})
+			similar = similar[:maxSimilarNum]
 		}
 		return dto.NewCreatorAndSimilar(creator, similar), nil
 	}

@@ -261,7 +261,7 @@ func (wc *WangYiYunCrawler) CrawlerAllCreatorList() ([]model.Creator, error) {
 		}
 		offset += creatorLimit
 	}
-	return wc.doCrawlerAllCreatorList(creatorIDs)
+	return wc.DoCrawlerAllCreatorList(creatorIDs)
 }
 
 func (wc *WangYiYunCrawler) CrawlerCreatorMusic(creatorID int) ([]APIMusicDetail, error) {
@@ -359,11 +359,12 @@ func getCreatorMusicUrl(creatorID, offset int) string {
 	return fmt.Sprintf("/artist/songs?id=%d&offset=%d&limit=%d", creatorID, offset, creatorMusicLimit)
 }
 
-func (wc *WangYiYunCrawler) doCrawlerAllCreatorList(creatorIDs []int) ([]model.Creator, error) {
+func (wc *WangYiYunCrawler) DoCrawlerAllCreatorList(creatorIDs []int) ([]model.Creator, error) {
 	if len(creatorIDs) <= 0 {
 		return nil, nil
 	}
 	ret := make([]model.Creator, 0, len(creatorIDs))
+
 	for _, creatorID := range creatorIDs {
 		var apiResult APICreatorResult
 		url := fmt.Sprintf("%s%s", APICrawlerName, apiResult.GetUrl(creatorID))
@@ -388,13 +389,17 @@ func (wc *WangYiYunCrawler) doCrawlerAllCreatorList(creatorIDs []int) ([]model.C
 			log.Error(err)
 			return nil, err
 		}
+
 		err = codec.API.JsonAPI.Unmarshal(bys, &apiSimilarRes)
 		if err != nil {
 			return nil, err
 		}
-		similarStr := make([]string, 0, len(apiSimilarRes.Artists))
+		similarStr := set.NewStringSet(len(apiSimilarRes.Artists))
 		for _, similar := range apiSimilarRes.Artists {
-			similarStr = append(similarStr, fmt.Sprintf("%d", similar.ID))
+			if similarStr.Contains(fmt.Sprintf("%d", similar.ID)) || similar.ID == 0 {
+				continue
+			}
+			similarStr.Add(fmt.Sprintf("%d", similar.ID))
 		}
 		creatorTy := model.CreatorUnknownType
 		if apiResult.Data.Artist.IdentifyTag == nil || (len(apiResult.Data.Artist.IdentifyTag) > 0 &&
@@ -414,7 +419,7 @@ func (wc *WangYiYunCrawler) doCrawlerAllCreatorList(creatorIDs []int) ([]model.C
 			Status:         0,
 			ImageUrl:       apiResult.Data.Artist.Cover,
 			Description:    apiResult.Data.Artist.BriefDesc,
-			SimilarCreator: strings.Join(similarStr, model.TagDelimiter),
+			SimilarCreator: strings.Join(similarStr.Iterator(), model.TagDelimiter),
 			FansNum:        0,
 			Type:           creatorTy,
 			UpdateTime:     "",

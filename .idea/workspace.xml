@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="69bed523-9511-40db-b5c8-0622b19ca69e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/music-recommend/benchmark_test/init_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/music-recommend/benchmark_test/service_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/music-recommend-system.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml-music-data/data_load/crawler.go" beforeDir="false" afterPath="$PROJECT_DIR$/ml-music-data/data_load/crawler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml-music-data/data_load/mysql_writer.go" beforeDir="false" afterPath="$PROJECT_DIR$/ml-music-data/data_load/mysql_writer.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml-music-data/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/ml-music-data/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml-music-data/log/sta.log.2021-03-15.ERROR" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml-music-data/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/ml-music-data/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/controller/creator.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/controller/creator.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/controller/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/controller/router.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/log/sta.log.2021-03-15.INFO" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/log/sta.log.2021-03-15.INFO" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/model/creator.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/model/creator.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/model/music.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/model/music.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/service/creator.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/service/creator.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" path="D:/golang" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="false" />
+  </component>
+  <component name="ProjectId" id="1pm6ZoMXtH2Nip9jSNWw7XLQ4yQ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="go.vgo" />
+  </component>
+  <component name="RunManager" selected="Go Build.go build github.com/sta-golang/music-recommend">
+    <configuration name="go build github.com/sta-golang/ml-music-data" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="music-recommend-system" />
+      <working_directory value="$PROJECT_DIR$/ml-music-data" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/ml-music-data/main.go" />
+      <package value="github.com/sta-golang/ml-music-data" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build github.com/sta-golang/music-recommend" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="music-recommend-system" />
+      <working_directory value="$PROJECT_DIR$/music-recommend" />
+      <kind value="PACKAGE" />
+      <filePath value="$PROJECT_DIR$/music-recommend/main.go" />
+      <package value="github.com/sta-golang/music-recommend" />
+      <method v="2" />
+    </configuration>
+    <configuration name="BenchmarkService in github.com/sta-golang/music-recommend/benchmark_test" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="music-recommend-system" />
+      <working_directory value="$PROJECT_DIR$/music-recommend/benchmark_test" />
+      <framework value="gobench" />
+      <kind value="PACKAGE" />
+      <package value="github.com/sta-golang/music-recommend/benchmark_test" />
+      <pattern value="^BenchmarkService$" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build github.com/sta-golang/music-recommend" />
+        <item itemvalue="Go Build.go build github.com/sta-golang/ml-music-data" />
+        <item itemvalue="Go Test.BenchmarkService in github.com/sta-golang/music-recommend/benchmark_test" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>true</integration-enabled>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="752" y="353" key="#Go_Modules" timestamp="1615776037032">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="752" y="353" key="#Go_Modules/0.0.1920.1040@0.0.1920.1040" timestamp="1615776037032" />
+    <state x="702" y="309" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1615790819515">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="702" y="309" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1615790819515" />
+    <state width="1877" height="359" key="GridCell.Tab.0.bottom" timestamp="1615795076481">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="359" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1615795076481" />
+    <state width="1877" height="359" key="GridCell.Tab.0.center" timestamp="1615795076462">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="359" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1615795076462" />
+    <state width="1877" height="359" key="GridCell.Tab.0.left" timestamp="1615795076448">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="359" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1615795076448" />
+    <state width="1877" height="359" key="GridCell.Tab.0.right" timestamp="1615795076480">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="359" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1615795076480" />
+    <state x="461" y="164" key="SettingsEditor" timestamp="1615776179634">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="461" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1615776179634" />
+    <state x="682" y="424" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1615785586023">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="682" y="424" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1615785586023" />
+  </component>
+</project>

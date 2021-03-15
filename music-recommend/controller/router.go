@@ -8,6 +8,7 @@ import (
 )
 
 func GlobalRouter() *fasthttprouter.Router {
+
 	router := fasthttprouter.New()
 	router.GET("/", Index)
 	router.GET(creatorDetailUrl, TimeController(creatorDetailUrl, NewCreatorController().GetCreator))

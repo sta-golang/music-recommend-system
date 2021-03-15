@@ -68,17 +68,17 @@ func ProcessCreatorAndMusic() error {
 	//	log.Error(err)
 	//	return err
 	//}
-	creators, err := model.NewCreatorMysql().SelectCreators(0, 99999)
+	creators, err := model.NewCreatorMysql().SelectCreatorsForStatus(0,0, 99999)
 	if err != nil {
 		log.Error(err)
 		return err
 	}
-	log.ConsoleLogger.Infof("crawler creator ok len : %d", len(creators))
-	err = mysqlWriter.LoadCreatorToMysql(creators)
-	if err != nil {
-		log.Error(err)
-		return err
-	}
+	//log.ConsoleLogger.Infof("crawler creator ok len : %d", len(creators))
+	//err = mysqlWriter.LoadCreatorToMysql(creators)
+	//if err != nil {
+	//	log.Error(err)
+	//	return err
+	//}
 	log.ConsoleLogger.Info("LoadCreatorToMysql ok!")
 	for _, creator := range creators {
 		details, err := crawler.CrawlerCreatorMusic(creator.ID)
@@ -87,12 +87,19 @@ func ProcessCreatorAndMusic() error {
 			return err
 		}
 		log.ConsoleLogger.Infof("crawler creator ：%s music ok len : %d", creator.Name, len(details))
-		err = mysqlWriter.LoadMusicToMysql(details)
+		missCreatorIDs, err := mysqlWriter.LoadMusicToMysql(details)
 		if err != nil {
 			log.Error(err)
 			return err
 		}
-		log.ConsoleLogger.Infof("LoadMusicToMysql ok !")
+		log.ConsoleLogger.Infof("LoadMusicToMysql ok ! miss : %v",missCreatorIDs)
+
+		_, err = model.NewCreatorMysql().UpdateCreatorsForStatus(model.StatusLoadMusicFinish, creator.ID)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		log.ConsoleLogger.Info("Process creator finish")
 	}
 	return nil
 }
