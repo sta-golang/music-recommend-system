@@ -75,11 +75,14 @@ func (cm *creatorMysql) SelectCreator(id int) (*Creator, error) {
 }
 
 func (cm *creatorMysql) SelectCreatorForIDs(ids []string) (creators []Creator, err error) {
+	if len(ids) <= 0 {
+		return nil, err
+	}
 	sql := fmt.Sprintf("select id, name, image_url,type from %s where id in(%s)",
 		tableCreator, strings.Join(ids, ","))
 	err = client(dbMusicRecommendNameTest).Select(&creators, sql)
 	if err != nil {
-		log.Error("ids : %v has err : %v", ids, err)
+		log.Errorf("ids : %v has err : %v", ids, err)
 		return nil, err
 	}
 	return

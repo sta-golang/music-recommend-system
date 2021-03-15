@@ -107,6 +107,9 @@ func (ml *MysqlDataWriter) FixMusic() error {
 				log.Errorf("offset : tempOffset has err : %v",err)
 			}
 			for _, music := range musics {
+				if len(music.CreatorIDs) <= 0 {
+					continue
+				}
 				split := strings.Split(music.CreatorIDs, model.CreatorDelimiter)
 				arr := make([]string, 0, len(split))
 				for _, ss := range split {

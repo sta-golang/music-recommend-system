@@ -19,31 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5a00541-9dcb-4e33-8332-f3e2ad678c35" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/music-recommend/controller/music.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/music-recommend/service/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml-music-data/data_load/mysql_writer.go" beforeDir="false" afterPath="$PROJECT_DIR$/ml-music-data/data_load/mysql_writer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml-music-data/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/ml-music-data/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/common/cache.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/common/cache.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/common/err.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/common/err.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/common/log.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/common/log.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/controller/common.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/controller/common.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/controller/creator.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/controller/creator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/controller/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/controller/router.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/db/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/db/db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/doc/db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/doc/db.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/dto/creator.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/controller/dto/creator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/log/sta.log.2021-03-14.INFO" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/log/sta.log.2021-03-15.DEBUG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/log/sta.log.2021-03-15.INFO" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/model/creator.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/model/creator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/model/music.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/model/music.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/service/creator.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/service/creator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/service/music.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/service/music.go" afterDir="false" />
-    </list>
+    <list default="true" id="d5a00541-9dcb-4e33-8332-f3e2ad678c35" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,22 +107,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="702" y="314" key="#Go_Modules/0.0.1920.1040@0.0.1920.1040" timestamp="1615814120932" />
-    <state width="1867" height="260" key="GridCell.Tab.0.bottom" timestamp="1615827304715">
+    <state width="1867" height="260" key="GridCell.Tab.0.bottom" timestamp="1615828738133">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="260" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1615827304715" />
-    <state width="1867" height="260" key="GridCell.Tab.0.center" timestamp="1615827304715">
+    <state width="1867" height="260" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1615828738133" />
+    <state width="1867" height="260" key="GridCell.Tab.0.center" timestamp="1615828738133">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="260" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1615827304715" />
-    <state width="1867" height="260" key="GridCell.Tab.0.left" timestamp="1615827304715">
+    <state width="1867" height="260" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1615828738133" />
+    <state width="1867" height="260" key="GridCell.Tab.0.left" timestamp="1615828738132">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="260" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1615827304715" />
-    <state width="1867" height="260" key="GridCell.Tab.0.right" timestamp="1615827304715">
+    <state width="1867" height="260" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1615828738132" />
+    <state width="1867" height="260" key="GridCell.Tab.0.right" timestamp="1615828738133">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="260" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1615827304715" />
+    <state width="1867" height="260" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1615828738133" />
     <state x="539" y="5" width="840" height="1034" key="search.everywhere.popup" timestamp="1615815114498">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
