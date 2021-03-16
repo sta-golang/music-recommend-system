@@ -19,7 +19,17 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d5a00541-9dcb-4e33-8332-f3e2ad678c35" name="Default Changelist" comment="" />
+    <list default="true" id="d5a00541-9dcb-4e33-8332-f3e2ad678c35" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/music-recommend/model/user.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/music-recommend/service/verify.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/music-recommend/service/verify_auth/jwt.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/music-recommend/service/verify_auth/jwt_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml-music-data/log/sta.log.2021-03-16.ERROR" beforeDir="false" afterPath="$PROJECT_DIR$/ml-music-data/log/sta.log.2021-03-16.ERROR" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ml-music-data/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/ml-music-data/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music-recommend/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/go.sum" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,6 +50,9 @@
     <option name="indexEntireGoPath" value="false" />
   </component>
   <component name="ProjectId" id="1pnLrdADojw8IsKwZnqfFFc40Dd" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -59,7 +72,7 @@
       <recent name="D:\毕设\music-recommend-system\music-recommend\controller" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build github.com/sta-golang/music-recommend">
+  <component name="RunManager" selected="Go Test.TestNewJWTService in github.com/sta-golang/music-recommend/service/verify_auth">
     <configuration name="go build github.com/sta-golang/ml-music-data" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="music-recommend-system" />
       <working_directory value="$PROJECT_DIR$/ml-music-data" />
@@ -78,8 +91,20 @@
       <directory value="$PROJECT_DIR$/" />
       <method v="2" />
     </configuration>
+    <configuration name="TestNewJWTService in github.com/sta-golang/music-recommend/service/verify_auth" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="music-recommend-system" />
+      <working_directory value="$PROJECT_DIR$/music-recommend/service/verify_auth" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/sta-golang/music-recommend/service/verify_auth" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestNewJWTService$" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestNewJWTService in github.com/sta-golang/music-recommend/service/verify_auth" />
         <item itemvalue="Go Build.go build github.com/sta-golang/ml-music-data" />
         <item itemvalue="Go Build.go build github.com/sta-golang/music-recommend" />
       </list>
@@ -107,22 +132,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="702" y="314" key="#Go_Modules/0.0.1920.1040@0.0.1920.1040" timestamp="1615814120932" />
-    <state width="1867" height="260" key="GridCell.Tab.0.bottom" timestamp="1615828738133">
+    <state width="1867" height="260" key="GridCell.Tab.0.bottom" timestamp="1615913714426">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="260" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1615828738133" />
-    <state width="1867" height="260" key="GridCell.Tab.0.center" timestamp="1615828738133">
+    <state width="1867" height="260" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1615913714426" />
+    <state width="1867" height="260" key="GridCell.Tab.0.center" timestamp="1615913714426">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="260" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1615828738133" />
-    <state width="1867" height="260" key="GridCell.Tab.0.left" timestamp="1615828738132">
+    <state width="1867" height="260" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1615913714426" />
+    <state width="1867" height="260" key="GridCell.Tab.0.left" timestamp="1615913714425">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="260" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1615828738132" />
-    <state width="1867" height="260" key="GridCell.Tab.0.right" timestamp="1615828738133">
+    <state width="1867" height="260" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1615913714425" />
+    <state width="1867" height="260" key="GridCell.Tab.0.right" timestamp="1615913714426">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="260" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1615828738133" />
+    <state width="1867" height="260" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1615913714426" />
     <state x="539" y="5" width="840" height="1034" key="search.everywhere.popup" timestamp="1615815114498">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

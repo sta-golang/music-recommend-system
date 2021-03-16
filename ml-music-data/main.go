@@ -19,7 +19,7 @@ const (
 )
 
 func main() {
-	fix()
+	//fix()
 	//TestAysncG()
 	fmt.Println(ProcessCreatorAndMusic())
 	//ProcessSong()
