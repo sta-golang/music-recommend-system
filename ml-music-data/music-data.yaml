@@ -15,7 +15,7 @@ database:
   music_recommend_test:
     db_name: music_recommend_test
     username: testuser
-    password: qwe123456
+    password: 111111
     target: cdb-obyudb1e.bj.tencentcdb.com:10049
     driver_name: mysql
     args: charset=utf8&loc=Local
