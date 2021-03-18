@@ -21,11 +21,18 @@ const (
 func main() {
 	//fix()
 	//TestAysncG()
-	fmt.Println(ProcessCreatorAndMusic())
+	//fmt.Println(ProcessCreatorAndMusic())
 	//ProcessSong()
 	//ProcessD()
 	//err := ProcessData()
 	//fmt.Println(err)
+	myTest()
+}
+
+func myTest() {
+	str := "hello world5"
+	index := len(str)
+	fmt.Println(str[:index - 1])
 }
 
 func fix() {
