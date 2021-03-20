@@ -20,11 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5a00541-9dcb-4e33-8332-f3e2ad678c35" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/music-recommend/service/statistics.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml-music-data/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/ml-music-data/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ml-music-data/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/ml-music-data/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music-recommend/service/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/service/init.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/music-recommend/service/music.go" beforeDir="false" afterPath="$PROJECT_DIR$/music-recommend/service/music.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

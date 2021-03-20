@@ -72,24 +72,12 @@ func (ss *statisticsService) Run() {
 		idleTime := time.Second * 10
 		cnt := 0
 		ticker := time.NewTimer(idleTime)
-		fn := func(info *bytebufferpool.ByteBuffer, index int) {
-			ss.funcArr[index].ParseFunc(info.Bytes()[:info.Len() -1])
-			bytebufferpool.Put(info)
-		}
 		processChan := make(chan struct{}, 1)
 		for  {
 			select {
 			case info := <- ss.statisticsChan:
 				if info == signalStatistics {
-					for i := 0; i < ss.queue.Size(); i++ {
-						queueInfo := ss.queue.Pop().(*bytebufferpool.ByteBuffer)
-						queueIndex := queueInfo.B[queueInfo.Len() - 1]
-						if atomic.LoadInt32(&ss.status[queueIndex]) == statisticsStatusProcess {
-							ss.queue.Push(queueInfo)
-							continue
-						}
-						fn(queueInfo, int(queueIndex))
-					}
+					ss.signalTimeOut()
 					continue
 				}
 				cnt++
@@ -98,22 +86,12 @@ func (ss *statisticsService) Run() {
 					ss.queue.Push(info)
 					continue
 				}
-				fn(info, int(index))
+				ss.doProcessFunc(info, int(index))
 			case <- ticker.C:
 				if cnt <= 0 {
 					continue
 				}
-				maxTimeOutTime := idleTime >> 1
-				if cnt > len(ss.statisticsChan) / 2 {
-					maxTimeOutTime = time.Duration(float64(maxTimeOutTime) * (float64(len(ss.statisticsChan))/float64(cnt)))
-					if maxTimeOutTime < idleTime >> 2 {
-						maxTimeOutTime = idleTime >> 2
-					}
-					if maxTimeOutTime > (idleTime << 1) - (idleTime >> 1) {
-						maxTimeOutTime = (idleTime << 1) - (idleTime >> 1)
-					}
-				}
-				onceTimeOut := time.Duration(float64(maxTimeOutTime)/float64(len(ss.funcArr)))
+				onceTimeOut := ss.GetOnceTimeOutTime()
 				var runTm time.Duration
 				for i := 0; i < len(ss.funcArr);i++ {
 					ss.status[i] = statisticsStatusProcess
@@ -139,4 +117,36 @@ func (ss *statisticsService) Run() {
 			}
 		}
 	})
+}
+
+func (ss *statisticsService) GetOnceTimeOutTime(idleTime time.Duration, cnt int) time.Duration {
+	maxTimeOutTime := idleTime >> 1
+	if cnt > len(ss.statisticsChan) / 2 {
+		maxTimeOutTime = time.Duration(float64(maxTimeOutTime) * (float64(len(ss.statisticsChan))/float64(cnt)))
+		if maxTimeOutTime < idleTime >> 2 {
+			maxTimeOutTime = idleTime >> 2
+		}
+		if maxTimeOutTime > (idleTime << 1) - (idleTime >> 1) {
+			maxTimeOutTime = (idleTime << 1) - (idleTime >> 1)
+		}
+	}
+	return time.Duration(float64(maxTimeOutTime)/float64(len(ss.funcArr)))
+}
+
+func (ss *statisticsService) doProcessFunc(info *bytebufferpool.ByteBuffer, index int) {
+	ss.funcArr[index].ParseFunc(info.Bytes()[:info.Len() -1])
+	bytebufferpool.Put(info)
+}
+
+func (ss *statisticsService) signalTimeOut() {
+	for i := 0; i < ss.queue.Size(); i++ {
+		queueInfo := ss.queue.Pop().(*bytebufferpool.ByteBuffer)
+		queueIndex := queueInfo.B[queueInfo.Len() - 1]
+		if atomic.LoadInt32(&ss.status[queueIndex]) == statisticsStatusProcess {
+			ss.queue.Push(queueInfo)
+			continue
+		}
+		ss.doProcessFunc(queueInfo, int(queueIndex))
+
+	}
 }
