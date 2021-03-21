@@ -18,6 +18,19 @@ log:
     - INFO
     - ERROR
     - FATAL
+
+memory:
+  shards: 4
+  gc_interval: 600
+  max_Key: 100000
+  set_Chan_Size: 512
+
+email:
+  host: smtp.qq.com
+  port: 465
+  email: 63237777@qq.com
+  pwd: zruiuphuossvbhhc
+
 database:
   music_recommend_test:
     db_name: music_recommend_test

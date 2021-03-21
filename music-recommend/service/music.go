@@ -83,6 +83,9 @@ func (ms *musicService) RegisterStatistics() {
 func (ms *musicService) processStatistics() {
 	musicDB := model.NewMusicMysql()
 	for key, val := range ms.table {
+		if val == 0 {
+			continue
+		}
 		err := musicDB.UpdateMusicHotSource(key, val)
 		if err != nil {
 			log.Error(err)

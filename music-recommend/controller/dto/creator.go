@@ -17,6 +17,11 @@ type CreatorAndSimilar struct {
 	UpdateTime     string          `json:"update_time"`
 }
 
+type RegisterUser struct {
+	User model.User `json:"user"`
+	Code string `json:"code"`
+}
+
 func NewCreatorAndSimilar(creator *model.Creator, similar []model.Creator) *CreatorAndSimilar {
 	return &CreatorAndSimilar{
 		ID:             creator.ID,

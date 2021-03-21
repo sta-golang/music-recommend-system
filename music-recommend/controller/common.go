@@ -13,16 +13,26 @@ const (
 	serverSelectErrMessage = "服务器查询出错 请联系管理员QQ:63237777"
 	success                = "success"
 	successCode            = 0
+	postDataErrMessage     = "提交数据表单异常"
+	forbiddenErrMessage    = "没有权限"
+	tokenTimeOutErrMessage = "凭证已过期请重新登录"
+	waitMessage            = "请稍后再重试"
+	sendCodeMessage        = "发送验证码成功！\n如果没有收到请查看垃圾邮件"
+	tokenStr               = "sta-token"
 
 	creatorDetailUrl = "/creator/detail"
-	creatorList = "/creator/list"
-	musicDetails = "/music/details"
-	creatorMusic = "/creator/music"
+	creatorList      = "/creator/list"
+	musicDetails     = "/music/details"
+	creatorMusic     = "/creator/music"
+	userRegister     = "/user/register"
+	userLogin        = "/user/login"
+	userCode         = "/user/code"
+	userInfo         = "/user/me"
 )
 
 /**
 这里全是一些视图层需要返回的数据定义。方便一些
- */
+*/
 
 var DebugLevelName = log.GetLevelName(log.DEBUG)
 
@@ -87,4 +97,8 @@ func TimeController(controllerName string, fn fasthttp.RequestHandler) func(*fas
 			fn(ctx)
 		}
 	}
+}
+
+func canCORS(ctx *fasthttp.RequestCtx) {
+	ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
 }

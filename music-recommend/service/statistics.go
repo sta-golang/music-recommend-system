@@ -1,7 +1,9 @@
 package service
 
 import (
+
 	"github.com/sta-golang/go-lib-utils/algorithm/data_structure"
+	"github.com/sta-golang/go-lib-utils/log"
 	tm "github.com/sta-golang/go-lib-utils/time"
 	"github.com/valyala/bytebufferpool"
 	"sync"
@@ -48,6 +50,7 @@ func (ss *statisticsService) Register(name string, fn *StatisticsFunc) bool {
 	}
 	ss.registerMap[name] = uint8(length)
 	ss.funcArr = append(ss.funcArr, fn)
+	ss.status = append(ss.status, statisticsStatusReady)
 	return true
 }
 
@@ -72,7 +75,7 @@ func (ss *statisticsService) Run() {
 		idleTime := time.Second * 10
 		cnt := 0
 		ticker := time.NewTimer(idleTime)
-		processChan := make(chan struct{}, 1)
+
 		for  {
 			select {
 			case info := <- ss.statisticsChan:
@@ -88,32 +91,47 @@ func (ss *statisticsService) Run() {
 				}
 				ss.doProcessFunc(info, int(index))
 			case <- ticker.C:
+
 				if cnt <= 0 {
+					ticker.Reset(idleTime)
 					continue
 				}
-				onceTimeOut := ss.GetOnceTimeOutTime()
+				onceTimeOut := ss.GetOnceTimeOutTime(idleTime, cnt)
 				var runTm time.Duration
+				var timing time.Duration
+				var timeOutFlag = false
 				for i := 0; i < len(ss.funcArr);i++ {
 					ss.status[i] = statisticsStatusProcess
 					timer := time.NewTimer(onceTimeOut)
+					processChan := make(chan struct{}, 1)
 					go func(tempIndex int) {
-						timing := tm.FuncTiming(func() {
+						timing = tm.FuncTiming(func() {
 							ss.funcArr[tempIndex].ProcessFunc()
 							atomic.StoreInt32(&ss.status[tempIndex], statisticsStatusReady)
 						})
-						if time.Duration(float64(timing) * 1.2 ) < onceTimeOut {
-							onceTimeOut += onceTimeOut - timing
-						}
 						runTm += timing
 						processChan <- struct{}{}
 					}(i)
 					select {
 					case <- processChan:
+						onceTimeOut += onceTimeOut - timing
+						close(processChan)
 					case <- timer.C:
+						timeOutCh := processChan
+						timeOutFlag = true
+						go func() {
+							<- timeOutCh
+							close(timeOutCh)
+						}()
 					}
 				}
 				cnt = 0
 				ticker.Reset(idleTime)
+				if timeOutFlag {
+					log.Warn("statisticsService statistics timeout!")
+					continue
+				}
+				log.Infof("statisticsService statistics timing : %v 毫秒", runTm.Milliseconds())
 			}
 		}
 	})

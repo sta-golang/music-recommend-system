@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/sta-golang/go-lib-utils/cache/memory"
 	"github.com/sta-golang/go-lib-utils/codec"
 	"github.com/sta-golang/go-lib-utils/log"
 	"io/ioutil"
@@ -10,14 +11,16 @@ import (
 /**
 配置类 通过解析yaml文件生成
 这个可以长久保存 直接复制粘贴拿来用
- */
+*/
 type Config struct {
-	ServerName string               `yaml:"server"`
-	IP         string               `yaml:"ip"`
-	PProf      string               `yaml:"pprof"`
-	Port       string               `yaml:"port"`
-	LogConfig  log.FileLogConfig    `yaml:"log"`
-	DBConfigs  map[string]*DBConfig `yaml:"database"`
+	ServerName   string               `yaml:"server"`
+	IP           string               `yaml:"ip"`
+	PProf        string               `yaml:"pprof"`
+	Port         string               `yaml:"port"`
+	LogConfig    log.FileLogConfig    `yaml:"log"`
+	MemoryConfig memory.Config        `yaml:"memory"`
+	EmailConfig  EmailConfig          `yaml:"email"`
+	DBConfigs    map[string]*DBConfig `yaml:"database"`
 }
 
 var cfg *Config
@@ -44,7 +47,7 @@ func (dc *DBConfig) String() string {
 这里就是用来初始化的
 读取文件的字节数组
 然后调用codec.API.YamlAPI.UnMarshal解析成需要的格式
- */
+*/
 func InitConfig(path string) error {
 	var conf Config
 	bys, err := ioutil.ReadFile(path)

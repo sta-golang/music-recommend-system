@@ -1,4 +1,4 @@
-package verify_auth
+package verify
 
 import (
 	"fmt"

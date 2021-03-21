@@ -1,0 +1,52 @@
+    <!DOCTYPE html>
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+    <form id="registerForm">
+        username:<input type="text" name="username" /> <br>
+        password:<input type="password" name="password"> <br>
+        name:<input type="text" name="name" /> <br>
+        验证码:<input type="text" name="code" /><br>
+       <button type="button" name="register" id="register">注册</button>
+    </form>
+    </body>
+    <script src="jquery.js"></script>
+    <script type="text/javascript" >
+
+        $("#register").click(function() {
+            var allData = $("#registerForm").serializeArray()
+            var user = {}
+            var code = ""
+            for (i = 0;i < allData.length; i++) {
+                if (allData[i].name == "code") {
+                    code = allData[i].value
+                    continue
+                }
+                user[allData[i].name] = allData[i].value
+            }
+            var sendData = {
+                "user":user,
+                "code":code,
+            }
+            console.log(sendData)
+            $.ajax({
+                url:"http://127.0.0.1/user/register",
+                type:"post",
+                contentType: "application/x-www-form-urlencoded",
+                data: JSON.stringify(sendData),
+                dataType: "json",
+                success:function(data){
+                    alert(data.message)
+                },
+                error:function(e){
+                    alert("服务器错误!");
+                }
+            });
+        });
+
+    </script>
+    </html>

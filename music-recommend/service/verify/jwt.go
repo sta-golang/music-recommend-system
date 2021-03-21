@@ -1,10 +1,9 @@
-package verify_auth
+package verify
 
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
 	tm "github.com/sta-golang/go-lib-utils/time"
-	"github.com/sta-golang/music-recommend/service"
 	"time"
 )
 
@@ -25,7 +24,7 @@ type CustomClaims struct {
 
 var globalJWTService = jwtService{priKey: []byte("sta-golang")}
 
-func NewJWTService() service.VerifyAuthService {
+func NewJWTService() VerifyAuthService {
 	return &globalJWTService
 }
 

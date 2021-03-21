@@ -9,6 +9,8 @@ import (
 	"github.com/sta-golang/music-recommend/config"
 	"github.com/sta-golang/music-recommend/controller"
 	"github.com/sta-golang/music-recommend/db"
+	"github.com/sta-golang/music-recommend/service/cache"
+	"github.com/sta-golang/music-recommend/service/email"
 	"github.com/valyala/fasthttp"
 	"net/http"
 	_ "net/http/pprof"
@@ -46,8 +48,8 @@ func main() {
 	log.Info("init addr : ", *addr)
 	if config.GlobalConfig().PProf != "" {
 		go func() {
-			log.Info("PProf begin : ",config.GlobalConfig().PProf )
-			log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s",config.GlobalConfig().PProf), nil))
+			log.Info("PProf begin : ", config.GlobalConfig().PProf)
+			log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", config.GlobalConfig().PProf), nil))
 		}()
 	}
 	router := controller.GlobalRouter()
@@ -64,10 +66,8 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	err = common.InitMemoryCache()
-	if err != nil {
-		panic(err)
-	}
-	common.InitLog(&config.GlobalConfig().LogConfig)
+	cache.InitCache()
+	common.InitLog()
+	email.InitEmailService()
 	log.ConsoleLogger.Info(config.GlobalConfig())
 }

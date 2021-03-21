@@ -53,3 +53,19 @@ create table `creator_music` (
     UNIQUE KEY `key_music_creator` (`creator_id`,`music_id`),
     KEY `index_creator` (`creator_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='作者和歌曲的索引表';
+
+create table `user` (
+    `id` int unsigned not null AUTO_INCREMENT COMMENT '自增id',
+    `username` varchar(255) not null COMMENT '用户',
+    `password` varchar(255) not null COMMENT '密码',
+    `name` varchar(255) not null COMMENT '名字',
+    `status` int(11) not null DEFAULT 0 COMMENT '状态',
+    `image_url` varchar(255) not null DEFAULT '' COMMENT '头像地址',
+    `create_time` timestamp not null DEFAULT '1970-01-01 08:00:01' COMMENT '创建时间',
+    `last_login_time` timestamp not null DEFAULT '1970-01-01 08:00:01' COMMENT '上次登录时间',
+    `last_month_login_num` int not null DEFAULT 0 COMMENT '上个月登录次数',
+    `last_stat_time` timestamp not null DEFAULT '1970-01-01 08:00:01' COMMENT '上次统计时间',
+    `update_time` timestamp not null DEFAULT '1970-01-01 08:00:01' COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `key_user` (`username`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
