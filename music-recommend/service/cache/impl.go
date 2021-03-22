@@ -101,7 +101,7 @@ func (cs *cacheService) setAndGCRoutine() {
 }
 
 func (cs *cacheService) cleanMemory(priority Priority) bool {
-	usage, _, total := systeminfo.MemoryUsage()
+	usage, _, total := systeminfo.MemoryUsage(false)
 	if float64(usage)/float64(total) < maxMemoryScore {
 		return false
 	}
