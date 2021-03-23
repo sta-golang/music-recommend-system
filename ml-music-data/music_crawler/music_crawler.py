@@ -5,6 +5,8 @@ import requests
 import json
 import sys
 
+all_link = ['/playlist?id=19723756','/playlist?id=3779629','/playlist?id=2884035','/playlist?id=3778678','/playlist?id=991319590',]
+
 class Wangyiyun(object):
 
     def __init__(self, **kwargs):
@@ -19,7 +21,7 @@ class Wangyiyun(object):
         self.offset = 35 * self.pages - self.limit
         # 这是请求的url
         self.url = "https://music.163.com/discover/playlist/?"
-        self.all_link = ['/playlist?id=19723756','/playlist?id=3779629','/playlist?id=2884035','/playlist?id=3778678','/playlist?id=991319590',]
+
 
 
     # 设置请求头部信息(可扩展：不同的User - Agent)
@@ -53,7 +55,10 @@ class Wangyiyun(object):
         self.listen = page.xpath('//span[@class="nb"]/text()')
         # 歌单链接
         self.link = page.xpath('//div[@class="u-cover u-cover-1"]/a[@href]/@href')
-        self.all_link.extend([x for x in self.link])
+        if len(self.link) <= 0:
+            return False
+        all_link.extend([x for x in self.link])
+        return True
 
     # 获取网页源代码
     def get_code(self):
@@ -74,23 +79,22 @@ class Wangyiyun(object):
 
 
 if __name__ == '__main__':
-    # 歌单的歌曲风格
-    types = "华语"
-    # 歌单的发布类型:最热=hot，最新=new
-    # 指定爬取的页数
-    pages = 37
-    # 通过pages变量爬取指定页面
-    music = Wangyiyun(
-        types=types,
-    )
-    for i in range(pages):
-        page = i + 1  # 因为没有第0页
-        music.multi(page)  # 爬取多页时指定，传入当前页数，刷新offset
-        music.set_header()  # 调用头部方法，构造请求头信息
-        music.set_froms()  # 调用froms方法，构造froms信息
-        music.get_code()  # 获取当前页面的源码
-        music.parsing_codes()  # 处理源码，获取指定数据
-    link_set = set(music.all_link)
-    bys = json.dumps(music.all_link)
+    types = ["华语","欧美","日语","韩语","粤语","流行","摇滚","民谣","电子","舞曲","说唱","经典"," 90后","00后","古风","80后"]
+    pages = 50
+    for type in types:
+        music = Wangyiyun(
+            types=type,
+        )
+        for i in range(pages):
+            page = i + 1  # 因为没有第0页
+            music.multi(page)  # 爬取多页时指定，传入当前页数，刷新offset
+            music.set_header()  # 调用头部方法，构造请求头信息
+            music.set_froms()  # 调用froms方法，构造froms信息
+            music.get_code()  # 获取当前页面的源码
+            flag = music.parsing_codes()  # 处理源码，获取指定数据
+            if flag == False:
+                break
+    link_set = set(all_link)
+    bys = json.dumps(all_link)
     print(bys)
     sys.stdout.flush()

@@ -26,7 +26,44 @@ func main() {
 	//ProcessD()
 	//err := ProcessData()
 	//fmt.Println(err)
-	myTest()
+	//myTest()
+	fmt.Println(ProcessTag())
+}
+
+func ProcessTag() error {
+	crawler := data_load.WangYiYunCrawler{}
+	ids, err := crawler.GetPlayListIDs()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	fmt.Println(ids)
+	defer func() {
+		if e := recover(); e != nil {
+
+			log.Fatal(e)
+			log.Fatal(string(debug.Stack()))
+		}
+	}()
+	cnt := 0
+	for i := len(ids) -1; i >= 0; i-- {
+		id := ids[i]
+		results, err := crawler.CrawlerPlaylistsDetail(id)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		dbWriter := data_load.MysqlDataWriter{}
+		err = dbWriter.LoadPlaylistForTag(results)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		cnt++
+		log.ConsoleLogger.Infof("LoadPlaylistForTag finish %.2f%%",100*float64(cnt)/float64(len(ids)))
+	}
+
+	return nil
 }
 
 func myTest() {
@@ -192,5 +229,5 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	common.InitLog(&config.GlobalConfig().LogConfig)
+	common.InitLog()
 }

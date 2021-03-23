@@ -279,9 +279,67 @@ func (ml *MysqlDataWriter) LoadMusicToMysql(musics []APIMusicDetail)  error {
 	return nil
 }
 
+func (ml *MysqlDataWriter) LoadPlaylistForTag(res *APIPlaylistDetailResult) error {
+	detail := res
+	if len(detail.Playlist.Tags) <= 0 {
+		return nil
+	}
+	tagNames := strings.Join(detail.Playlist.Tags, model.TagDelimiter)
+	err := ml.WriterTag(tagNames)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	tagIDs, err := ml.getTagIDs(tagNames)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	for _, song := range detail.Playlist.SongIDs {
+		queryObj, err := model.NewMusicMysql().SelectByID(song.ID)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		if queryObj == nil {
+			continue
+		}
+		stringSet := set.NewStringSet(10)
+		if len(queryObj.TagIDs) != 0 {
+			stringSet.Add(strings.Split(queryObj.TagIDs, model.TagDelimiter)...)
+		}
+		oldLen := stringSet.Size()
+		stringSet.Add(tagIDs...)
+		if stringSet.Size() == oldLen {
+			continue
+		}
+		ids := stringSet.Iterator()
+		names, err := ml.getTagNames(ids)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		queryObj.TagNames = strings.Join(names, model.TagDelimiter)
+		queryObj.TagIDs = strings.Join(ids, model.TagDelimiter)
+		affected, err := model.NewMusicMysql().UpdateMusic(queryObj)
+		if err != nil {
+			log.Error(err)
+		}
+		if !affected {
+			log.Warnf("music id: %d update not affected", queryObj.ID)
+		}
+	}
+	return nil
+}
+
 func (ml *MysqlDataWriter) getTagNames(ids []string) ([]string, error) {
 	ret := make([]string, 0, len(ids))
 	for _, id := range ids {
+		if id == "" {
+			continue
+		}
 		idInt, err := strconv.Atoi(id)
 		if err != nil {
 			log.Error(err)
@@ -306,6 +364,9 @@ func (ml *MysqlDataWriter) getTagIDs(tagNames string) ([]string, error) {
 	ret := make([]string, 0, len(split))
 
 	for _, name := range split {
+		if name == "" {
+			continue
+		}
 		tag, err := model.NewTagMysql().SelectTagForName(name)
 		if err != nil {
 			log.Error(err)
@@ -326,6 +387,9 @@ func (ml *MysqlDataWriter) WriterTag(tagNames string) error {
 	}
 	split := strings.Split(tagNames, model.TagDelimiter)
 	for _, name := range split {
+		if name == "" {
+			continue
+		}
 		if ml.tagSet.Contains(name) {
 			continue
 		}

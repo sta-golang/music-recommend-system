@@ -30,6 +30,8 @@ create table `tag` (
     UNIQUE KEY `key_name` (`name`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='标签表';
 
+ALTER TABLE `tag` AUTO_INCREMENT =1
+
 create table `creator` (
     id int unsigned not null AUTO_INCREMENT COMMENT '自增id',
     `name` varchar(255) NOT NULL DEFAULT '' COMMENT '作者名字',

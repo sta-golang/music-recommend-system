@@ -359,6 +359,7 @@ func getCreatorMusicUrl(creatorID, offset int) string {
 	return fmt.Sprintf("/artist/songs?id=%d&offset=%d&limit=%d", creatorID, offset, creatorMusicLimit)
 }
 
+
 func (wc *WangYiYunCrawler) DoCrawlerAllCreatorList(creatorIDs []int) ([]model.Creator, error) {
 	if len(creatorIDs) <= 0 {
 		return nil, nil
@@ -426,4 +427,24 @@ func (wc *WangYiYunCrawler) DoCrawlerAllCreatorList(creatorIDs []int) ([]model.C
 		})
 	}
 	return ret, nil
+}
+
+func getPlaylistDetail(playlistID string) string {
+	return fmt.Sprintf("/playlist/detail?id=%s", playlistID)
+}
+
+func (wc *WangYiYunCrawler) CrawlerPlaylistsDetail(playlistID string) (*APIPlaylistDetailResult, error) {
+	var ret APIPlaylistDetailResult
+	url := fmt.Sprintf("%s%s", APICrawlerName, getPlaylistDetail(playlistID))
+	bys, err := HttpGetFunc(url)
+	if err != nil {
+		log.ConsoleLogger.Error(err)
+		return nil, err
+	}
+	err = codec.API.JsonAPI.Unmarshal(bys, &ret)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return &ret, nil
 }

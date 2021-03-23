@@ -118,3 +118,16 @@ type APIMusicDetailAL struct {
 	TitleName string `json:"name"`
 	TitleUrl  string `json:"picUrl"`
 }
+
+type APIPlaylistDetailResult struct {
+	Playlist APIPlaylistDetail `json:"playlist"`
+}
+
+type APIPlaylistDetail struct {
+	SongIDs []APIPlayListSongID `json:"trackIds"`
+	Tags []string `json:"tags"`
+}
+
+type APIPlayListSongID struct {
+	ID int `json:"id"`
+}
