@@ -46,7 +46,7 @@ func ProcessTag() error {
 		}
 	}()
 	cnt := 0
-	for i := len(ids) -1; i >= 0; i-- {
+	for i := 0 ; i < len(ids); i++ {
 		id := ids[i]
 		results, err := crawler.CrawlerPlaylistsDetail(id)
 		if err != nil {

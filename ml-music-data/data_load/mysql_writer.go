@@ -311,6 +311,9 @@ func (ml *MysqlDataWriter) LoadPlaylistForTag(res *APIPlaylistDetailResult) erro
 			stringSet.Add(strings.Split(queryObj.TagIDs, model.TagDelimiter)...)
 		}
 		oldLen := stringSet.Size()
+		if oldLen > 12 {
+			continue
+		}
 		stringSet.Add(tagIDs...)
 		if stringSet.Size() == oldLen {
 			continue
