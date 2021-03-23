@@ -1,12 +1,14 @@
 package cache
 
 import (
+	"fmt"
 	"github.com/sta-golang/go-lib-utils/algorithm/data_structure/set"
 	ca "github.com/sta-golang/go-lib-utils/cache"
 	"github.com/sta-golang/go-lib-utils/cache/memory"
 	"github.com/sta-golang/go-lib-utils/log"
 	systeminfo "github.com/sta-golang/go-lib-utils/os/system_info"
 	"github.com/sta-golang/music-recommend/config"
+	"github.com/sta-golang/music-recommend/service/email"
 	"math"
 	"runtime"
 	"sync"
@@ -51,16 +53,15 @@ func (cs *cacheService) Set(key string, val interface{}, expire int, priority Pr
 	if priority <= zero || priority > Ten {
 		return
 	}
-	if expire == NoExpire {
+	chData := cs.pool.Get().(*keyAndPriority)
+	chData.key = &key
+	chData.priority = priority
+	cs.setCh <- chData
+	if expire <= NoExpire {
 		cs.memory.Set(key, val)
-		chData := cs.pool.Get().(*keyAndPriority)
-		chData.key = &key
-		chData.priority = priority
-		cs.setCh <- chData
 		return
 	}
 	cs.memory.SetWithRemove(key, val, expire)
-
 }
 
 func (cs *cacheService) Get(key string) (interface{}, bool) {
@@ -68,12 +69,19 @@ func (cs *cacheService) Get(key string) (interface{}, bool) {
 }
 
 func (cs *cacheService) Delete(key string) {
+	cs.doDelete(key, true)
+}
+
+func (cs *cacheService) doDelete(key string, isRef bool) {
 	var val interface{}
 	var ok bool
 	if val, ok = cs.memory.Get(key); !ok {
 		return
 	}
 	cs.memory.SetWithRemove(key, val, zeroExpire)
+	if !isRef {
+		return
+	}
 	chData := cs.pool.Get().(*keyAndPriority)
 	chData.key = &key
 	chData.priority = zero
@@ -106,8 +114,15 @@ func (cs *cacheService) cleanMemory(priority Priority) bool {
 		return false
 	}
 	if float64(usage)/float64(total) > monitorScore {
-		log.Warnf("memory 使用量报警!\n %v", systeminfo.GetSystemInfo())
-		// todo 发送报警信息 如果想加可以使用邮件 短信 或者报警平台
+		info := systeminfo.GetSystemInfo()
+		log.Warnf("memory 使用量报警!\n %v", info)
+		go func() {
+			err := email.PubEmailService.SendEmail("内存使用告警", fmt.Sprintf("内存使用告警\n%v", info),
+				config.GlobalConfig().EmailConfig.Email)
+			if err != nil {
+				log.Error(err)
+			}
+		}()
 	}
 	priority = priority + One
 	cnt := One
@@ -118,7 +133,7 @@ func (cs *cacheService) cleanMemory(priority Priority) bool {
 		iterator := cs.priorityQueue[i].Iterator()
 		cs.priorityQueue[i].Clear()
 		for k := range iterator {
-			cs.Delete(iterator[k])
+			cs.doDelete(iterator[k], false)
 		}
 		iterator = nil
 		cnt++

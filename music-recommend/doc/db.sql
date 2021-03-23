@@ -71,3 +71,15 @@ create table `user` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `key_user` (`username`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+
+create table `follow_creator` (
+    `id` int unsigned not null AUTO_INCREMENT COMMENT '自增id',
+    `status` int(11) not null DEFAULT 0 COMMENT '状态',
+    `creator_id` int not null COMMENT '作者id',
+    `username` varchar(255) not null COMMENT '用户名',
+    `create_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '创建时间',
+    `update_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `key_user_creator` (`username`,`creator_id`)
+
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='关注';

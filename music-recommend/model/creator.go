@@ -88,6 +88,18 @@ func (cm *creatorMysql) SelectCreatorForIDs(ids []string) (creators []Creator, e
 	return
 }
 
+func (cm *creatorMysql) SelectCreatorsOrderBySong(pos, limit int) (creators []Creator, err error) {
+	sql := fmt.Sprintf("select id, name, image_url,type from %s,"+
+		" (select count(*) as cnt , creator_id as c from %s group by creator_id) as other "+
+		" WHERE id = other.c order by oth.cnt desc limit ?,?", tableCreator, tableCreatorToMusic)
+	err = client(dbMusicRecommendNameTest).Select(&creators, sql, pos, limit)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return
+}
+
 func (cm *creatorMysql) SelectCreators(pos, limit int) (creators []Creator, err error) {
 	sql := fmt.Sprintf("select id, name, image_url,type from %s limit ?,?", tableCreator)
 	err = client(dbMusicRecommendNameTest).Select(&creators, sql, pos, limit)
@@ -110,7 +122,7 @@ func (cm *creatorMysql) SelectCreatorsDetails(pos, limit int) (creators []Creato
 
 func (cm *creatorMysql) SelectCreatorsForStatus(status, pos, limit int) (creators []Creator, err error) {
 	sql := fmt.Sprintf("select id, name, image_url,type from %s where status = ? limit ?,?", tableCreator)
-	err = client(dbMusicRecommendNameTest).Select(&creators, sql,status, pos, limit)
+	err = client(dbMusicRecommendNameTest).Select(&creators, sql, status, pos, limit)
 	if err != nil {
 		log.Error(err)
 		return nil, err
