@@ -10,7 +10,7 @@ type FollowCreator struct {
 	ID         int    `json:"id" db:"id"`
 	Status     int32  `json:"status" db:"status"`
 	CreatorID  int    `json:"creator_id" db:"creator_id"`
-	Username   int    `json:"username" db:"username"`
+	Username   string    `json:"username" db:"username"`
 	CreateTime string `json:"create_time" db:"create_time"`
 	UpdateTime string `json:"update_time" db:"update_time"`
 }
@@ -29,7 +29,7 @@ func NewFollowCreatorMysql() *followCreatorMysql {
 }
 
 func (fc *followCreatorMysql) Insert(follow *FollowCreator) error {
-	sql := fmt.Sprintf("insert into %s(creator_id,username,create_time,update_time) values(?,?,?,?)", tableFollowCreator)
+	sql := fmt.Sprintf("insert ignore into %s(creator_id,username,create_time,update_time) values(?,?,?,?)", tableFollowCreator)
 	_, err := client(dbMusicRecommendNameTest).Exec(sql, follow.CreatorID, follow.Username, tm.GetNowDateTimeStr(), tm.GetNowDateTimeStr())
 	if err != nil {
 		log.Error(err)

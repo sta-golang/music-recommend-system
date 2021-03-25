@@ -42,4 +42,5 @@ var (
 	UserNotExistErr    = errors.New("用户不存在")
 	CodeNotExistErr    = errors.New("验证码为空")
 	CodeSendErr        = errors.New("系统验证码发送出错,请联系管理员QQ:6323777")
+	CreatorNotExistErr = errors.New("作者不存在")
 )

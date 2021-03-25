@@ -23,4 +23,6 @@ const (
 
 	NoExpire   = -1
 	zeroExpire = 0
+
+	Hour = 60 * 60
 )

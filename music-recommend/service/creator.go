@@ -34,23 +34,32 @@ func (cs *creatorService) GetCreator(page int) ([]model.Creator, *er.Error) {
 	}
 	key := fmt.Sprintf(creatorsCacheFmt, page)
 	if val, ok := cache.PubCacheService.Get(key); ok {
-		return val.([]model.Creator), nil
-	}
-	var creators []model.Creator
-	var sErr *er.Error
-	priority := cache.Priority(math.Max(float64(cache.One), float64(cache.Ten-cache.Priority(page/2)*cache.One)))
-	_, _ = common.SingleRunGroup.Do(key, func() (interface{}, error) {
-		var err error
-		creators, err = model.NewCreatorMysql().SelectCreatorsOrderBySong((page-1)*creatorLimit, creatorLimit)
-		if err != nil {
-			log.Error(err)
-			sErr = er.NewError(common.DBFindErr, err)
+		if val == nil {
 			return nil, nil
 		}
-		cache.PubCacheService.Set(key, creators, cache.NoExpire, priority)
-		return nil, nil
+		return val.([]model.Creator), nil
+	}
+	priority := cache.Priority(math.Max(float64(cache.One), float64(cache.Ten-cache.Priority(page/2)*cache.One)))
+	ret, err := common.SingleRunGroup.Do(key, func() (interface{}, error) {
+		creators, err := model.NewCreatorMysql().SelectCreatorsOrderBySong((page-1)*creatorLimit, creatorLimit)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+		if len(creators) <= 0 {
+			cache.PubCacheService.Set(key, creators, cache.Hour, cache.One)
+			return nil, nil
+		}
+		cache.PubCacheService.Set(key, creators, cache.Hour * int(priority) * 3, priority)
+		return creators, nil
 	})
-	return creators, nil
+	if err != nil {
+		return nil, er.NewError(common.DBFindErr, err)
+	}
+	if ret == nil {
+		return nil, nil
+	}
+	return ret.([]model.Creator) , nil
 }
 
 func (cs *creatorService) GetCreatorWithType(tp int, page int) ([]model.Creator, *er.Error) {
@@ -88,17 +97,13 @@ func (cs *creatorService) GetCreatorDetail(id int) (*dto.CreatorAndSimilar, *er.
 		tempDetail.SimilarCreator = tempDetail.SimilarCreator[:maxSimilarNum]
 		return &tempDetail, nil
 	}
-	var ret *dto.CreatorAndSimilar
-	var sErr *er.Error
-	_, _ = common.SingleRunGroup.Do(key, func() (interface{}, error) {
+	data, err := common.SingleRunGroup.Do(key, func() (interface{}, error) {
 		creator, err := model.NewCreatorMysql().SelectCreator(id)
 		if err != nil {
 			log.Error(err)
-			sErr = er.NewError(common.DBFindIDErr, err)
-			return nil, nil
+			return nil, err
 		}
 		if creator == nil {
-			sErr = er.NewError(common.NotFound, fmt.Errorf(common.NotFoundMessage))
 			cache.PubCacheService.Set(key, nil, 3000, cache.One)
 			return nil, nil
 		}
@@ -107,17 +112,23 @@ func (cs *creatorService) GetCreatorDetail(id int) (*dto.CreatorAndSimilar, *er.
 			similar, err := model.NewCreatorMysql().SelectCreatorForIDs(split)
 			if err != nil {
 				log.Error(err)
-				ret = dto.NewCreatorAndSimilar(creator, nil)
-				return nil, nil
+				return dto.NewCreatorAndSimilar(creator, nil), nil
 			}
-			ret = dto.NewCreatorAndSimilar(creator, similar)
+			return dto.NewCreatorAndSimilar(creator, similar), nil
 		}
-		return nil, nil
+		return dto.NewCreatorAndSimilar(creator, nil), nil
 	})
-	if ret == nil && sErr != nil {
-		return ret, sErr
+	if data == nil && err == nil {
+		return nil, er.NewError(common.NotFound, fmt.Errorf(common.NotFoundMessage))
 	}
-	cache.PubCacheService.Set(key, ret, cache.NoExpire, cache.Ten)
+	if err != nil {
+		return nil, er.NewError(common.DBFindIDErr, err)
+	}
+	if data == nil {
+		return nil, nil
+	}
+	ret := data.(*dto.CreatorAndSimilar)
+	cache.PubCacheService.Set(key, ret, cache.Hour * 24, cache.Ten)
 
 	if len(ret.SimilarCreator) > maxSimilarNum {
 		tempRet := *ret

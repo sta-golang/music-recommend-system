@@ -30,12 +30,6 @@ const (
 func main() {
 	flag.Parse()
 	log.SetLevel(log.DEBUG)
-	defer func() {
-		source.Sync()
-		if er := recover(); er != nil {
-			panic(er)
-		}
-	}()
 	if *addr == "" {
 		*addr = os.Getenv(AddrEnv)
 	}
@@ -45,14 +39,23 @@ func main() {
 	if *addr == "" {
 		*addr = defAddr
 	}
-	log.Info("init addr : ", *addr)
 	if config.GlobalConfig().PProf != "" {
 		go func() {
 			log.Info("PProf begin : ", config.GlobalConfig().PProf)
 			log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", config.GlobalConfig().PProf), nil))
 		}()
 	}
+	StartServer()
+}
+
+func StartServer()  {
 	router := controller.GlobalRouter()
+	defer func() {
+		source.Sync()
+		if er := recover(); er != nil {
+			StartServer()
+		}
+	}()
 	log.Fatal(fasthttp.ListenAndServe(*addr, router.Handler))
 }
 
