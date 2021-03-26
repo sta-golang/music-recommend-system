@@ -28,25 +28,37 @@ func NewFollowCreatorMysql() *followCreatorMysql {
 	return &onceFollowCreator
 }
 
-func (fc *followCreatorMysql) Insert(follow *FollowCreator) error {
+func (fc *followCreatorMysql) Insert(follow *FollowCreator) (affected bool, err error) {
 	sql := fmt.Sprintf("insert ignore into %s(creator_id,username,create_time,update_time) values(?,?,?,?)", tableFollowCreator)
-	_, err := client(dbMusicRecommendNameTest).Exec(sql, follow.CreatorID, follow.Username, tm.GetNowDateTimeStr(), tm.GetNowDateTimeStr())
+	res, err := client(dbMusicRecommendNameTest).Exec(sql, follow.CreatorID, follow.Username, tm.GetNowDateTimeStr(), tm.GetNowDateTimeStr())
 	if err != nil {
 		log.Error(err)
+		return false, err
 	}
-	return err
+	rows, err := res.RowsAffected()
+	if err != nil {
+		log.Error(err)
+		return false, err
+	}
+	return rows > 0, nil
 }
 
-func (fc *followCreatorMysql) Delete(username string, creatorID int) error {
+func (fc *followCreatorMysql) Delete(username string, creatorID int) (affected bool, err error) {
 	sql := fmt.Sprintf("Delete from %s where creator_id = ? and username = ?", tableFollowCreator)
-	_, err := client(dbMusicRecommendNameTest).Exec(sql, creatorID, username)
+	res ,err := client(dbMusicRecommendNameTest).Exec(sql, creatorID, username)
 	if err != nil {
 		log.Error(err)
+		return false, err
 	}
-	return err
+	rows, err := res.RowsAffected()
+	if err != nil {
+		log.Error(err)
+		return false, err
+	}
+	return rows > 0, nil
 }
 
-func (fc *followCreatorMysql) SelectFollows(username string, pos, limit int) (ids []string, err error) {
+func (fc *followCreatorMysql) SelectFollows(username string, pos, limit int) (ids []int, err error) {
 	sql := fmt.Sprintf("select creator_id from %s where username = ? limit ?,?", tableFollowCreator)
 	err = client(dbMusicRecommendNameTest).Select(&ids, sql, username, pos, limit)
 	if err != nil {
@@ -56,8 +68,10 @@ func (fc *followCreatorMysql) SelectFollows(username string, pos, limit int) (id
 	return
 }
 
-func (fc *followCreatorMysql) SelectFollowsOrderByCreateTime(username string, pos, limit int) (ids []string, err error) {
-	sql := fmt.Sprintf("select creator_id from %s where username = ? ordey by create_time desc limit ?,?", tableFollowCreator)
+
+
+func (fc *followCreatorMysql) SelectFollowsOrderByCreateTime(username string, pos, limit int) (ids []int, err error) {
+	sql := fmt.Sprintf("select creator_id from %s where username = ? ordey by create_time  limit ?,?", tableFollowCreator)
 	err = client(dbMusicRecommendNameTest).Select(&ids, sql, username, pos, limit)
 	if err != nil {
 		log.Error(err)

@@ -78,14 +78,22 @@ func (us *userService) SendCodeForUser(username string) *er.Error {
 }
 
 func (us *userService) MeInfo(username string) (*model.User, bool) {
+	ret, ok := us.meInfo(username)
+	if ret == nil {
+		return nil, false
+	}
+	user := ret
+	retUser := *user
+	retUser.Password = ""
+	return &retUser, ok
+}
+
+func (us *userService) meInfo(username string) (*model.User, bool) {
 	ret, ok := cache.PubCacheService.Get(fmt.Sprintf(userSessionCacheKeyFmt, username))
 	if ret == nil {
 		return nil, false
 	}
-	user := ret.(*model.User)
-	retUser := *user
-	retUser.Password = ""
-	return &retUser, ok
+	return ret.(*model.User), ok
 }
 
 func (us *userService) checkUserExistAndSetCache(username *string) (bool, *er.Error) {
