@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	followCacheKey = "follow_%s_f"
+	followCacheKey   = "follow_%s_f"
 	unFollowCacheKey = "unFollow_%s_f"
 
 	followExpireTime = cache.Hour * 24
@@ -23,7 +23,6 @@ const (
 
 type followService struct {
 }
-
 
 var PubFollowService = followService{}
 
@@ -45,7 +44,7 @@ var PubFollowService = followService{}
 // 所以最简单方式就是不让跳页 从头遍历到尾。取多少个就是多少个。 这块有好的idea可以和我探讨一下
 // 这块我就偷懒去做了
 func (fs *followService) Follow(creatorID int, username string) *er.Error {
-	if _, ok := cache.PubCacheService.Get(fmt.Sprintf(creatorDetailCacheFmt, creatorID));!ok {
+	if _, ok := cache.PubCacheService.Get(fmt.Sprintf(creatorDetailCacheFmt, creatorID)); !ok {
 		return er.NewError(common.NotFound, common.CreatorNotExistErr)
 	}
 
@@ -61,7 +60,7 @@ func (fs *followService) Follow(creatorID int, username string) *er.Error {
 		return er.NewError(common.Success, common.FollowRepeatWarn)
 	}
 	key := fmt.Sprintf(followCacheKey, username)
-	if val, ok := cache.PubCacheService.Get(key);ok {
+	if val, ok := cache.PubCacheService.Get(key); ok {
 		arr := val.([]int)
 		arr = append(arr, creatorID)
 		return nil
@@ -76,12 +75,12 @@ func (fs *followService) setFollowCache(username string, creators []int) {
 	priority := cache.Six
 	key := fmt.Sprintf(followCacheKey, username)
 	user, _ := PubUserService.meInfo(username)
-	priority += cache.Priority(user.LastMonthLoginNum / 10) * cache.One
-	cache.PubCacheService.Set(key, creators, cache.Hour * 24, priority)
+	priority += cache.Priority(user.LastMonthLoginNum/10) * cache.One
+	cache.PubCacheService.Set(key, creators, cache.Hour*24, priority)
 }
 
 func (fs *followService) UnFollow(creatorID int, username string) *er.Error {
-	if _, ok := cache.PubCacheService.Get(fmt.Sprintf(creatorDetailCacheFmt, creatorID));!ok {
+	if _, ok := cache.PubCacheService.Get(fmt.Sprintf(creatorDetailCacheFmt, creatorID)); !ok {
 		return er.NewError(common.NotFound, common.CreatorNotExistErr)
 	}
 	affected, err := model.NewFollowCreatorMysql().Delete(username, creatorID)
@@ -131,10 +130,10 @@ func (fs *followService) FollowList(username string, page int) ([]*model.Creator
 
 func (fs *followService) doGetFollowList(username string, creatorIDs []int, page int) []*model.Creator {
 	var unFollowSet *set.HashSet
-	if val, ok := cache.PubCacheService.Get(fmt.Sprintf(unFollowCacheKey, username));ok {
+	if val, ok := cache.PubCacheService.Get(fmt.Sprintf(unFollowCacheKey, username)); ok {
 		unFollowSet = val.(*set.HashSet)
 	}
-	start := common.MaxInt(0, len(creatorIDs) - 1 - followLimit * (page - 1))
+	start := common.MaxInt(0, len(creatorIDs)-1-followLimit*(page-1))
 	cnt := 0
 	ret := make([]*model.Creator, 0, common.MinInt(20, start))
 	for i := start; i >= 0 && cnt < followLimit; i-- {

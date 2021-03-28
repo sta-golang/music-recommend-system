@@ -14,7 +14,7 @@ type sqlxDB struct {
 }
 
 const (
-	dbFmt = "%s:%s@tcp(%s)/%s?%s"
+	dbFmt      = "%s:%s@tcp(%s)/%s?%s"
 	sourceName = "database"
 )
 
@@ -37,7 +37,7 @@ var globalDB *sqlxDB
 
 // InitDB 初始化数据库 连接数据库使用
 func InitDB() error {
-	globalDB = &sqlxDB{dbMap: make(map[string]*sqlx.DB,1)}
+	globalDB = &sqlxDB{dbMap: make(map[string]*sqlx.DB, 1)}
 	source.Monitoring(globalDB)
 	var err error
 	cfg := config.GlobalConfig()
@@ -46,8 +46,8 @@ func InitDB() error {
 		if ipPort == "" {
 			ipPort = "127.0.0.1:3306"
 		}
-		globalDB.dbMap[key], err = sqlx.Open(val.DriverName,fmt.Sprintf(dbFmt,
-			val.UserName,val.PassWord,val.Target,val.DBName,val.Args))
+		globalDB.dbMap[key], err = sqlx.Open(val.DriverName, fmt.Sprintf(dbFmt,
+			val.UserName, val.PassWord, val.Target, val.DBName, val.Args))
 		if err != nil {
 			log.Error(err)
 			return err
