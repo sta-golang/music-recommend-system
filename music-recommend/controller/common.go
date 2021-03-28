@@ -84,6 +84,7 @@ func WriterResp(ctx *fasthttp.RequestCtx, bys []byte) {
 	if err != nil {
 		log.Error(err)
 	}
+
 }
 
 func TimeController(controllerName string, fn fasthttp.RequestHandler) func(*fasthttp.RequestCtx) {
@@ -99,6 +100,16 @@ func TimeController(controllerName string, fn fasthttp.RequestHandler) func(*fas
 	}
 }
 
+func CORSHandler(fn fasthttp.RequestHandler) func(*fasthttp.RequestCtx) {
+	return func(ctx *fasthttp.RequestCtx) {
+		canCORS(ctx)
+		fn(ctx)
+	}
+}
+
 func canCORS(ctx *fasthttp.RequestCtx) {
 	ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
+	ctx.Response.Header.Set("Access-Control-Allow-Methods", "PUT,GET,POST,DELETE,OPTIONS")
+	ctx.Response.Header.Set("Access-Control-Allow-Headers", "*")
+	ctx.Response.Header.Set("content-type", "application/json")
 }

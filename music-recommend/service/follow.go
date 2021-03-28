@@ -1,7 +1,6 @@
 package service
 
 import (
-	"errors"
 	"fmt"
 	"github.com/sta-golang/go-lib-utils/algorithm/data_structure/set"
 	er "github.com/sta-golang/go-lib-utils/err"
@@ -147,4 +146,5 @@ func (fs *followService) doGetFollowList(username string, creatorIDs []int, page
 		ret = append(ret, creator)
 		cnt++
 	}
+	return nil
 }

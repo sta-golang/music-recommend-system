@@ -128,7 +128,9 @@ func (us *userService) queryUserWithCache(username string) (*model.User, *er.Err
 	if err != nil {
 		return nil, er.NewError(common.DBFindErr, common.ServerErr)
 	}
-
+	if ret == nil {
+		return nil, nil
+	}
 	return ret.(*model.User), nil
 }
 

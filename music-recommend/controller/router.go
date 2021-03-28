@@ -9,7 +9,6 @@ import (
 
 // GlobalRouter 返回 路由器
 func GlobalRouter() *fasthttprouter.Router {
-
 	router := fasthttprouter.New()
 	router.GET("/", Index)
 

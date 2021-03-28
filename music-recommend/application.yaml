@@ -2,7 +2,7 @@ server:
   music-recommend
 
 port:
-  8000
+  8888
 
 pprof:
   8080

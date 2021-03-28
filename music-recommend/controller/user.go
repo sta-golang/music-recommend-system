@@ -1,15 +1,17 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/sta-golang/go-lib-utils/codec"
 	"github.com/sta-golang/go-lib-utils/log"
 	"github.com/sta-golang/go-lib-utils/str"
+	"github.com/sta-golang/music-recommend/common"
 	"github.com/sta-golang/music-recommend/controller/dto"
 	"github.com/sta-golang/music-recommend/service"
 	"github.com/sta-golang/music-recommend/service/cache"
 	"github.com/sta-golang/music-recommend/service/verify"
 	"github.com/valyala/fasthttp"
-	"net/http"
 )
 
 const (
@@ -42,14 +44,13 @@ func (uc *userController) MeInfo(ctx *fasthttp.RequestCtx) {
 	}
 	info, exist := service.PubUserService.MeInfo(auth)
 	if !exist {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, serverSelectErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, common.UserNotExistErr.Error()).ToJson())
 		return
 	}
 	WriterResp(ctx, NewRetData(successCode, success, info).ToJson())
 }
 
 func (uc *userController) SendCode(ctx *fasthttp.RequestCtx) {
-	canCORS(ctx)
 	username := str.BytesToString(ctx.FormValue("username"))
 	if _, ok := cache.PubCacheService.Get(username); ok {
 		WriterResp(ctx, NewRetData(successCode, waitMessage, nil).ToJson())
@@ -64,10 +65,16 @@ func (uc *userController) SendCode(ctx *fasthttp.RequestCtx) {
 }
 
 func (uc *userController) Login(ctx *fasthttp.RequestCtx) {
-	canCORS(ctx)
-	username := str.BytesToString(ctx.FormValue("username"))
-	password := str.BytesToString(ctx.FormValue("password"))
-	readme := ctx.PostArgs().GetBool("readme")
+	var lUser dto.UserLogin
+	err := codec.API.JsonAPI.Unmarshal(ctx.PostBody(), &lUser)
+	if err != nil {
+		log.Error(err)
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, postDataErrMessage).ToJson())
+		return
+	}
+	username := lUser.Username
+	password := lUser.Password
+	readme := lUser.Readme
 	if username == "" || password == "" || len(username) > 25 || len(password) > 25 ||
 		len(username) < 6 || len(password) < 6 {
 		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
@@ -79,12 +86,11 @@ func (uc *userController) Login(ctx *fasthttp.RequestCtx) {
 		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, sErr.String()).ToJson())
 		return
 	}
-	ctx.Response.Header.Set(tokenStr, token)
-	WriterResp(ctx, NewRetData(successCode, success, nil).ToJson())
+	ret := map[string]string{tokenStr: token}
+	WriterResp(ctx, NewRetData(successCode, success, ret).ToJson())
 }
 
 func (uc *userController) Register(ctx *fasthttp.RequestCtx) {
-	canCORS(ctx)
 	var rUser dto.RegisterUser
 	err := codec.API.JsonAPI.Unmarshal(ctx.PostBody(), &rUser)
 	if err != nil {

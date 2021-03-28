@@ -48,7 +48,7 @@ func main() {
 	StartServer()
 }
 
-func StartServer()  {
+func StartServer() {
 	router := controller.GlobalRouter()
 	defer func() {
 		source.Sync()
@@ -56,7 +56,7 @@ func StartServer()  {
 			StartServer()
 		}
 	}()
-	log.Fatal(fasthttp.ListenAndServe(*addr, router.Handler))
+	log.Fatal(fasthttp.ListenAndServe(*addr, controller.CORSHandler(router.Handler)))
 }
 
 func init() {

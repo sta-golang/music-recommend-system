@@ -18,6 +18,8 @@ import (
 const (
 	maxMemoryScore = 0.8
 	monitorScore   = 0.9
+
+	memoryWarnCacheKey = "memory_warn"
 )
 
 type cacheService struct {
@@ -116,13 +118,22 @@ func (cs *cacheService) cleanMemory(priority Priority) bool {
 	if float64(usage)/float64(total) > monitorScore {
 		info := systeminfo.GetSystemInfo()
 		log.Warnf("memory 使用量报警!\n %v", info)
-		go func() {
-			err := email.PubEmailService.SendEmail("内存使用告警", fmt.Sprintf("内存使用告警\n%v", info),
-				config.GlobalConfig().EmailConfig.Email)
-			if err != nil {
-				log.Error(err)
-			}
-		}()
+		warnNum := 1
+		if val, ok := cs.Get(memoryWarnCacheKey); ok {
+			warnNum = val.(int) + 1
+		}
+		cs.Set(memoryWarnCacheKey, warnNum, Hour, Ten)
+		if warnNum == 1 || warnNum == 2 || warnNum == 4 || warnNum == 8 || warnNum == 16 || warnNum == 32 || warnNum == 64 || warnNum == 128 || warnNum == 256 {
+
+			go func() {
+				err := email.PubEmailService.SendEmail("内存使用告警",
+					fmt.Sprintf("内存使用告警 次数 : %d \n%v", warnNum, info),
+					config.GlobalConfig().EmailConfig.Email)
+				if err != nil {
+					log.Error(err)
+				}
+			}()
+		}
 	}
 	priority = priority + One
 	cnt := One
@@ -133,6 +144,9 @@ func (cs *cacheService) cleanMemory(priority Priority) bool {
 		iterator := cs.priorityQueue[i].Iterator()
 		cs.priorityQueue[i].Clear()
 		for k := range iterator {
+			if iterator[k] == memoryWarnCacheKey {
+				continue
+			}
 			cs.doDelete(iterator[k], false)
 		}
 		iterator = nil
