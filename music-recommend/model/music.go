@@ -1,37 +1,40 @@
 package model
 
 import (
+	"context"
 	"fmt"
+	"strconv"
+	"strings"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/sta-golang/go-lib-utils/log"
 	tm "github.com/sta-golang/go-lib-utils/time"
-	"strconv"
-	"strings"
 )
 
 type Music struct {
-	ID          int     `json:"id" db:"id"`
-	Name        string  `json:"name" db:"name"`
-	Status      int32   `json:"status" db:"status"`
-	Title       string  `json:"title" db:"title"`
-	HotScore    float64 `json:"hot_score" db:"hot_score"`
-	CreatorIDs  string  `json:"creator_ids" db:"creator_ids"`
-	CreatorNames string `json:"creator_names" db:"creator_names"`
-	MusicUrl    string  `json:"music_url" db:"music_url"`
-	PlayTime    int     `json:"play_time" db:"play_time"`
-	TagIDs      string  `json:"tag_ids" db:"tag_ids"`
-	TagNames    string  `json:"tag_names" db:"tag_names"`
-	ImageUrl    string  `json:"image_url" db:"image_url"`
-	PublishTime string  `json:"publish_time" db:"publish_time"`
-	UpdateTime  string  `json:"update_time" db:"update_time"`
+	ID           int     `json:"id" db:"id"`
+	Name         string  `json:"name" db:"name"`
+	Status       int32   `json:"status" db:"status"`
+	Title        string  `json:"title" db:"title"`
+	HotScore     float64 `json:"hot_score" db:"hot_score"`
+	CreatorIDs   string  `json:"creator_ids" db:"creator_ids"`
+	CreatorNames string  `json:"creator_names" db:"creator_names"`
+	MusicUrl     string  `json:"music_url" db:"music_url"`
+	PlayTime     int     `json:"play_time" db:"play_time"`
+	TagIDs       string  `json:"tag_ids" db:"tag_ids"`
+	TagNames     string  `json:"tag_names" db:"tag_names"`
+	ImageUrl     string  `json:"image_url" db:"image_url"`
+	PublishTime  string  `json:"publish_time" db:"publish_time"`
+	UpdateTime   string  `json:"update_time" db:"update_time"`
 }
 
 const (
-	tableMusic                = "music"
-	MusicDefaultStatus        = 0
-	MusicHasUrlMusicUrlStatus = 1
+	tableMusic         = "music"
+	MusicDefaultStatus = 0
+	// TODO: 原本的状态应该是1 目前先改成0  <08-04-21, FOUR SEASONS> //
+	MusicHasUrlMusicUrlStatus = 0
 	MusicCreatorNameDelimiter = "/"
-	insertSQLFmt = "insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+	insertSQLFmt              = "insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 )
 
 type musicMysql struct {
@@ -52,7 +55,7 @@ func (md *musicMysql) doInsertMusic(db sqlx.Execer, music *Music) error {
 
 	sql := fmt.Sprintf(insertSQLFmt, tableMusic)
 	_, err := db.Exec(sql, music.ID, music.Name, music.Status,
-		music.Title, music.HotScore, music.CreatorIDs,music.CreatorNames, music.MusicUrl, music.PlayTime,
+		music.Title, music.HotScore, music.CreatorIDs, music.CreatorNames, music.MusicUrl, music.PlayTime,
 		music.TagIDs, music.TagNames, music.ImageUrl, music.PublishTime, tm.GetNowDateTimeStr())
 	if err != nil {
 		log.Error(err)
@@ -124,6 +127,16 @@ func (md *musicMysql) SelectMusicForCreator(creatorID, pos, limit int) (musics [
 	return
 }
 
+func (md *musicMysql) SelectMusicsWithPublishTime(ctx context.Context, pos, limit int) (musics []Music, err error) {
+	sql := fmt.Sprintf("select * from %s where status = ? order by publish_time desc limit ?, ?", tableMusic)
+	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, MusicHasUrlMusicUrlStatus, pos, limit)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return
+}
+
 func (md *musicMysql) SelectMusics(pos, limit int) (musics []Music, err error) {
 	sql := fmt.Sprintf("select * from %s limit ?,?", tableMusic)
 	err = client(dbMusicRecommendNameTest).Select(&musics, sql, pos, limit)
@@ -139,10 +152,10 @@ func (md *musicMysql) FixMusicCreator(music *Music) error {
 		return nil
 	}
 	sql := fmt.Sprintf("update %s set creator_ids=?, creator_names=?, update_time=? where id=?", tableMusic)
-	_, err := client(dbMusicRecommendNameTest).Exec(sql, music.CreatorIDs,music.CreatorNames, tm.GetNowDateTimeStr(), music.ID)
+	_, err := client(dbMusicRecommendNameTest).Exec(sql, music.CreatorIDs, music.CreatorNames, tm.GetNowDateTimeStr(), music.ID)
 	if err != nil {
 		log.Error(err)
-		return  err
+		return err
 	}
 	return nil
 }

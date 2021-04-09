@@ -15,15 +15,16 @@ const (
 )
 
 type Creator struct {
-	ID             int    `json:"id" db:"id"`
-	Name           string `json:"name" db:"name"`
-	Status         int32  `json:"status" db:"status"`
-	ImageUrl       string `json:"image_url" db:"image_url"`
-	Description    string `json:"description" db:"description"`
-	SimilarCreator string `json:"similar_creator" db:"similar_creator"`
-	FansNum        int    `json:"fans_num" db:"fans_num"`
-	Type           int    `json:"type" db:"type"`
-	UpdateTime     string `json:"update_time" db:"update_time"`
+	ID             int     `json:"id" db:"id"`
+	Name           string  `json:"name" db:"name"`
+	Status         int32   `json:"status" db:"status"`
+	ImageUrl       string  `json:"image_url" db:"image_url"`
+	Description    string  `json:"description" db:"description"`
+	SimilarCreator string  `json:"similar_creator" db:"similar_creator"`
+	FansNum        int     `json:"fans_num" db:"fans_num"`
+	HotScore       float64 `json:"hot_score" db:"hot_score"`
+	Type           int     `json:"type" db:"type"`
+	UpdateTime     string  `json:"update_time" db:"update_time"`
 }
 
 const (
@@ -91,7 +92,18 @@ func (cm *creatorMysql) SelectCreatorForIDs(ids []string) (creators []Creator, e
 func (cm *creatorMysql) SelectCreatorsOrderBySong(pos, limit int) (creators []Creator, err error) {
 	sql := fmt.Sprintf("select id, name, image_url,type from %s,"+
 		" (select count(*) as cnt , creator_id as c from %s group by creator_id) as other "+
-		" WHERE id = other.c order by oth.cnt desc limit ?,?", tableCreator, tableCreatorToMusic)
+		" WHERE id = other.c order by other.cnt desc limit ?,?", tableCreator, tableCreatorToMusic)
+	err = client(dbMusicRecommendNameTest).Select(&creators, sql, pos, limit)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return
+}
+
+func (cm *creatorMysql) SelectCreatorsOrderByScore(pos, limit int) (creators []Creator, err error) {
+	sql := fmt.Sprintf("select id, name, image_url, type from %s order by hot_score desc limit ?, ?", tableCreator)
+
 	err = client(dbMusicRecommendNameTest).Select(&creators, sql, pos, limit)
 	if err != nil {
 		log.Error(err)

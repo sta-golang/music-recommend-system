@@ -1,18 +1,23 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import './plugins/element.js'
-import axios from 'axios'
-
-axios.defaults.baseURL = 'http://localhost:8888'
-Vue.prototype.$http = axios
-Vue.prototype.$tokenStr = 'sta-token'
-
+import Vue from "vue";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store/index";
+import "./plugins/element.js";
+import "@/network/axios";
+import "./common/css/base.css";
+import "./common/css/global.css";
+import "default-passive-events";
+import axios from "axios";
+Vue.config.productionTip = false;
+Vue.prototype.$bus = new Vue();
+Vue.prototype.$tokenStr = "sta-token";
+Vue.prototype.$http = axios;
 axios.defaults.headers.common[Vue.prototype.$tokenStr] = localStorage.getItem(
   Vue.prototype.$tokenStr
-)
-Vue.config.productionTip = false
+);
+
 new Vue({
   router,
+  store,
   render: h => h(App)
-}).$mount('#app')
+}).$mount("#app");

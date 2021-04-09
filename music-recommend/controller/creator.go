@@ -40,7 +40,7 @@ func (cc *creatorController) GetCreator(ctx *fasthttp.RequestCtx) {
 }
 
 // GetCreators 获取作者列表
-func (cc *creatorController) GetCreators(ctx *fasthttp.RequestCtx)  {
+func (cc *creatorController) GetCreators(ctx *fasthttp.RequestCtx) {
 	args := ctx.QueryArgs()
 	page := args.GetUintOrZero("page")
 	tp := args.GetUintOrZero("type")
@@ -49,13 +49,13 @@ func (cc *creatorController) GetCreators(ctx *fasthttp.RequestCtx)  {
 	if tp == 0 {
 		creators, sErr = service.PubCreatorService.GetCreator(page)
 		if sErr != nil && sErr.Err != nil {
-			WriterResp(ctx,NewRetDataForErrAndMessage(sErr, serverSelectErrMessage).ToJson())
+			WriterResp(ctx, NewRetDataForErrAndMessage(sErr, serverSelectErrMessage).ToJson())
 			return
 		}
 	} else {
 		creators, sErr = service.PubCreatorService.GetCreatorWithType(tp, page)
 		if sErr != nil && sErr.Err != nil {
-			WriterResp(ctx,NewRetDataForErrAndMessage(sErr, serverSelectErrMessage).ToJson())
+			WriterResp(ctx, NewRetDataForErrAndMessage(sErr, serverSelectErrMessage).ToJson())
 			return
 		}
 	}

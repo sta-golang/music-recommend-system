@@ -1,9 +1,11 @@
 package controller
 
 import (
+	"context"
+	"net/http"
+
 	"github.com/sta-golang/music-recommend/service"
 	"github.com/valyala/fasthttp"
-	"net/http"
 )
 
 type musicController struct {
@@ -30,6 +32,16 @@ func (mc *musicController) CreatorMusics(ctx *fasthttp.RequestCtx) {
 		return
 	}
 	WriterResp(ctx, NewRetData(successCode, success, creator).ToJson())
+}
+
+func (mc *musicController) GetAllMusics(ctx *fasthttp.RequestCtx) {
+	page := ctx.QueryArgs().GetUintOrZero("page")
+	musics, sErr := service.PubMusicService.GetAllMusicWithCache(context.Background(), page)
+	if sErr != nil && sErr.Err != nil {
+		WriterResp(ctx, NewRetDataForErrAndMessage(sErr, serverSelectErrMessage).ToJson())
+		return
+	}
+	WriterResp(ctx, NewRetData(successCode, success, musics).ToJson())
 }
 
 // GetMusic 获取音乐

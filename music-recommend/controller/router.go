@@ -13,7 +13,7 @@ func GlobalRouter() *fasthttprouter.Router {
 	router.GET("/", Index)
 
 	//router.GET(creatorDetailUrl, TimeController(creatorDetailUrl, NewCreatorController().GetCreator))
-	router.GET(creatorDetailUrl, NewCreatorController().GetCreator)
+	router.GET(creatorDetailUrl, TimeController(creatorDetailUrl, NewCreatorController().GetCreator))
 	router.GET(creatorList, TimeController(creatorList, NewCreatorController().GetCreators))
 	router.GET(musicDetails, TimeController(musicDetails, NewMusicController().GetMusic))
 	router.GET(creatorMusic, TimeController(creatorMusic, NewMusicController().CreatorMusics))
@@ -21,6 +21,7 @@ func GlobalRouter() *fasthttprouter.Router {
 	router.POST(userLogin, TimeController(userLogin, NewUserController().Login))
 	router.POST(userCode, TimeController(userCode, NewUserController().SendCode))
 	router.GET(userInfo, TimeController(userInfo, NewUserController().MeInfo))
+	router.GET(musicAll, TimeController(musicAll, NewMusicController().GetAllMusics))
 	return router
 }
 

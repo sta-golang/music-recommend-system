@@ -40,6 +40,7 @@ create table `creator` (
     `description` text not null COMMENT '自述',
     `similar_creator` varchar(255) not null COMMENT '相似作者集',
     `fans_num` int(11) not null default 0 COMMENT '粉丝数量',
+    `hot_score` double not null DEFAULT 0.0 COMMENT '热度打分',
     `type` int not null DEFAULT 0 COMMENT '作者类型',
     `update_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '更新时间',
     PRIMARY KEY (`id`)
@@ -83,3 +84,18 @@ create table `follow_creator` (
     UNIQUE KEY `key_user_creator` (`username`,`creator_id`)
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='关注';
+
+create table `playlist` (
+    `id` int unsigned not null AUTO_INCREMENT COMMENT '自增id',
+    `status` int(11) not null DEFAULT 0 COMMENT '状态',
+    `user_id` int not null COMMENT '用戶id',
+    `name` varchar(255) not null COMMENT '用户名',
+	`image_url` varchar(255) not null DEFAULT '' COMMENT '图片地址',
+    `hot_score` double not null DEFAULT 0.0 COMMENT '热度打分',
+    `create_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '创建时间',
+    `update_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+	UNIQUE KEY `key_user` (`user_id`),
+    UNIQUE KEY `key_user_play_list` (`user_id`,`name`)
+
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='歌单';

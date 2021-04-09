@@ -19,15 +19,25 @@ type creatorService struct {
 const (
 	creatorLimit = 20
 
-	maxSimilarNum      = 6
-	maxSplitSimilarNum = 18
+	maxSimilarNum      = 8
+	maxSplitSimilarNum = 24
 
 	creatorNotSimilarCacheFmt = "creators_%d_n"
-	creatorsCacheFmt      = "creators_%d_s"
-	creatorDetailCacheFmt = "creator_%d_detail"
+	creatorsCacheFmt          = "creators_%d_s"
+	creatorDetailCacheFmt     = "creator_%d_detail"
 )
 
+var maxPage = 1
+
 var PubCreatorService = &creatorService{}
+
+func (cs *creatorService) CleanCache() {
+	for i := 1; i <= maxPage; i++ {
+		key := fmt.Sprintf(creatorsCacheFmt, i)
+		cache.PubCacheService.Delete(key)
+	}
+	maxPage = 1
+}
 
 func (cs *creatorService) GetCreator(page int) ([]model.Creator, *er.Error) {
 	if page <= 0 {
@@ -42,7 +52,7 @@ func (cs *creatorService) GetCreator(page int) ([]model.Creator, *er.Error) {
 	}
 	priority := cache.Priority(math.Max(float64(cache.One), float64(cache.Ten-cache.Priority(page/2)*cache.One)))
 	ret, err := common.SingleRunGroup.Do(key, func() (interface{}, error) {
-		creators, err := model.NewCreatorMysql().SelectCreatorsOrderBySong((page-1)*creatorLimit, creatorLimit)
+		creators, err := model.NewCreatorMysql().SelectCreatorsOrderByScore((page-1)*creatorLimit, creatorLimit)
 		if err != nil {
 			log.Error(err)
 			return nil, err
@@ -51,7 +61,8 @@ func (cs *creatorService) GetCreator(page int) ([]model.Creator, *er.Error) {
 			cache.PubCacheService.Set(key, creators, cache.Hour, cache.One)
 			return nil, nil
 		}
-		cache.PubCacheService.Set(key, creators, cache.Hour * int(priority) * 3, priority)
+		maxPage = int(math.Max(float64(page), float64(maxPage)))
+		cache.PubCacheService.Set(key, creators, cache.Hour*int(priority)*3, priority)
 		return creators, nil
 	})
 	if err != nil {
@@ -60,7 +71,7 @@ func (cs *creatorService) GetCreator(page int) ([]model.Creator, *er.Error) {
 	if ret == nil {
 		return nil, nil
 	}
-	return ret.([]model.Creator) , nil
+	return ret.([]model.Creator), nil
 }
 
 func (cs *creatorService) GetCreatorWithType(tp int, page int) ([]model.Creator, *er.Error) {
@@ -103,6 +114,28 @@ func (cs *creatorService) getCreatorWithCache(id int) (*model.Creator, error) {
 	return nil, err
 }
 
+// // TODO: delete  <31-03-21, FOUR SEASONS> //
+func (cs *creatorService) GetCreatorTest(id int) (*dto.CreatorAndSimilar, *er.Error) {
+	creator, err := model.NewCreatorMysql().SelectCreator(id)
+	if err != nil {
+		log.Error(err)
+		return nil, nil
+	}
+	if creator == nil {
+		return nil, nil
+	}
+	if creator.SimilarCreator != "" {
+		split := strings.Split(creator.SimilarCreator, model.CreatorDelimiter)
+		similar, err := model.NewCreatorMysql().SelectCreatorForIDs(split)
+		if err != nil {
+			log.Error(err)
+			return dto.NewCreatorAndSimilar(creator, nil), nil
+		}
+		return dto.NewCreatorAndSimilar(creator, similar), nil
+	}
+	return dto.NewCreatorAndSimilar(creator, nil), nil
+}
+
 // GetCreatorDetail 获取作者详细信息
 func (cs *creatorService) GetCreatorDetail(id int) (*dto.CreatorAndSimilar, *er.Error) {
 	key := fmt.Sprintf(creatorDetailCacheFmt, id)
@@ -135,7 +168,7 @@ func (cs *creatorService) GetCreatorDetail(id int) (*dto.CreatorAndSimilar, *er.
 			cache.PubCacheService.Set(key, nil, cache.Hour, cache.One)
 			return nil, nil
 		}
-		cache.PubCacheService.Set(fmt.Sprintf(creatorNotSimilarCacheFmt, id), creator, cache.Hour * 24, cache.Ten)
+		cache.PubCacheService.Set(fmt.Sprintf(creatorNotSimilarCacheFmt, id), creator, cache.Hour*24, cache.Ten)
 		if creator.SimilarCreator != "" {
 			split := strings.Split(creator.SimilarCreator, model.CreatorDelimiter)
 			similar, err := model.NewCreatorMysql().SelectCreatorForIDs(split)
@@ -157,7 +190,7 @@ func (cs *creatorService) GetCreatorDetail(id int) (*dto.CreatorAndSimilar, *er.
 		return nil, nil
 	}
 	ret := data.(*dto.CreatorAndSimilar)
-	cache.PubCacheService.Set(key, ret, cache.Hour * 24, cache.Ten)
+	cache.PubCacheService.Set(key, ret, cache.Hour*24, cache.Ten)
 
 	if len(ret.SimilarCreator) > maxSimilarNum {
 		tempRet := *ret

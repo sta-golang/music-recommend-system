@@ -28,6 +28,7 @@ const (
 	userLogin        = "/user/login"
 	userCode         = "/user/code"
 	userInfo         = "/user/me"
+	musicAll         = "/music/all"
 )
 
 /**
