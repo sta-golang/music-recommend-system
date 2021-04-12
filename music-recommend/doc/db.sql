@@ -89,13 +89,27 @@ create table `playlist` (
     `id` int unsigned not null AUTO_INCREMENT COMMENT '自增id',
     `status` int(11) not null DEFAULT 0 COMMENT '状态',
     `user_id` int not null COMMENT '用戶id',
-    `name` varchar(255) not null COMMENT '用户名',
-	`image_url` varchar(255) not null DEFAULT '' COMMENT '图片地址',
+    `name` varchar(255) not null COMMENT '歌单名',
+	`image_url` varchar(265) not null DEFAULT '' COMMENT '图片地址',
     `hot_score` double not null DEFAULT 0.0 COMMENT '热度打分',
     `create_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '创建时间',
     `update_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '更新时间',
     PRIMARY KEY (`id`),
-	UNIQUE KEY `key_user` (`user_id`),
+	KEY `key_user` (`user_id`),
     UNIQUE KEY `key_user_play_list` (`user_id`,`name`)
 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='歌单';
+
+create table `playlist_music` (
+	`id` int unsigned not null AUTO_INCREMENT COMMENT '自增id',
+    `status` int(11) not null DEFAULT 0 COMMENT '状态',
+    `user_id` int not null COMMENT '用戶id',
+	`music_id` int not null COMMENT '音乐id',
+	`playlist_id` int not null COMMENT '歌单id',
+    `create_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '创建时间',
+    `update_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+	KEY `key_user` (`user_id`),
+	KEY `key_playlist` (`playlist_id`),
+    UNIQUE KEY `key_playlist_music` (`playlist_id`,`music_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='歌单歌曲';

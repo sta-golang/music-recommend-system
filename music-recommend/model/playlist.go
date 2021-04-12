@@ -23,7 +23,8 @@ type Playlist struct {
 }
 
 const (
-	tablePlaylist = "playlist"
+	tablePlaylist      = "playlist"
+	tablePlaylistMusic = "playlist_music"
 )
 
 type playlistMysql struct {
@@ -48,6 +49,12 @@ func (pm *playlistMysql) Insert(ctx context.Context, p *Playlist) (bool, error) 
 		log.Error(err)
 		return false, err
 	}
+	insertID, err := res.LastInsertId()
+	if err != nil {
+		log.Error(err)
+		return true, err
+	}
+	p.ID = int(insertID)
 	return rows > 0, err
 }
 
@@ -61,13 +68,50 @@ func (pm *playlistMysql) Update(ctx context.Context, p *Playlist) error {
 }
 
 func (pm *playlistMysql) SelectForUser(ctx context.Context, userID int) (playlists []Playlist, err error) {
-	sql := fmt.Sprintf("select id, name from %s where user_id = ?", tablePlaylist)
+	sql := fmt.Sprintf("select id, name,user_id from %s where user_id = ? order by id desc", tablePlaylist)
 	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &playlists, sql, userID)
 	if err != nil {
 		log.Error(err)
 		return nil, err
 	}
 	return
+}
+
+func (pm *playlistMysql) SelectMusicsForPlaylist(ctx context.Context, id, userID, pos, limit int) (musics []Music, err error) {
+	sql := fmt.Sprintf("select * from %s where id in (select music_id from %s where playlist_id = ? and user_id = ? order by id desc limit ?, ?)", tableMusic, tablePlaylistMusic)
+	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, id, userID, pos, limit)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return nil, nil
+}
+
+// AddMusicForPlaylist 和Delete说明类似
+func (pm *playlistMysql) AddMusicForPlaylist(ctx context.Context, musicID, playlistID, userID int) (bool, error) {
+	sql := fmt.Sprintf("insert ignore into %s(music_id, playlist_id,user_id, create_time, update_time) values(?,?,?,?,?)", tablePlaylistMusic)
+	res, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql, musicID, playlistID, userID, tm.GetNowDateTimeStr(), tm.GetNowDateTimeStr())
+	if err != nil {
+		log.Error(err)
+
+		return false, err
+	}
+	rows, err := res.RowsAffected()
+	if err != nil {
+		log.Error(err)
+		return false, err
+	}
+	return rows > 0, nil
+}
+
+// DeleteMusicForPlaylist 传入userID是因为可以防止别人通过请求直接删除而不校验权限
+func (pm *playlistMysql) DeleteMusicForPlaylist(ctx context.Context, id, userID int) error {
+	sql := fmt.Sprintf("delete from %s where id = ? and user_id = ?", tablePlaylistMusic)
+	_, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql, id, userID)
+	if err != nil {
+		log.Error(err)
+	}
+	return err
 }
 
 func (pm *playlistMysql) Select(ctx context.Context, id int) (*Playlist, error) {

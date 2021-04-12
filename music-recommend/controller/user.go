@@ -6,11 +6,9 @@ import (
 	"github.com/sta-golang/go-lib-utils/codec"
 	"github.com/sta-golang/go-lib-utils/log"
 	"github.com/sta-golang/go-lib-utils/str"
-	"github.com/sta-golang/music-recommend/common"
 	"github.com/sta-golang/music-recommend/controller/dto"
 	"github.com/sta-golang/music-recommend/service"
 	"github.com/sta-golang/music-recommend/service/cache"
-	"github.com/sta-golang/music-recommend/service/verify"
 	"github.com/valyala/fasthttp"
 )
 
@@ -28,26 +26,9 @@ func NewUserController() *userController {
 }
 
 func (uc *userController) MeInfo(ctx *fasthttp.RequestCtx) {
-	token := str.BytesToString(ctx.Request.Header.Peek(tokenStr))
-	if token == "" {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, forbiddenErrMessage).ToJson())
-		return
+	if info, ok := haveAuthority(ctx); ok {
+		WriterResp(ctx, NewRetData(successCode, success, info).ToJson())
 	}
-	auth, ok, err := verify.NewJWTService().VerifyAuth(token)
-	if err != nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, err.Error()).ToJson())
-		return
-	}
-	if !ok {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, tokenTimeOutErrMessage).ToJson())
-		return
-	}
-	info, exist := service.PubUserService.MeInfo(auth)
-	if !exist {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, common.UserNotExistErr.Error()).ToJson())
-		return
-	}
-	WriterResp(ctx, NewRetData(successCode, success, info).ToJson())
 }
 
 func (uc *userController) SendCode(ctx *fasthttp.RequestCtx) {

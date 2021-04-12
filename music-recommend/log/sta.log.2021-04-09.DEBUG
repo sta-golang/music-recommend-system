@@ -1,2 +1,0 @@
-[STA:Music-Data] 2021-04-09 08:07:52 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:97 ==> controller : /user/login timing : 393 毫秒
-[STA:Music-Data] 2021-04-09 08:07:52 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:97 ==> controller : /user/me timing : 0 毫秒

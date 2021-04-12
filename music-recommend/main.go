@@ -56,7 +56,7 @@ func StartServer() {
 			StartServer()
 		}
 	}()
-	log.Fatal(fasthttp.ListenAndServe(*addr, controller.CORSHandler(router.Handler)))
+	log.Fatal(fasthttp.ListenAndServe(*addr, controller.ServerHandler(router.Handler)))
 }
 
 func init() {

@@ -1,10 +1,25 @@
 package controller
 
 import (
+	"context"
+	"fmt"
+	"net/http"
+	"runtime/debug"
+	"sync"
+
 	"github.com/sta-golang/go-lib-utils/codec"
 	er "github.com/sta-golang/go-lib-utils/err"
 	"github.com/sta-golang/go-lib-utils/log"
+	"github.com/sta-golang/go-lib-utils/pool/workerpool"
+	"github.com/sta-golang/go-lib-utils/source"
+	str "github.com/sta-golang/go-lib-utils/str"
 	tm "github.com/sta-golang/go-lib-utils/time"
+	"github.com/sta-golang/music-recommend/common"
+	"github.com/sta-golang/music-recommend/config"
+	"github.com/sta-golang/music-recommend/model"
+	"github.com/sta-golang/music-recommend/service"
+	"github.com/sta-golang/music-recommend/service/email"
+	"github.com/sta-golang/music-recommend/service/verify"
 	"github.com/valyala/fasthttp"
 )
 
@@ -36,6 +51,11 @@ const (
 */
 
 var DebugLevelName = log.GetLevelName(log.DEBUG)
+var contextKeyMapPool = sync.Pool{
+	New: func() interface{} {
+		return make(map[string]string)
+	},
+}
 
 type RetData struct {
 	Code    int         `json:"code"`
@@ -85,7 +105,56 @@ func WriterResp(ctx *fasthttp.RequestCtx, bys []byte) {
 	if err != nil {
 		log.Error(err)
 	}
+}
 
+func RequestContext(ReqCtx *fasthttp.RequestCtx) context.Context {
+	keyMap := contextKeyMapPool.Get().(map[string]string)
+	keyMap["requestID"] = common.UUID()
+	keyMap["scene"] = str.BytesToString(ReqCtx.Path())
+	ipBys, _ := ReqCtx.RemoteIP().MarshalText()
+	keyMap["ipAddr"] = str.BytesToString(ipBys)
+	keyMap["user"] = ""
+	token := str.BytesToString(ReqCtx.Request.Header.Peek(tokenStr))
+	if token != "" {
+		auth, _, _ := verify.NewJWTService().VerifyAuth(token)
+		if auth != "" {
+			keyMap["user"] = auth
+		}
+	}
+	return log.LogContextKeyMap(nil, keyMap)
+}
+
+func DestroyContext(ctx context.Context) {
+	if ctx == nil {
+		return
+	}
+	if val := ctx.Value(log.LogContextKey); val != nil {
+		contextKeyMapPool.Put(val)
+	}
+	ctx = nil
+}
+
+func haveAuthority(ctx *fasthttp.RequestCtx) (*model.User, bool) {
+	token := str.BytesToString(ctx.Request.Header.Peek(tokenStr))
+	if token == "" {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, forbiddenErrMessage).ToJson())
+		return nil, false
+	}
+	auth, ok, err := verify.NewJWTService().VerifyAuth(token)
+	if err != nil {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, err.Error()).ToJson())
+		return nil, false
+	}
+	if !ok {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, tokenTimeOutErrMessage).ToJson())
+		return nil, false
+	}
+	info, exist := service.PubUserService.MeInfo(auth)
+	if !exist {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, common.UserEmailExistsErr.Error()).ToJson())
+		return nil, false
+	}
+	return info, true
 }
 
 func TimeController(controllerName string, fn fasthttp.RequestHandler) func(*fasthttp.RequestCtx) {
@@ -101,8 +170,24 @@ func TimeController(controllerName string, fn fasthttp.RequestHandler) func(*fas
 	}
 }
 
-func CORSHandler(fn fasthttp.RequestHandler) func(*fasthttp.RequestCtx) {
+func ServerHandler(fn fasthttp.RequestHandler) func(*fasthttp.RequestCtx) {
 	return func(ctx *fasthttp.RequestCtx) {
+		defer func() {
+			if er := recover(); er != nil {
+				ctx.WriteString("目前此功能可能出现部分问题，请留意后续版本或者联系管理员qq:63237777")
+				source.Sync()
+				debugInfo := str.BytesToString(debug.Stack())
+				debugInfo = fmt.Sprintf("err %v \n %s", er, debugInfo)
+				log.Fatal(debugInfo)
+				fn := func() {
+					subject := fmt.Sprintf(email.ServerMsg, "Fatal")
+					email.PubEmailService.SendEmail(subject, debugInfo, config.GlobalConfig().EmailConfig.Email)
+				}
+				if err := workerpool.Submit(fn); err != nil {
+					go fn()
+				}
+			}
+		}()
 		canCORS(ctx)
 		fn(ctx)
 	}

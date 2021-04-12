@@ -34,12 +34,10 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rs/xid v1.2.1 h1:mhH9Nq+C1fY2l1XIpgxIiUOfNpRBYH1kKcr+qfKgjRc=
 github.com/rs/xid v1.2.1/go.mod h1:+uKXf+4Djp6Md1KODXJxgGQPKngRmWyn10oCKFzNHOQ=
-github.com/sta-golang/go-lib-utils v0.2.7 h1:NWfSKQvfq6xkSNZb/fKDSZdquFPYIPjTnHUtDNSrmQU=
-github.com/sta-golang/go-lib-utils v0.2.7/go.mod h1:IcT4Wu6pUIq8wPdSygf6W66IeoJBX/LY/bh8ApGj51Y=
-github.com/sta-golang/go-lib-utils v0.2.8 h1:zvxunfj8FmuN/oPXsTrMUrjWELBSqV90kMM8eevnr10=
-github.com/sta-golang/go-lib-utils v0.2.8/go.mod h1:IcT4Wu6pUIq8wPdSygf6W66IeoJBX/LY/bh8ApGj51Y=
-github.com/sta-golang/go-lib-utils v0.2.9 h1:M4o/CBlju99SXIfpksMftvlVSbMI2cveEDVAP0Na508=
-github.com/sta-golang/go-lib-utils v0.2.9/go.mod h1:IcT4Wu6pUIq8wPdSygf6W66IeoJBX/LY/bh8ApGj51Y=
+github.com/satori/go.uuid v1.2.0 h1:0uYX9dsZ2yD7q2RtLRtPSdGDWzjeM3TbMJP9utgA0ww=
+github.com/satori/go.uuid v1.2.0/go.mod h1:dA0hQrYB0VpLJoorglMZABFdXlWrHn1NEOzdhQKdks0=
+github.com/sta-golang/go-lib-utils v0.3.1 h1:9ZR7jEnustcPfUoKH9IfY418zpjr0PrCVzTkjD0hLpo=
+github.com/sta-golang/go-lib-utils v0.3.1/go.mod h1:SJqJA/Fw6iPRlbDyyYOyDAxjyCRViQKyysvtoTOhTNs=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.3.0 h1:TivCn/peBQ7UY8ooIcPgZFpTNSz0Q2U6UrFlUfqbe0Q=
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=

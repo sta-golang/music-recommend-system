@@ -11,6 +11,8 @@ const (
 	sendTo      = "To"
 	sendSubject = "subject"
 	sendBody    = "text/html"
+
+	ServerMsg = "STA音乐推荐系统消息 Level[%s]"
 )
 
 type emailService struct {
