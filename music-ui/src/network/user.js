@@ -11,11 +11,14 @@ export function _getUserDetail(uid, cookie) {
 
 // 获取用户歌单
 export function _getUserSongList(uid) {
-  return axios.get("/user/playlist", {
+  return axios.get("/playlist/user", {
     params: {
       uid
     }
   });
+}
+export function _getUserPlaylist() {
+  return axios.get("/playlist/user");
 }
 
 // 用户登录

@@ -35,6 +35,8 @@ const (
 	sendCodeMessage        = "发送验证码成功！\n如果没有收到请查看垃圾邮件"
 	tokenStr               = "sta-token"
 
+	playlistUser     = "/playlist/user"
+	plsylistDetail   = "/playlist/detail"
 	creatorDetailUrl = "/creator/detail"
 	creatorList      = "/creator/list"
 	musicDetails     = "/music/details"
@@ -149,9 +151,10 @@ func haveAuthority(ctx *fasthttp.RequestCtx) (*model.User, bool) {
 		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, tokenTimeOutErrMessage).ToJson())
 		return nil, false
 	}
+	fmt.Println(auth, token)
 	info, exist := service.PubUserService.MeInfo(auth)
 	if !exist {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, common.UserEmailExistsErr.Error()).ToJson())
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, common.UserEmailNotLogin.Error()).ToJson())
 		return nil, false
 	}
 	return info, true

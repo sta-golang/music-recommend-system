@@ -12,9 +12,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$bus = new Vue();
 Vue.prototype.$tokenStr = "sta-token";
 Vue.prototype.$http = axios;
-axios.defaults.headers.common[Vue.prototype.$tokenStr] = localStorage.getItem(
-  Vue.prototype.$tokenStr
-);
+axios.defaults.headers.common[Vue.prototype.$tokenStr] = store.state.token;
 
 new Vue({
   router,

@@ -71,7 +71,7 @@ func (md *musicMysql) InsertMusicAndCreatorMusic(music *Music) error {
 			return err
 		}
 		split := strings.Split(music.CreatorIDs, CreatorDelimiter)
-		if len(split) < 0 {
+		if len(split) < 1 {
 			return nil
 		}
 		for _, str := range split {

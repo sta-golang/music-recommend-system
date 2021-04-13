@@ -147,8 +147,10 @@ export default {
           this.loginImgSrc = res.data["image_url"];
           this.loginState = res.data["name"];
           this.userFormDialogVisible = false;
+          this.$store.commit("addUser", res.data);
         });
     },
+    getUserPlaylist() {},
 
     // 登录功能
     userLogin() {
@@ -165,13 +167,16 @@ export default {
           this.$message.success("登录成功");
           tokenTmp = result.data[this.$tokenStr];
           localStorage.setItem(this.$tokenStr, result.data[this.$tokenStr]);
+          console.log(localStorage.getItem(this.$tokenStr));
+          this.$store.commit("storeToken", tokenTmp);
+          this.$http.defaults.headers.common[this.$tokenStr] = tokenTmp;
           this.getUserInfo(tokenTmp);
         });
       });
     },
     // 后退
     backRouter() {
-      this.$router.go(-1);
+      this.$router.go(0);
       // console.log(this.$route.path);
     },
     // 点击搜索框
