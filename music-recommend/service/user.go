@@ -2,10 +2,14 @@ package service
 
 import (
 	"fmt"
+	"regexp"
+	"time"
+
 	"github.com/sta-golang/go-lib-utils/algorithm/data_structure"
 	"github.com/sta-golang/go-lib-utils/codec"
 	er "github.com/sta-golang/go-lib-utils/err"
 	"github.com/sta-golang/go-lib-utils/log"
+	"github.com/sta-golang/go-lib-utils/pool/workerpool"
 	"github.com/sta-golang/go-lib-utils/str"
 	"github.com/sta-golang/music-recommend/common"
 	"github.com/sta-golang/music-recommend/model"
@@ -13,8 +17,6 @@ import (
 	cd "github.com/sta-golang/music-recommend/service/code"
 	"github.com/sta-golang/music-recommend/service/verify"
 	"github.com/valyala/bytebufferpool"
-	"regexp"
-	"time"
 )
 
 const (
@@ -69,10 +71,14 @@ func (us *userService) SendCodeForUser(username string) *er.Error {
 	if ok, sErr := us.checkUserExistAndSetCache(&username); ok {
 		return sErr
 	}
-	err := cd.NewEmailIdentifyingService().SendCode(username, cd.NewEmailIdentifyingService().Generate())
-	if err != nil {
-		log.Error(err)
-		return er.NewError(common.ServerCodecErr, common.CodeSendErr)
+	fn := func() {
+		err := cd.NewEmailIdentifyingService().SendCode(username, cd.NewEmailIdentifyingService().Generate())
+		if err != nil {
+			log.Error(err)
+		}
+	}
+	if err := workerpool.Submit(fn); err != nil {
+		go fn()
 	}
 	return nil
 }
@@ -97,7 +103,7 @@ func (us *userService) meInfo(username string) (*model.User, bool) {
 }
 
 func (us *userService) checkUserExistAndSetCache(username *string) (bool, *er.Error) {
-	user, sErr := us.queryUserWithCache(*username)
+	user, sErr := us.QueryUserWithCache(*username)
 	if sErr != nil {
 		return true, sErr
 	}
@@ -107,7 +113,7 @@ func (us *userService) checkUserExistAndSetCache(username *string) (bool, *er.Er
 	return false, nil
 }
 
-func (us *userService) queryUserWithCache(username string) (*model.User, *er.Error) {
+func (us *userService) QueryUserWithCache(username string) (*model.User, *er.Error) {
 	key := fmt.Sprintf(userCacheKeyFmt, username)
 	if val, ok := cache.PubCacheService.Get(key); ok && val != nil {
 		return val.(*model.User), nil
@@ -137,7 +143,7 @@ func (us *userService) queryUserWithCache(username string) (*model.User, *er.Err
 func (us *userService) Login(username, password string, readme bool) (token string, sErr *er.Error) {
 	var user *model.User
 	var err error
-	if user, sErr = us.queryUserWithCache(username); sErr != nil {
+	if user, sErr = us.QueryUserWithCache(username); sErr != nil {
 		return "", sErr
 	}
 	if user == nil {
@@ -164,6 +170,10 @@ func (us *userService) Login(username, password string, readme bool) (token stri
 	PubStatisticsService.Statistics(us.GetName(), buff, false)
 	cache.PubCacheService.Set(fmt.Sprintf(userSessionCacheKeyFmt, username), user, int(expireTime.Seconds()), cache.Ten)
 	return token, nil
+}
+
+func (us *userService) IsEmailFmt(email string) bool {
+	return emailRegexp.MatchString(email)
 }
 
 func (us *userService) checkUser(user *model.User) *er.Error {

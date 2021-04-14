@@ -14,6 +14,8 @@ import (
 const (
 	playlistUserKey   = "playlist_%s_all"
 	playlistDetailKey = "playlist_%d_de"
+	defDescription    = "暂无介绍"
+	defImageUrl       = "https://gimg3.baidu.com/image_search/src=http%3A%2F%2Fwenhui.whb.cn%2Fu%2Fcms%2Fwww%2F201804%2F02165434mp7i.jpg&refer=http%3A%2F%2Fwenhui.whb.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1620922142&t=cb795fafc42b7438723435d40553cba3 "
 )
 
 type playlistService struct {
@@ -62,8 +64,10 @@ func (ps *playlistService) GetPlaylistForUserWithCache(ctx context.Context, user
 
 func (ps *playlistService) AddPlaylistForUserWithCache(ctx context.Context, name, username string) error {
 	playlist := model.Playlist{
-		Username: username,
-		Name:     name,
+		Username:    username,
+		Name:        name,
+		Description: defDescription,
+		ImageUrl:    defImageUrl,
 	}
 	affected, err := model.NewPlaylistMysql().Insert(ctx, &playlist)
 	if err != nil {

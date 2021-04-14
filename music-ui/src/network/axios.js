@@ -4,7 +4,7 @@ import { Loading } from "element-ui";
 let vm = new Vue();
 let loading;
 let timer = null;
-axios.defaults.baseURL = "http://127.0.0.1:8888";
+axios.defaults.baseURL = "http://127.0.0.1:8888/";
 
 axios.interceptors.request.use(config => {
   loading = Loading.service({

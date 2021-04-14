@@ -128,29 +128,29 @@ export class songDetail {
 // 歌单的基础信息
 export class baseInfo {
   constructor(playlist) {
-    (this.img = playlist.coverImgUrl),
+    (this.img = playlist.playlist.image_url),
       // 歌单名字
-      (this.name = playlist.name),
+      (this.name = playlist.playlist.name),
       // 标签
-      (this.tags = playlist.tags),
+      (this.tags = playlist.playlist.tag_names),
       // 描述信息
-      (this.desc = playlist.description),
+      (this.description = playlist.playlist.description),
       // 分享
-      (this.shareCount = playlist.shareCount),
+      (this.shareCount = playlist.playlist.shareCount),
       // 播放
-      (this.playCount = playlist.playCount),
+      (this.playCount = playlist.playlist.playCount),
       // 评论
-      (this.commentCount = playlist.commentCount),
+      (this.commentCount = playlist.playlist.commentCount),
       // 收藏
-      (this.subscribedCount = playlist.subscribedCount),
+      (this.subscribedCount = playlist.playlist.subscribedCount),
       // 歌曲数
-      (this.trackCount = playlist.trackCount),
+      (this.trackCount = playlist.playlist.trackCount),
       // 创建时间
-      (this.createTime = playlist.createTime),
+      (this.createTime = playlist.playlist.create_time),
       // 作者信息。  名字
-      (this.nickname = playlist.creator.nickname),
+      (this.nickname = playlist.user.name),
       // 头像
-      (this.avatarUrl = playlist.creator.avatarUrl);
+      (this.avatarUrl = playlist.user.image_url);
   }
 }
 

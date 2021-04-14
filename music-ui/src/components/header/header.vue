@@ -50,32 +50,91 @@
       @close="userFormClose"
     >
       <img src="@/common/img/logo.jpg" alt="" />
-      <el-form
-        :model="userForm"
-        :rules="userFormRules"
-        ref="userFormRef"
-        class="demo-ruleForm"
-      >
-        <el-form-item prop="username">
-          <el-input
-            placeholder="请输入您的邮箱"
-            size="small"
-            v-model="userForm.username"
-          ></el-input>
-        </el-form-item>
-        <el-form-item prop="password">
-          <el-input
-            placeholder="请输入您的密码"
-            type="password"
-            size="small"
-            v-model="userForm.password"
-          ></el-input>
-        </el-form-item>
-        <el-checkbox v-model="checked">备选项</el-checkbox>
-      </el-form>
-      <button class="loginBtn" @click="userLogin">登录</button>
       <br />
-      <button class="registerBtn" @click="userLogin">注册</button>
+      <div style="width: 100%">
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="登录" name="first">
+            <el-form
+              :model="userForm"
+              :rules="userFormRules"
+              ref="userFormRef"
+              class="demo-ruleForm"
+            >
+              <el-form-item prop="username">
+                <el-input
+                  placeholder="请输入您的邮箱"
+                  size="small"
+                  v-model="userForm.username"
+                ></el-input>
+              </el-form-item>
+              <el-form-item prop="password">
+                <el-input
+                  placeholder="请输入您的密码"
+                  type="password"
+                  size="small"
+                  v-model="userForm.password"
+                ></el-input>
+              </el-form-item>
+            </el-form>
+            <button class="loginBtn" @click="userLogin">登录</button>
+          </el-tab-pane>
+          <el-tab-pane label="注册" name="second">
+            <el-form
+              :model="userRegisterForm"
+              :rules="userRegisterFormRules"
+              ref="userRegisterFormRef"
+              class="demo-ruleForm"
+            >
+              <el-form-item prop="email">
+                邮箱：<el-input
+                  placeholder="请输入您的邮箱"
+                  size="small"
+                  v-model="userRegisterForm.email"
+                ></el-input>
+              </el-form-item>
+              <el-form-item prop="username">
+                用户名：<el-input
+                  placeholder="请输入您的邮箱"
+                  size="small"
+                  v-model="userRegisterForm.username"
+                ></el-input>
+              </el-form-item>
+              <el-form-item prop="password">
+                密码：<el-input
+                  placeholder="请输入您的密码"
+                  type="password"
+                  size="small"
+                  v-model="userRegisterForm.password"
+                ></el-input>
+              </el-form-item>
+              <el-form-item prop="password">
+                验证码：<el-input
+                  placeholder="请输入您的密码"
+                  type="password"
+                  size="small"
+                  v-model="userRegisterForm.verification"
+                ></el-input>
+                <el-button
+                  type="primary"
+                  v-show="showIt"
+                  @click="sendVerification"
+                  style="width: 150px;"
+                  >获取验证码</el-button
+                >
+                <el-button
+                  type="primary"
+                  v-show="!showIt"
+                  @click="sendVerification"
+                  style="width: 150px;"
+                  disabled
+                  >{{ btntxt }}</el-button
+                >
+              </el-form-item>
+            </el-form>
+            <button class="registerBtn" @click="userRegister">注册</button>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -84,7 +143,7 @@
 import searchBox from "./searchBox";
 import SearchSuggest from "./SearchSuggest";
 import { _getSearchHot, _getSearchSuggest } from "@/network/search";
-import { _userLogin } from "@/network/user";
+import { _userLogin, _userRegister, _userVerification } from "@/network/user";
 export default {
   data() {
     // 手机号码验证规则
@@ -96,7 +155,11 @@ export default {
       cb(new Error("请输入合法的邮箱"));
     };
     return {
-      checked: true,
+      showIt: true,
+      btntxt: "获取验证码",
+      time: 0,
+      activeName: "first",
+      readme: false,
       // 搜索内容
       searchValue: "",
       // 登录用户名文本
@@ -110,11 +173,28 @@ export default {
         username: "",
         password: ""
       },
+      userRegisterForm: {
+        email: "",
+        username: "",
+        verification: "",
+        password: ""
+      },
       // 用户验证规则
       userFormRules: {
         username: [
           { required: true, message: "请输入您的邮箱", trigger: "blur" },
           { validator: checkMobile, trigger: "blur" }
+        ],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+      },
+      userRegisterFormRules: {
+        email: [
+          { required: true, message: "请输入您的邮箱", trigger: "blur" },
+          { validator: checkMobile, trigger: "blur" }
+        ],
+        username: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        verification: [
+          { required: true, message: "请输入密码", trigger: "blur" }
         ],
         password: [{ required: true, message: "请输入密码", trigger: "blur" }]
       },
@@ -151,6 +231,34 @@ export default {
         });
     },
     getUserPlaylist() {},
+    // 多少秒后重新发送
+    makeTimer() {
+      if (this.time > 0) {
+        this.showIt = false;
+        this.time--;
+        this.btntxt = this.time + "s重新获取";
+        setTimeout(this.makeTimer, 1000);
+      } else {
+        this.showIt = true;
+        this.time = 0;
+        this.btntxt = "获取验证码";
+        this.disabled = false;
+      }
+    },
+    sendVerification() {
+      // _userVerificatio
+      //60s之后才能点击
+      this.time = 60;
+      this.makeTimer();
+      _userVerification(this.userRegisterForm.email).then(result => {
+        if (result.code !== 0) {
+          return this.$message.error(result.message);
+        }
+        return this.$message.sucess(
+          "发送成功，请留意邮箱，若未收到邮件请查看垃圾邮件"
+        );
+      });
+    },
 
     // 登录功能
     userLogin() {
@@ -159,12 +267,39 @@ export default {
         if (!item) return;
         _userLogin({
           username: this.userForm.username,
-          password: this.userForm.password
+          password: this.userForm.password,
+          readme: this.readme
         }).then(result => {
           if (result.code !== 0) {
             return this.$message.error(result.message);
           }
           this.$message.success("登录成功");
+          tokenTmp = result.data[this.$tokenStr];
+          localStorage.setItem(this.$tokenStr, result.data[this.$tokenStr]);
+          console.log(localStorage.getItem(this.$tokenStr));
+          this.$store.commit("storeToken", tokenTmp);
+          this.$http.defaults.headers.common[this.$tokenStr] = tokenTmp;
+          this.getUserInfo(tokenTmp);
+        });
+      });
+    },
+    // 用户注册
+    userRegister() {
+      let tokenTmp = "";
+      this.$refs.userRegisterFormRef.validate(async item => {
+        if (!item) return;
+        _userRegister({
+          user: {
+            username: this.userRegisterForm.email,
+            password: this.userRegisterForm.password,
+            name: this.userRegisterForm.username
+          },
+          code: this.userRegisterForm.verification
+        }).then(result => {
+          if (result.code !== 0) {
+            return this.$message.error(result.message);
+          }
+          this.$message.success("注册成功");
           tokenTmp = result.data[this.$tokenStr];
           localStorage.setItem(this.$tokenStr, result.data[this.$tokenStr]);
           console.log(localStorage.getItem(this.$tokenStr));
@@ -319,6 +454,9 @@ export default {
   }
 }
 .loginDialog {
+  .el-tabs__content {
+    width: 100%;
+  }
   img {
     margin: 0 auto;
     display: block;

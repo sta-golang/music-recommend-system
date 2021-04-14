@@ -33,6 +33,11 @@ func (uc *userController) MeInfo(ctx *fasthttp.RequestCtx) {
 
 func (uc *userController) SendCode(ctx *fasthttp.RequestCtx) {
 	username := str.BytesToString(ctx.FormValue("username"))
+	if username == "" || len(username) > 25 || len(username) < 6 || !service.PubUserService.IsEmailFmt(username) {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, emailFormErr).ToJson())
+		return
+	}
+
 	if _, ok := cache.PubCacheService.Get(username); ok {
 		WriterResp(ctx, NewRetData(successCode, waitMessage, nil).ToJson())
 		return
@@ -41,7 +46,7 @@ func (uc *userController) SendCode(ctx *fasthttp.RequestCtx) {
 		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusInternalServerError, sErr.String()).ToJson())
 		return
 	}
-	cache.PubCacheService.Set(username, true, 60, cache.Two)
+	cache.PubCacheService.Set(username, true, 61, cache.Two)
 	WriterResp(ctx, NewRetData(successCode, sendCodeMessage, nil).ToJson())
 }
 

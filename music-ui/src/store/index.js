@@ -20,7 +20,7 @@ export default new Vuex.Store({
     addUser(store, obj) {
       console.log(obj);
       store.user = obj;
-      _getUserPlaylist().then(result => {
+      _getUserPlaylist(store.user.username).then(result => {
         console.log(result);
         store.songList = result.data;
       });

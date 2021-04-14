@@ -2,68 +2,97 @@
   <div class="DetailBaseInfo">
     <!-- 歌单介绍 -->
     <div class="image">
-      <img :src="baseinfolist.img" alt="">
+      <img :src="baseinfolist.img" alt="" />
     </div>
     <div class="info">
-      <div class="title">{{baseinfolist.name}}</div>
+      <div class="title">{{ baseinfolist.name }}</div>
       <div class="author">
-        <span><img :src="baseinfolist.avatarUrl" alt=""></span>
-        <span class="nickname">{{baseinfolist.nickname}}</span>
-        <span class="timer">{{baseinfolist.createTime | timer}}创建</span>
+        <span><img :src="baseinfolist.avatarUrl" alt=""/></span>
+        <span class="nickname">{{ baseinfolist.nickname }}</span>
+        <span class="timer">{{ baseinfolist.createTime | timer }}创建</span>
       </div>
       <div class="btns">
-        <div class="btns_1"><i class="iconfont">&#xe609; </i> 播放全部 <i class="iconfont">&#xe522;</i></div>
-        <div class="btns_2"><i class="iconfont">&#xe63a; </i> 收藏( {{baseinfolist.subscribedCount}} )</div>
-        <div class="btns_3"><i class="iconfont">&#xe65d; </i> 分享( {{baseinfolist.shareCount}} )</div>
+        <div class="btns_1">
+          <i class="iconfont">&#xe609; </i> 播放全部
+          <i class="iconfont">&#xe522;</i>
+        </div>
+        <div class="btns_2">
+          <i class="iconfont">&#xe63a; </i> 收藏(
+          {{ baseinfolist.subscribedCount }} )
+        </div>
+        <div class="btns_3">
+          <i class="iconfont">&#xe65d; </i> 分享(
+          {{ baseinfolist.shareCount }} )
+        </div>
         <div class="btns_3"><i class="iconfont">&#xe723; </i> 下载全部</div>
       </div>
       <div class="tags">
-        标签：<span v-for="(item,index) in baseinfolist.tags" :key="index">{{item }}</span>
+        标签：<span v-for="(item, index) in baseinfolist.tags" :key="index">{{
+          item
+        }}</span>
       </div>
       <div class="desc">
-        <div>简介：</div> <span v-html="baseinfolist.desc" :class="control =='up'?'overhidden':''" style="white-space: pre-line;"></span>
-        <div class="control iconfont" @click="controlHandle('down')" v-if="control == 'up'">&#xe65b;</div>
-        <div class="control iconfont" @click="controlHandle('up')" v-else>&#xe659;</div>
+        <div>简介：</div>
+        <span
+          v-html="baseinfolist.description"
+          :class="control == 'up' ? 'overhidden' : ''"
+          style="white-space: pre-line;"
+        ></span>
+        <div
+          class="control iconfont"
+          @click="controlHandle('down')"
+          v-if="control == 'up'"
+        >
+          &#xe65b;
+        </div>
+        <div class="control iconfont" @click="controlHandle('up')" v-else>
+          &#xe659;
+        </div>
       </div>
       <div class="numwrap">
-        <span>歌曲数<p>{{baseinfolist.trackCount}}</p></span>
-        <span>播放数<p>{{baseinfolist.playCount | bignum}}</p></span>
+        <span
+          >歌曲数
+          <p>{{ baseinfolist.trackCount }}</p></span
+        >
+        <span
+          >播放数
+          <p>{{ baseinfolist.playCount | bignum }}</p></span
+        >
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
-import { formatDate, bignumSlice } from '@/common/js/tool.js'
+import { formatDate, bignumSlice } from "@/common/js/tool.js";
 export default {
   props: ["baseinfolist"],
-  data () {
+  data() {
     return {
-      control: 'up'
-    }
+      control: "up"
+    };
   },
   methods: {
     // 切换简介展示
-    controlHandle (val) {
-      this.control = val
+    controlHandle(val) {
+      this.control = val;
     }
   },
-  mounted () {
+  mounted() {
     // console.log(this.baseinfolist);
   },
   filters: {
-    timer (val) {
-      return formatDate(new Date(val), "yy-MM-dd")
+    timer(val) {
+      return formatDate(new Date(val), "yy-MM-dd");
     },
-    bignum (val) {
-      return bignumSlice(val)
+    bignum(val) {
+      return bignumSlice(val);
     }
   }
-}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .DetailBaseInfo {
   margin-top: 10px;
   padding: 10px;
@@ -194,3 +223,4 @@ export default {
   }
 }
 </style>
+

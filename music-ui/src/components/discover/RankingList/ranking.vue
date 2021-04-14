@@ -2,24 +2,34 @@
   <div>
     <!-- 榜单格式 -->
     <div class="ranking">
-      <div class="title" :style="{background:'linear-gradient(to right,'+color[0]+','+color[1]+')'}">
+      <div
+        class="title"
+        :style="{
+          background:
+            'linear-gradient(to right,' + color[0] + ',' + color[1] + ')'
+        }"
+      >
         <div class="title_0">
-          {{titleArr[0]}}
+          {{ titleArr[0] }}
         </div>
         <div class="set">
           <div class="title_1">
-            {{titleArr[1]}}
-            {{titleArr[2]}}
+            {{ titleArr[1] }}
+            {{ titleArr[2] }}
           </div>
           <div class="timer">{{ time }}更新</div>
           <i class="iconfont">&#xe609;</i>
         </div>
       </div>
-      <table class="centen" cellpadding='0'>
-        <tr @click="rowClick(index,playlistDetail)" v-for="(item,index) in playlistDetail" :key='item.id'>
-          <td :style="index < 3 ? 'color:red' : ''">{{index + 1}}</td>
-          <td>{{item.name}}</td>
-          <td>{{item.song.trim()}}</td>
+      <table class="centen" cellpadding="0">
+        <tr
+          @click="rowClick(index, playlistDetail)"
+          v-for="(item, index) in playlistDetail"
+          :key="item.id"
+        >
+          <td :style="index < 3 ? 'color:red' : ''">{{ index + 1 }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.song.trim() }}</td>
         </tr>
       </table>
     </div>
@@ -28,54 +38,58 @@
 
 <script>
 // 格式化时间
-import { formatDate } from '@/common/js/tool.js'
+import { formatDate } from "@/common/js/tool.js";
 // 请求路由
-import { _getSongsDetail, songDetail, _getMusicListDetail } from '@/network/discover/discover.js'
+import {
+  _getSongsDetail,
+  songDetail,
+  _getMusicListDetail
+} from "@/network/discover/discover.js";
 export default {
-  props: ["rankId", 'title', 'color'],
-  data () {
+  props: ["rankId", "title", "color"],
+  data() {
     return {
       playlistDetail: [],
       timer: 0
-    }
+    };
   },
-  created () {
-    this.getPlaylistDetail()
+  created() {
+    this.getPlaylistDetail();
   },
   methods: {
     // 获取歌单列表数据
-    getPlaylistDetail () {
-      _getMusicListDetail(this.rankId).then((result) => {
-        if (result.code !== 200) return this.$message.error(result.msg)
+    getPlaylistDetail() {
+      _getMusicListDetail(this.rankId).then(result => {
+        console.log("getMusicListDetail");
+        if (result.code !== 200) return this.$message.error(result.msg);
         for (let i of result.playlist.tracks.splice(0, 8)) {
           _getSongsDetail(i.id).then(res => {
-            let song = new songDetail(res.songs)
+            let song = new songDetail(res.songs);
             this.playlistDetail.push(song);
           });
         }
         // console.log(this.playlistDetail);
-        this.timer = result.playlist.updateTime
-      })
+        this.timer = result.playlist.updateTime;
+      });
     },
     // 点击了某一行
-    rowClick (index, musiclist) {
-      this.$bus.$emit('playMusic', index, musiclist)
+    rowClick(index, musiclist) {
+      this.$bus.$emit("playMusic", index, musiclist);
     }
   },
   computed: {
-    titleArr: function () {
-      let titleclone = this.title
-      return titleclone.substr(3).split('')
+    titleArr: function() {
+      let titleclone = this.title;
+      return titleclone.substr(3).split("");
     },
-    time () {
-
+    time() {
       return formatDate(new Date(this.timer), "MM月dd日");
     }
   }
-}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .ranking {
   width: 334px;
   .title {

@@ -17,13 +17,27 @@ export function _getUserSongList(uid) {
     }
   });
 }
-export function _getUserPlaylist() {
-  return axios.get("/playlist/user");
+export function _getUserPlaylist(username) {
+  return axios.get("/playlist/user", {
+    params: {
+      username
+    }
+  });
 }
 
 // 用户登录
 export function _userLogin(obj) {
   return axios.post("/user/login", obj);
+}
+
+// 用户注册
+export function _userRegister(obj) {
+  return axios.post("/user/register", obj);
+}
+
+// 验证码
+export function _userVerification(obj) {
+  return axios.post("/user/code", "username=" + obj);
 }
 
 export function _userInfo() {

@@ -91,6 +91,8 @@ create table `playlist` (
     `username` varchar(255) not null COMMENT '用戶名',
     `name` varchar(255) not null COMMENT '歌单名',
 	`image_url` varchar(265) not null DEFAULT '' COMMENT '图片地址',
+	`description` text not null COMMENT '自述',
+	`tag_names` varchar(255) DEFAULT '' COMMENT '标签名字',
     `hot_score` double not null DEFAULT 0.0 COMMENT '热度打分',
     `create_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '创建时间',
     `update_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '更新时间',

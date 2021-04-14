@@ -6,6 +6,8 @@ import (
 	"github.com/sta-golang/go-lib-utils/codec"
 	"github.com/sta-golang/go-lib-utils/str"
 	"github.com/sta-golang/music-recommend/common"
+	"github.com/sta-golang/music-recommend/controller/dto"
+	"github.com/sta-golang/music-recommend/model"
 	"github.com/sta-golang/music-recommend/service"
 	"github.com/valyala/fasthttp"
 )
@@ -67,7 +69,22 @@ func (pc *playlistController) GetPlaylistDetail(ctx *fasthttp.RequestCtx) {
 		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, err.Error()).ToJson())
 		return
 	}
-	WriterResp(ctx, NewRetData(successCode, sendCodeMessage, playlist).ToJson())
+	if playlist == nil {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusNotFound, common.NotFoundMessage).ToJson())
+	}
+	user, _ := service.PubUserService.QueryUserWithCache(playlist.Username)
+	if user == nil {
+		user = noneUser
+	}
+	retData := dto.UserAndPlaylist{
+		Playlist: playlist,
+		User:     user,
+	}
+	WriterResp(ctx, NewRetData(successCode, success, retData).ToJson())
+}
+
+var noneUser = &model.User{
+	Name: "该用户已注销",
 }
 
 func (pc *playlistController) GetUserPlaylist(ctx *fasthttp.RequestCtx) {

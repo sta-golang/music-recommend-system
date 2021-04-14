@@ -3,6 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
+	_ "net/http/pprof"
+	"os"
+
 	"github.com/sta-golang/go-lib-utils/log"
 	"github.com/sta-golang/go-lib-utils/source"
 	"github.com/sta-golang/music-recommend/common"
@@ -11,10 +15,8 @@ import (
 	"github.com/sta-golang/music-recommend/db"
 	"github.com/sta-golang/music-recommend/service/cache"
 	"github.com/sta-golang/music-recommend/service/email"
+	"github.com/sta-golang/music-recommend/task"
 	"github.com/valyala/fasthttp"
-	"net/http"
-	_ "net/http/pprof"
-	"os"
 )
 
 var (
@@ -72,5 +74,6 @@ func init() {
 	cache.InitCache()
 	common.InitLog()
 	email.InitEmailService()
+	task.InitTask()
 	log.ConsoleLogger.Info(config.GlobalConfig())
 }

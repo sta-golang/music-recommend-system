@@ -38,8 +38,8 @@ func NewPlaylistMysql() *playlistMysql {
 }
 
 func (pm *playlistMysql) Insert(ctx context.Context, p *Playlist) (bool, error) {
-	sql := fmt.Sprintf("insert ignore into %s(status,username,name,image_url,create_time,update_time) values(?,?,?,?,?,?)", tablePlaylist)
-	res, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql, 0, p.Username, p.Name, p.ImageUrl, tm.GetNowDateTimeStr(), tm.GetNowDateTimeStr())
+	sql := fmt.Sprintf("insert ignore into %s(status,username,name,image_url,description,create_time,update_time) values(?,?,?,?,?,?,?)", tablePlaylist)
+	res, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql, 0, p.Username, p.Name, p.ImageUrl, p.Description, tm.GetNowDateTimeStr(), tm.GetNowDateTimeStr())
 	if err != nil {
 		log.ErrorContext(ctx, err)
 

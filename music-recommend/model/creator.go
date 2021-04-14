@@ -1,11 +1,15 @@
 package model
 
 import (
+	"bytes"
+	"context"
 	"fmt"
+	"strconv"
+	"strings"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/sta-golang/go-lib-utils/log"
 	tm "github.com/sta-golang/go-lib-utils/time"
-	"strings"
 )
 
 const (
@@ -27,6 +31,12 @@ type Creator struct {
 	UpdateTime     string  `json:"update_time" db:"update_time"`
 }
 
+// CreatorHotScoreStat 统计作者的分数
+type CreatorHotScoreStat struct {
+	ID  int     `db:"id"`
+	Cnt float64 `db:"cnt"`
+}
+
 const (
 	tableCreator     = "creator"
 	CreatorDelimiter = "+"
@@ -45,6 +55,32 @@ func NewCreatorMysql() *creatorMysql {
 
 func (cm *creatorMysql) Insert(c *Creator) error {
 	return cm.doInsert(client(dbMusicRecommendNameTest), c)
+}
+
+func (cm *creatorMysql) GetScoresTable(ctx context.Context) (scores []CreatorHotScoreStat, err error) {
+	sql := fmt.Sprintf("select sum(hot_score) as cnt, creator_id as id from %s as a,%s as b where a.id = b.music_id GROUP BY b.creator_id", tableMusic, tableCreatorToMusic)
+	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &scores, sql)
+	if err != nil {
+		log.ErrorContext(ctx, err)
+		return nil, err
+	}
+	return scores, nil
+}
+
+func (cm *creatorMysql) UpdateCreatorScores(ctx context.Context, scores []CreatorHotScoreStat) error {
+	ids := make([]string, len(scores))
+	caseBody := bytes.Buffer{}
+	for i := range scores {
+		caseBody.WriteString(fmt.Sprintf(" when id = %d then %f", scores[i].ID, scores[i].Cnt))
+		ids[i] = strconv.Itoa(scores[i].ID)
+	}
+	sql := fmt.Sprintf("update %s set hot_score = ( case %s end ) where id in (%s)", tableCreator, caseBody.String(), strings.Join(ids, ","))
+	_, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql)
+	if err != nil {
+		log.ErrorContext(ctx, err)
+		return err
+	}
+	return nil
 }
 
 func (cm *creatorMysql) doInsert(db sqlx.Execer, c *Creator) error {
