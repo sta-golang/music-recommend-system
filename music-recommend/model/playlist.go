@@ -26,6 +26,8 @@ type Playlist struct {
 const (
 	tablePlaylist      = "playlist"
 	tablePlaylistMusic = "playlist_music"
+
+	MaxPlaylistMusicSize = 200
 )
 
 type playlistMysql struct {
@@ -78,14 +80,14 @@ func (pm *playlistMysql) SelectForUser(ctx context.Context, username string) (pl
 	return
 }
 
-func (pm *playlistMysql) SelectMusicsForPlaylist(ctx context.Context, id, pos, limit int, username string) (musics []Music, err error) {
-	sql := fmt.Sprintf("select * from %s where id in (select music_id from %s where playlist_id = ? and username = ? order by id desc limit ?, ?)", tableMusic, tablePlaylistMusic)
-	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, id, username, pos, limit)
+func (pm *playlistMysql) SelectMusicsForPlaylist(ctx context.Context, id, pos, limit int) (musics []Music, err error) {
+	sql := fmt.Sprintf("select * from %s where id in (select music_id from %s where playlist_id = ? order by id desc ) limit ?, ?", tableMusic, tablePlaylistMusic)
+	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, id, pos, limit)
 	if err != nil {
 		log.ErrorContext(ctx, err)
 		return nil, err
 	}
-	return nil, nil
+	return musics, nil
 }
 
 // AddMusicForPlaylist 和Delete说明类似
@@ -141,9 +143,9 @@ func (pm *playlistMysql) DeletePlaylist(ctx context.Context, id int, username st
 }
 
 // DeleteMusicForPlaylist 传入userID是因为可以防止别人通过请求直接删除而不校验权限
-func (pm *playlistMysql) DeleteMusicForPlaylist(ctx context.Context, id int, username string) (bool, error) {
-	sql := fmt.Sprintf("delete from %s where id = ? and username = ?", tablePlaylistMusic)
-	res, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql, id, username)
+func (pm *playlistMysql) DeleteMusicForPlaylist(ctx context.Context, musicID, playlistID int, username string) (bool, error) {
+	sql := fmt.Sprintf("delete from %s where music_id = ? and playlist_id = ? and username = ?", tablePlaylistMusic)
+	res, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql, musicID, playlistID, username)
 	if err != nil {
 		log.ErrorContext(ctx, err)
 	}

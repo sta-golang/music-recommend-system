@@ -52,13 +52,15 @@ func InitCache() {
 var PubCacheService Cache
 
 func (cs *cacheService) Set(key string, val interface{}, expire int, priority Priority) {
-	if priority <= zero || priority > Ten {
+	if priority != Forever && (priority <= zero || priority > Ten) {
 		return
 	}
-	chData := cs.pool.Get().(*keyAndPriority)
-	chData.key = &key
-	chData.priority = priority
-	cs.setCh <- chData
+	if priority != Forever {
+		chData := cs.pool.Get().(*keyAndPriority)
+		chData.key = &key
+		chData.priority = priority
+		cs.setCh <- chData
+	}
 	if expire <= NoExpire {
 		cs.memory.Set(key, val)
 		return

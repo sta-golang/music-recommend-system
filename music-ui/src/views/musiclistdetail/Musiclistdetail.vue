@@ -107,31 +107,21 @@ export default {
       // 吧我们刚刚截取的数组剩下的去发请求
       console.log("getMusic-new");
       _getMusicListDetail(this.$route.query.id).then(result => {
-        console.log(result.code);
-        console.log(result.data);
         if (result.code !== 0) {
           return this.$message.error(result.message);
         }
         this.baseinfolist = new baseInfo(result.data);
-        let str = "评论(" + result.playlist.commentCount + ")";
-        this.list = ["歌曲列表", str, "收藏者"];
-        this.trackIds = result.playlist.trackIds;
-        this.playlist = result.playlist;
-        this.id = result.playlist.id;
+        //let str = "评论(" + result.playlist.commentCount + ")";
+        //this.list = ["歌曲列表", str, "收藏者"];
+        //this.trackIds = result.playlist.trackIds;
+        //this.playlist = result.playlist;
+        console.log(result.data.user);
+        this.tracklist = result.data.musics;
+        console.log(this.tracklist);
+        this.id = result.data.playlist.id;
         // 获取歌曲列表信息
-        if (this.playlist.trackIds.length > 200) {
-          // splice这个是会影响原数组的  返回了删除后的值
-          // 通过返回的值存储下来 下次用这个来发请求
-          this.leftList = this.playlist.trackIds.splice(200); //删除了200后面的
-        }
-        for (let i of this.playlist.trackIds) {
-          _getSongsDetail(i.id).then(res => {
-            let song = new songDetail(res.songs);
-            this.tracklist.push(song);
-          });
-        }
         // 获取评论数据
-        this.getCommentlist();
+        // this.getCommentlist();
       });
     },
     rowClick(index, list) {
@@ -177,4 +167,3 @@ export default {
   margin-bottom: 50px;
 }
 </style>
-

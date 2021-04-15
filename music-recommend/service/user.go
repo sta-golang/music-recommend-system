@@ -168,7 +168,7 @@ func (us *userService) Login(username, password string, readme bool) (token stri
 		return token, nil
 	}
 	PubStatisticsService.Statistics(us.GetName(), buff, false)
-	cache.PubCacheService.Set(fmt.Sprintf(userSessionCacheKeyFmt, username), user, int(expireTime.Seconds()), cache.Ten)
+	cache.PubCacheService.Set(fmt.Sprintf(userSessionCacheKeyFmt, username), user, int(expireTime.Seconds()), cache.Forever)
 	return token, nil
 }
 

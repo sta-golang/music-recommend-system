@@ -22,7 +22,9 @@ func GlobalRouter() *fasthttprouter.Router {
 	router.POST(userCode, TimeController(userCode, NewUserController().SendCode))
 	router.GET(userInfo, TimeController(userInfo, NewUserController().MeInfo))
 	router.GET(musicAll, TimeController(musicAll, NewMusicController().GetAllMusics))
-	router.GET("/test/playlist", NewPlaylistController().TestAPI)
+	router.GET("/test/playlist", NewPlaylistController().TestPlaylistAPI)
+	router.GET("/test/playlistMusic", NewPlaylistController().TestPlaylistMusicAPI)
+	router.GET(playlistMusic, TimeController(playlistMusic, NewPlaylistController().GetPlaylistMusic))
 	router.GET(playlistUser, TimeController(playlistUser, NewPlaylistController().GetUserPlaylist))
 	router.GET(plsylistDetail, TimeController(plsylistDetail, NewPlaylistController().GetPlaylistDetail))
 	return router

@@ -63,6 +63,15 @@ func (md *musicMysql) doInsertMusic(db sqlx.Execer, music *Music) error {
 	return err
 }
 
+func (md *musicMysql) UpdateMusicStatusBranch(ctx context.Context, ids []string) error {
+	sql := fmt.Sprintf("update %s set status = ? where id in(%s)", tableMusic, strings.Join(ids, ","))
+	_, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql)
+	if err != nil {
+		log.ErrorContext(ctx, err)
+	}
+	return err
+}
+
 func (md *musicMysql) InsertMusicAndCreatorMusic(music *Music) error {
 	err := newMysqlTransaction().Transaction(func(tx *sqlx.Tx) error {
 		err := NewMusicMysql().doInsertMusic(tx, music)
