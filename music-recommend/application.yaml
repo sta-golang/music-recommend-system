@@ -40,3 +40,4 @@ database:
     target: cdb-obyudb1e.bj.tencentcdb.com:10049
     driver_name: mysql
     args: charset=utf8&loc=Local&timeout=3s
+
