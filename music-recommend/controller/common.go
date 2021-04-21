@@ -39,6 +39,7 @@ const (
 	playlistUser     = "/playlist/user"
 	plsylistDetail   = "/playlist/detail"
 	playlistMusic    = "/playlist/music"
+	playlistAdd      = "/playlist/add"
 	creatorDetailUrl = "/creator/detail"
 	creatorList      = "/creator/list"
 	musicDetails     = "/music/details"

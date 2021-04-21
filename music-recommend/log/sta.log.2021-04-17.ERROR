@@ -1,0 +1,9 @@
+[STA:Music-Data] 2021-04-17 00:57:50 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/email/email.go:42 ==> dial tcp: lookup smtp.qq.com: no such host
+[STA:Music-Data] 2021-04-17 00:57:50 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:135 ==> dial tcp: lookup smtp.qq.com: no such host
+[STA:Music-Data] 2021-04-17 02:17:50 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/email/email.go:42 ==> dial tcp: lookup smtp.qq.com: no such host
+[STA:Music-Data] 2021-04-17 02:17:50 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:135 ==> dial tcp: lookup smtp.qq.com: no such host
+[STA:Music-Data] 2021-04-17 04:57:50 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/email/email.go:42 ==> dial tcp: lookup smtp.qq.com: no such host
+[STA:Music-Data] 2021-04-17 04:57:50 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:135 ==> dial tcp: lookup smtp.qq.com: no such host
+[STA:Music-Data] 2021-04-17 08:07:53 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/model/creator.go:64 ==> dial tcp: lookup cdb-obyudb1e.bj.tencentcdb.com: no such host ctx:  
+[STA:Music-Data] 2021-04-17 08:07:53 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/task/stat_creator_score.go:29 ==> dial tcp: lookup cdb-obyudb1e.bj.tencentcdb.com: no such host ctx:  
+[STA:Music-Data] 2021-04-17 08:07:53 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/task/task.go:55 ==> dial tcp: lookup cdb-obyudb1e.bj.tencentcdb.com: no such host

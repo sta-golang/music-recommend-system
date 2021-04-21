@@ -1,0 +1,9 @@
+[STA:Music-Data] 2021-04-16 08:23:57 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/model/user.go:132 ==> dial tcp: lookup cdb-obyudb1e.bj.tencentcdb.com: no such host
+[STA:Music-Data] 2021-04-16 08:23:57 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/user.go:124 ==> dial tcp: lookup cdb-obyudb1e.bj.tencentcdb.com: no such host
+[STA:Music-Data] 2021-04-16 08:23:57 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/user.go:71 ==> err code : 30000, msg : 服务器错误
+[STA:Music-Data] 2021-04-16 08:38:33 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/model/playlist.go:46 ==> invalid connection ctx:  {"ipAddr":"127.0.0.1","requestID":"3c4848a7-421c-4c44-a3af-fcf3e4d9954d","scene":"/playlist/add","user":"554285007@qq.com"}
+[STA:Music-Data] 2021-04-16 08:38:33 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/playlist.go:220 ==> invalid connection ctx:  {"ipAddr":"127.0.0.1","requestID":"3c4848a7-421c-4c44-a3af-fcf3e4d9954d","scene":"/playlist/add","user":"554285007@qq.com"}
+[STA:Music-Data] 2021-04-16 23:37:50 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/email/email.go:42 ==> dial tcp: lookup smtp.qq.com: no such host
+[STA:Music-Data] 2021-04-16 23:37:50 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:135 ==> dial tcp: lookup smtp.qq.com: no such host
+[STA:Music-Data] 2021-04-16 23:57:50 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/email/email.go:42 ==> dial tcp: lookup smtp.qq.com: no such host
+[STA:Music-Data] 2021-04-16 23:57:50 [ERROR] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:135 ==> dial tcp: lookup smtp.qq.com: no such host

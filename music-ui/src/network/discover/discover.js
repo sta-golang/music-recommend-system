@@ -103,6 +103,11 @@ export function _getMusicListDetail(id) {
   return result;
 }
 
+export function _addPlaylist(name) {
+  const result = axios.post("/playlist/add", "name=" + name);
+  return result;
+}
+
 // 获取歌曲详情信息
 export function _getSongsDetail(id) {
   const result = axios.get("/song/detail", {

@@ -1,10 +1,16 @@
 <template>
   <div class="musiclyric">
-    <el-drawer ref='drawer' :modal='false' direction="btt" :visible.sync="showLyric" :with-header="false">
+    <el-drawer
+      ref="drawer"
+      :modal="false"
+      direction="btt"
+      :visible.sync="showLyric"
+      :with-header="false"
+    >
       <div class="drawerBox">
         <div class="lyricbox">
           <div class="img_left">
-            <img :src="songDetailObj.pic" alt="">
+            <img :src="songDetailObj.pic" alt="" />
             <div class="wrap">
               <span><i class="iconfont">&#xe60a;</i>喜欢</span>
               <span><i class="iconfont">&#xe63a;</i>收藏</span>
@@ -15,58 +21,65 @@
           <div class="lyric_list">
             <i class="iconfont narrow" @click="closeLyricbox">&#xf01b4;</i>
             <div class="title">
-              {{songDetailObj.name}}
+              {{ songDetailObj.name }}
             </div>
             <div class="songInfo">
               <div class="sognAlbum">
-                专辑：<span>{{songDetailObj.album}}</span>
+                专辑：<span>{{ songDetailObj.album }}</span>
               </div>
               <div class="sognAlbum">
-                歌手：<span>{{songDetailObj.song}}</span>
+                歌手：<span>{{ songDetailObj.song }}</span>
               </div>
             </div>
-            <lyric-list :lyric='lyric'></lyric-list>
+            <lyric-list :lyric="lyric"></lyric-list>
           </div>
         </div>
         <div class="commtentList">
-          <comment-list @scrollLoad='scrollLoad' :id='songDetailObj.id' :hotCommentList='hotCommentList' :commentlist='commentList' :commentType='0'></comment-list>
+          <comment-list
+            @scrollLoad="scrollLoad"
+            :id="songDetailObj.id"
+            :hotCommentList="hotCommentList"
+            :commentlist="commentList"
+            :commentType="0"
+          ></comment-list>
         </div>
       </div>
       <div class="bgimage">
-        <img :src="songDetailObj.pic" alt="">
+        <img :src="songDetailObj.pic" alt="" />
       </div>
     </el-drawer>
   </div>
 </template>
 
 <script>
-import { _getLyric, _getSongComment } from '@/network/song'
-import CommentList from '@/views/musiclistdetail/childrenComps/CommentList'
-import LyricList from './LyricList'
+import { _getLyric, _getSongComment } from "@/network/song";
+import CommentList from "@/views/musiclistdetail/childrenComps/CommentList";
+import LyricList from "./LyricList";
 export default {
-  data () {
+  data() {
     return {
       songDetailObj: {},
       // 歌词
-      lyric: '',
+      lyric: "",
       commentOffset: 0,
       hotCommentList: [],
       commentList: [],
       commentlimit: 20
-    }
+    };
   },
   methods: {
-    closeLyricbox () {
-      this.$store.commit('editshowLyric', false)
+    closeLyricbox() {
+      this.$store.commit("editshowLyric", false);
     },
-    getLyric (id) {
-      _getLyric(id).then(result => {
-        // console.log(result);
-        this.lyric = result.lrc.lyric ? result.lrc.lyric : '纯音乐'
-        // console.log(this.lyric);
-      })
+    getLyric(id) {
+      // 获取歌词信息 暂时没有
+      // _getLyric(id).then(result => {
+      // console.log(result);
+      //   this.lyric = result.lrc.lyric ? result.lrc.lyric : "纯音乐";
+      // console.log(this.lyric);
+      // });
     },
-    getSongComment () {
+    getSongComment() {
       _getSongComment({
         id: this.songDetailObj.id,
         offset: this.commentOffset,
@@ -74,29 +87,29 @@ export default {
       }).then(result => {
         console.log(result);
         if (this.hotCommentList.length === 0) {
-          this.hotCommentList = result.hotComments
+          this.hotCommentList = result.hotComments;
         }
-        this.commentList.push(...result.comments)
-        this.commentOffset += this.commentlimit
-      })
+        this.commentList.push(...result.comments);
+        this.commentOffset += this.commentlimit;
+      });
     },
-    scrollLoad () {
-      this.getSongComment()
+    scrollLoad() {
+      this.getSongComment();
     }
   },
   computed: {
-    showLyric () {
-      return this.$store.state.showLyric
+    showLyric() {
+      return this.$store.state.showLyric;
     },
-    songDetail () {
-      return this.$store.state.songDetail
+    songDetail() {
+      return this.$store.state.songDetail;
     }
   },
   watch: {
-    songDetail: function (obj) {
-      this.songDetailObj = obj
-      this.getLyric(obj.id)
-      this.getSongComment()
+    songDetail: function(obj) {
+      this.songDetailObj = obj;
+      this.getLyric(obj.id);
+      //this.getSongComment()
       // console.log(obj);
     }
   },
@@ -104,10 +117,10 @@ export default {
     LyricList,
     CommentList
   }
-}
+};
 </script>
 
-<style lang='less'>
+<style lang="less">
 i {
   cursor: pointer;
 }
@@ -228,3 +241,4 @@ i {
   }
 }
 </style>
+

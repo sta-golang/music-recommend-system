@@ -32,7 +32,7 @@ const (
 	tableMusic         = "music"
 	MusicDefaultStatus = 0
 	// TODO: 原本的状态应该是1 目前先改成0  <08-04-21, FOUR SEASONS> //
-	MusicHasUrlMusicUrlStatus = 0
+	MusicHasUrlMusicUrlStatus = 1
 	MusicCreatorNameDelimiter = "/"
 	insertSQLFmt              = "insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 )

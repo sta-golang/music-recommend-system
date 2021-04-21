@@ -1,0 +1,435 @@
+[STA:Music-Data] 2021-04-17 00:37:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 59400.08743173(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.96% | cpu空闲比率 : 96.80%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14311(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1583(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 9 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 282604 | 内存释放次数 : 278720
+* gc Info : 
+	上次GC时间 : 1618590951858595197(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 35110486() | 上次GC暂停时间 : 8303()
+[STA:Music-Data] 2021-04-17 00:57:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 60600.090591535(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.95% | cpu空闲比率 : 96.80%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14315(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1579(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 9 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 287709 | 内存释放次数 : 283822
+* gc Info : 
+	上次GC时间 : 1618592151171680163(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 35880991() | 上次GC暂停时间 : 76801()
+[STA:Music-Data] 2021-04-17 01:17:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 61800.093367302(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.95% | cpu空闲比率 : 96.81%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14324(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1571(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 9 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 292961 | 内存释放次数 : 289066
+* gc Info : 
+	上次GC时间 : 1618593351484925240(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 36614836() | 上次GC暂停时间 : 77183()
+[STA:Music-Data] 2021-04-17 01:37:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 63000.24515089(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.95% | cpu空闲比率 : 96.81%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14314(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1581(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 9 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 298035 | 内存释放次数 : 294140
+* gc Info : 
+	上次GC时间 : 1618594551806251728(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 37541209() | 上次GC暂停时间 : 95254()
+[STA:Music-Data] 2021-04-17 01:57:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 64200.246970263(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.95% | cpu空闲比率 : 96.82%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14309(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1586(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 10 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 303110 | 内存释放次数 : 299209
+* gc Info : 
+	上次GC时间 : 1618595751124727407(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 38227795() | 上次GC暂停时间 : 28026()
+[STA:Music-Data] 2021-04-17 02:17:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 65400.249874316(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.94% | cpu空闲比率 : 96.82%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14317(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1578(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 10 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 308186 | 内存释放次数 : 304287
+* gc Info : 
+	上次GC时间 : 1618596951443837513(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 38845298() | 上次GC暂停时间 : 72679()
+[STA:Music-Data] 2021-04-17 02:37:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 66600.252532624(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.94% | cpu空闲比率 : 96.82%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14317(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1577(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 10 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 313413 | 内存释放次数 : 309506
+* gc Info : 
+	上次GC时间 : 1618598151764785863(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 39673676() | 上次GC暂停时间 : 91303()
+[STA:Music-Data] 2021-04-17 02:57:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 67800.25529054(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.94% | cpu空闲比率 : 96.83%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14328(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1566(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 10 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 318484 | 内存释放次数 : 314582
+* gc Info : 
+	上次GC时间 : 1618599352074245834(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 40437877() | 上次GC暂停时间 : 89381()
+[STA:Music-Data] 2021-04-17 03:17:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 69000.258010706(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.94% | cpu空闲比率 : 96.83%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14312(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1583(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 10 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 323561 | 内存释放次数 : 319655
+* gc Info : 
+	上次GC时间 : 1618600551392569729(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 41270234() | 上次GC暂停时间 : 28342()
+[STA:Music-Data] 2021-04-17 03:37:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 70200.260514793(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.94% | cpu空闲比率 : 96.83%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14317(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1578(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 11 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 328638 | 内存释放次数 : 324735
+* gc Info : 
+	上次GC时间 : 1618601751720980617(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 41945882() | 上次GC暂停时间 : 120167()
+[STA:Music-Data] 2021-04-17 03:57:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 71400.262922273(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.93% | cpu空闲比率 : 96.84%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14327(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1568(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 11 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 333711 | 内存释放次数 : 329811
+* gc Info : 
+	上次GC时间 : 1618602952037132798(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 42829474() | 上次GC暂停时间 : 58834()
+[STA:Music-Data] 2021-04-17 04:17:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 72600.265558317(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.93% | cpu空闲比率 : 96.84%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14316(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1579(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 11 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 338786 | 内存释放次数 : 334879
+* gc Info : 
+	上次GC时间 : 1618604151354055991(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 43551190() | 上次GC暂停时间 : 31027()
+[STA:Music-Data] 2021-04-17 04:37:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 73800.267591217(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.93% | cpu空闲比率 : 96.84%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14318(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1577(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 11 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 343863 | 内存释放次数 : 339955
+* gc Info : 
+	上次GC时间 : 1618605351665217685(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 44248484() | 上次GC暂停时间 : 56202()
+[STA:Music-Data] 2021-04-17 04:57:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 75000.274716007(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.93% | cpu空闲比率 : 96.84%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14327(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1568(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 11 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 348936 | 内存释放次数 : 345036
+* gc Info : 
+	上次GC时间 : 1618606551984137672(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 45018277() | 上次GC暂停时间 : 48674()
+[STA:Music-Data] 2021-04-17 05:17:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 76200.276460638(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.93% | cpu空闲比率 : 96.85%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14332(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1562(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 11 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 354141 | 内存释放次数 : 350234
+* gc Info : 
+	上次GC时间 : 1618607751296736569(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 45706717() | 上次GC暂停时间 : 85295()
+[STA:Music-Data] 2021-04-17 05:37:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 77400.278845625(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.92% | cpu空闲比率 : 96.85%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14334(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1561(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 12 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 359218 | 内存释放次数 : 355311
+* gc Info : 
+	上次GC时间 : 1618608951612931745(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 46281100() | 上次GC暂停时间 : 91238()
+[STA:Music-Data] 2021-04-17 05:57:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 78600.281381944(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.92% | cpu空闲比率 : 96.85%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14317(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1578(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 12 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 364291 | 内存释放次数 : 360385
+* gc Info : 
+	上次GC时间 : 1618610151917837734(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 47083430() | 上次GC暂停时间 : 28263()
+[STA:Music-Data] 2021-04-17 06:17:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 79800.28412423(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.92% | cpu空闲比率 : 96.86%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14325(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1570(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 12 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 369367 | 内存释放次数 : 365460
+* gc Info : 
+	上次GC时间 : 1618611351230087641(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 47976673() | 上次GC暂停时间 : 75061()
+[STA:Music-Data] 2021-04-17 06:37:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 81000.286689879(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.92% | cpu空闲比率 : 96.86%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14329(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1565(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 12 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 374444 | 内存释放次数 : 370533
+* gc Info : 
+	上次GC时间 : 1618612551551671607(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 48859666() | 上次GC暂停时间 : 80917()
+[STA:Music-Data] 2021-04-17 06:57:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 82200.289293059(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.92% | cpu空闲比率 : 96.86%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14339(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1556(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 12 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 379517 | 内存释放次数 : 375610
+* gc Info : 
+	上次GC时间 : 1618613751869790103(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 49453604() | 上次GC暂停时间 : 64188()
+[STA:Music-Data] 2021-04-17 07:17:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 83400.292454196(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.92% | cpu空闲比率 : 96.86%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14336(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1559(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 13 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 384594 | 内存释放次数 : 380686
+* gc Info : 
+	上次GC时间 : 1618614951182810852(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 50280278() | 上次GC暂停时间 : 23858()
+[STA:Music-Data] 2021-04-17 07:37:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 84600.29489684(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.92% | cpu空闲比率 : 96.87%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14337(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1558(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 13 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 389673 | 内存释放次数 : 385760
+* gc Info : 
+	上次GC时间 : 1618616151503502870(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 50920816() | 上次GC暂停时间 : 54696()
+[STA:Music-Data] 2021-04-17 07:57:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 85800.297548172(秒) | goroutine数量 : 15 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.91% | cpu空闲比率 : 96.87%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14321(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1574(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 13 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 394748 | 内存释放次数 : 390839
+* gc Info : 
+	上次GC时间 : 1618617351822489762(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 51598875() | 上次GC暂停时间 : 64484()
+[STA:Music-Data] 2021-04-17 08:17:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 87000.300223849(秒) | goroutine数量 : 14 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.91% | cpu空闲比率 : 96.87%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14318(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1576(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 13 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 400013 | 内存释放次数 : 396134
+* gc Info : 
+	上次GC时间 : 1618618551138255453(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 52353396() | 上次GC暂停时间 : 111540()
+[STA:Music-Data] 2021-04-17 08:37:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 88200.302895285(秒) | goroutine数量 : 14 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.91% | cpu空闲比率 : 96.87%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14331(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1564(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 13 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 405090 | 内存释放次数 : 401208
+* gc Info : 
+	上次GC时间 : 1618619751457735073(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 52984842() | 上次GC暂停时间 : 28907()
+[STA:Music-Data] 2021-04-17 08:57:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 89400.305278471(秒) | goroutine数量 : 14 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.91% | cpu空闲比率 : 96.88%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14330(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1565(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 14 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 410166 | 内存释放次数 : 406283
+* gc Info : 
+	上次GC时间 : 1618620951775785257(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 53585903() | 上次GC暂停时间 : 25748()
+[STA:Music-Data] 2021-04-17 09:17:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 90600.307986697(秒) | goroutine数量 : 14 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.91% | cpu空闲比率 : 96.88%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14333(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1562(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 14 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 415241 | 内存释放次数 : 411364
+* gc Info : 
+	上次GC时间 : 1618622152094311549(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 54219759() | 上次GC暂停时间 : 74656()
+[STA:Music-Data] 2021-04-17 09:37:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 91800.310714717(秒) | goroutine数量 : 14 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.90% | cpu空闲比率 : 96.88%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14341(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1553(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 14 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 420318 | 内存释放次数 : 416436
+* gc Info : 
+	上次GC时间 : 1618623351407952413(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 54893697() | 上次GC暂停时间 : 89743()
+[STA:Music-Data] 2021-04-17 09:57:50 [WARN] /usr/local/sta-golang/music-recommend-system/music-recommend/service/cache/impl.go:122 ==> memory 使用量报警!
+ * Server Info : 
+	ServerName : FOUR-SEASONS | SystemOs : linux | 运行时间 : 93000.313058676(秒) | goroutine数量 : 14 | ip : 127.0.0.1
+* CPU Info : 
+	cpu核数 : 8 | cpu用户态比率 : 1.90% | cpu空闲比率 : 96.89%
+* Disk Info : 
+	已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+	 ====> 路径: / | 已用磁盘空间 : 28874(MB) | 可用磁盘空间 : 123300(MB) | 总磁盘空间 : 152175(MB)
+* memory Info : 
+	已用内存 : 14328(MB) | 系统内存占用量 : 70(MB) | 剩余内存 : 1567(MB)
+	golang内存使用量(MB) : 1 | 总分配的内存 14 (MB) | 总内存 : 15895(MB)
+	指针查找次数 : 0 | 内存分配次数 : 425395 | 内存释放次数 : 421510
+* gc Info : 
+	上次GC时间 : 1618624551725286749(纳秒) | 下次GC内存回收量 : 4(字节)
+	GC暂停时间总量 : 55557192() | 上次GC暂停时间 : 57062()

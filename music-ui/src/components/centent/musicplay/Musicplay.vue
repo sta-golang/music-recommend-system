@@ -3,13 +3,13 @@
     <div class="musicplay">
       <div class="play-top" v-show="showTop">
         <div class="image">
-          <img :src="userinfo.pic" alt="">
+          <img :src="userinfo.pic" alt="" />
           <i class="iconfont imageIconfont" @click="showLyricBox">&#xe625;</i>
         </div>
         <div class="userinfo">
           <div class="info">
-            <div class="title">{{userinfo.name}}</div>
-            <div class="nickname">{{userinfo.song}}</div>
+            <div class="title">{{ userinfo.name }}</div>
+            <div class="nickname">{{ userinfo.song }}</div>
           </div>
           <div class="warp">
             <i class="iconfont">&#xe60a;</i>
@@ -19,26 +19,49 @@
       </div>
       <div class="play-left">
         <i class="iconfont Last" @click="preMusic">&#xe602;</i>
-        <i class="iconfont Last" @click="musicPlay()" v-if="musicStatus">&#xe609;</i>
+        <i class="iconfont Last" @click="musicPlay()" v-if="musicStatus"
+          >&#xe609;</i
+        >
         <i class="iconfont control" @click="musicStop()" v-else>&#xe662;</i>
         <i class="iconfont Next" @click="nextMusic">&#xe603;</i>
       </div>
       <div class="play-right">
-        <div class="startTime">{{currentTime}}</div>
-        <el-slider :disabled='sliderDisabled' @change='sliderChange' v-model="sliderTimer" :show-tooltip='false'>
+        <div class="startTime">{{ currentTime }}</div>
+        <el-slider
+          :disabled="sliderDisabled"
+          @change="sliderChange"
+          v-model="sliderTimer"
+          :show-tooltip="false"
+        >
         </el-slider>
-        <div class="startTime">{{duration}}</div>
+        <div class="startTime">{{ duration }}</div>
         <div class="sound">
-          <i class="iconfont" @click="soundHandle" v-if="!musicSound">&#xe63b;</i>
+          <i class="iconfont" @click="soundHandle" v-if="!musicSound"
+            >&#xe63b;</i
+          >
           <i class="iconfont" @click="soundHandle" v-else>&#xe666;</i>
           <div class="audio">
-            <audio autoplay @play="playLoad()" ref="audio" @error='audioError()' @timeupdate='timeupdate' @playing='musicPlaying()' @pause="musicPause()" @ended='musicEnded()' :src="playList.src"></audio>
+            <audio
+              autoplay
+              @play="playLoad()"
+              ref="audio"
+              @error="audioError()"
+              @timeupdate="timeupdate"
+              @playing="musicPlaying()"
+              @pause="musicPause()"
+              @ended="musicEnded()"
+              :src="playList.src"
+            ></audio>
           </div>
-          <el-slider :show-tooltip='false' v-model="volume">
-          </el-slider>
+          <el-slider :show-tooltip="false" v-model="volume"> </el-slider>
         </div>
         <div class="order">
-          <el-tooltip class="item" effect="dark" content="顺序播放" placement="top">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="顺序播放"
+            placement="top"
+          >
             <i class="iconfont">&#xe802;</i>
           </el-tooltip>
           <!-- <el-tooltip class="item" effect="dark" content="随即播放" placement="top">
@@ -49,14 +72,27 @@
         </el-tooltip> -->
         </div>
         <div class="musicList">
-          <el-tooltip class="item" effect="dark" content="播放列表" placement="top">
-            <i class="iconfont" @click="isShowMusicplaylist=!isShowMusicplaylist">&#xe83e;</i>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="播放列表"
+            placement="top"
+          >
+            <i
+              class="iconfont"
+              @click="isShowMusicplaylist = !isShowMusicplaylist"
+              >&#xe83e;</i
+            >
           </el-tooltip>
         </div>
       </div>
     </div>
     <transition name="Musicplaylist">
-      <music-play-list v-show="isShowMusicplaylist" :currentIndex='currentIndex' :musicList='musicList'></music-play-list>
+      <music-play-list
+        v-show="isShowMusicplaylist"
+        :currentIndex="currentIndex"
+        :musicList="musicList"
+      ></music-play-list>
     </transition>
 
     <music-lyric ref="musicLyric"></music-lyric>
@@ -64,14 +100,14 @@
 </template>
 
 <script>
-import { _getSongUrl, _getLyric } from '@/network/song'
-import { playlistTool } from './playlist'
-import { formatDate, deepClone } from '@/common/js/tool'
-import MusicPlayList from './MusicPlayList'
+import { _getSongUrl, _getLyric } from "@/network/song";
+import { playlistTool } from "./playlist";
+import { formatDate, deepClone } from "@/common/js/tool";
+import MusicPlayList from "./MusicPlayList";
 // 歌词
-import MusicLyric from './MusicLyric'
+import MusicLyric from "./MusicLyric";
 export default {
-  data () {
+  data() {
     return {
       playList: {
         src: ""
@@ -83,15 +119,15 @@ export default {
       sliderTimer: 0,
       // slider是否禁用
       sliderDisabled: true,
-      currentTime: '00:00',
+      currentTime: "00:00",
       // 音频的长度
-      duration: '00:00',
+      duration: "00:00",
       showTop: false,
       userinfo: {
-        name: '',
-        pic: '',
-        id: '',
-        song: ''
+        name: "",
+        image_url: "",
+        id: "",
+        song: ""
       },
       // 当前是播放还是暂停
       musicStatus: true,
@@ -103,236 +139,247 @@ export default {
       isShowMusicplaylist: false,
       // 播放类型
       playbackType: 1
-    }
+    };
   },
 
   methods: {
-    audioError () {
+    audioError() {
       // this.$message.error('没有音频')
     },
     // 开始播放
-    musicPlaying () {
-      this.$store.commit('editMusicPlay', true)
+    musicPlaying() {
+      this.$store.commit("editMusicPlay", true);
     },
     // 暂停了
-    musicPause () {
-      this.$store.commit('editMusicPlay', false)
+    musicPause() {
+      this.$store.commit("editMusicPlay", false);
     },
     // 当歌曲加载完成播放时
-    playLoad () {
-      this.$refs.audio.volume = this.volume / 100
-      this.duration = this.musicList[this.currentIndex].time
+    playLoad() {
+      this.$refs.audio.volume = this.volume / 100;
+      this.duration = this.musicList[this.currentIndex].time;
     },
     // 播放
-    musicPlay () {
+    musicPlay() {
       // 我是把要播放的放进playlist中  跟最初想的不一样了
       // 这里不知道为什么有时候获取不到this.$refs.audio  返回Undefined
       this.$nextTick(() => {
-        if (this.playList.src !== '') {
-          this.$refs.audio.volume = 0
-          this.$refs.audio.play()
-          this.musicStatus = false
+        if (this.playList.src !== "") {
+          this.$refs.audio.volume = 0;
+          this.$refs.audio.play();
+          this.musicStatus = false;
         }
-      })
+      });
     },
     // 重新播放
-    musicLoad () {
-      this.$refs.audio.load()
+    musicLoad() {
+      this.$refs.audio.load();
     },
     // 渐变声音
-    musicGradients (type) {
+    musicGradients(type) {
       return new Promise((resolve, reject) => {
         let num = 4; // 在对半除的时候 3 4次就没声音了
         for (let i = 1; i <= num; i++) {
           setTimeout(() => {
-            if (i == num) resolve()
-            if (type === 'down') {
-              this.$refs.audio.volume = this.$refs.audio.volume / 2
+            if (i == num) resolve();
+            if (type === "down") {
+              this.$refs.audio.volume = this.$refs.audio.volume / 2;
             } else {
               // 这里不知道怎么做到播放也是渐变的。。。
             }
           }, i * 100);
         }
-
-      })
+      });
     },
     // 暂停
-    async musicStop () {
-      this.musicStatus = true
-      await this.musicGradients('down')
-      this.$refs.audio.pause()
+    async musicStop() {
+      this.musicStatus = true;
+      await this.musicGradients("down");
+      this.$refs.audio.pause();
     },
     // 根据获取到的数据 发起获取URL请求 然后对返回值过滤 添加到播放中
-    getSongUrl (id) {
-      _getSongUrl(id).then(result => {
-        const res = new playlistTool(result.data[0])
-        if (!res.src) {
-          this.nextMusic()
-          return this.$message.info('需要付费或其他原因')
-        }
-        if (res.src == this.playList.src) {
-          // 再判断如果相同 那是不是结束了
-          if (this.$refs.audio && this.$refs.audio.ended) {
-            // 重新播放
-            return this.musicLoad()
-          }
-          return this.$message.info('正在播放中')
-        }
-        this.playList = res
-        // console.log(res);
-        // 放在这里只有歌真正变化了再去修改
-        this.$store.commit('editSongDetai', this.musicList[this.currentIndex])
-        this.musicStatus = false
-
-      })
-
+    getSongUrl(id) {
+      // _getSongUrl(id).then(result => {
+      //   const res = new playlistTool(result.data[0]);
+      //   if (!res.src) {
+      //     this.nextMusic();
+      //     return this.$message.info("需要付费或其他原因");
+      //   }
+      //   if (res.src == this.playList.src) {
+      // 再判断如果相同 那是不是结束了
+      //     if (this.$refs.audio && this.$refs.audio.ended) {
+      // 重新播放
+      //       return this.musicLoad();
+      //     }
+      //     return this.$message.info("正在播放中");
+      //   }
+      //   this.playList = res;
+      // console.log(res);
+      // 放在这里只有歌真正变化了再去修改
+      //   this.$store.commit("editSongDetai", this.musicList[this.currentIndex]);
+      //   this.musicStatus = false;
+      // });
     },
-    // 歌曲时间信息  
-    timeupdate () {
+    getMusicUrl(music) {
+      const res = new playlistTool(music);
+      if (res.src == this.playList.src) {
+        // 再判断如果相同 那是不是结束了
+        if (this.$refs.audio && this.$refs.audio.ended) {
+          // 重新播放
+          return this.musicLoad();
+        }
+        return this.$message.info("正在播放中");
+      }
+      this.playList = res;
+      this.$store.commit("editSongDetai", this.musicList[this.currentIndex]);
+      this.musicStatus = false;
+    },
+    // 歌曲时间信息
+    timeupdate() {
       // 在歌曲停止的一瞬间 this.$refs.audio 是undefined 然后就会报错。。
-      if (!this.$refs.audio) return
+      if (!this.$refs.audio) return;
       // 当前时间
       // console.log(this.$refs.audio);
       // console.log(this.$refs.audio.duration);
-      let duration = new Date(this.$refs.audio.duration * 1000)
-      let currentTime = new Date(this.$refs.audio.currentTime * 1000)
-      this.currentTime = formatDate(currentTime, 'mm:ss')
+      let duration = new Date(this.$refs.audio.duration * 1000);
+      let currentTime = new Date(this.$refs.audio.currentTime * 1000);
+      this.currentTime = formatDate(currentTime, "mm:ss");
       // 滑块的位置
-      this.sliderTimer = currentTime / duration * 100
+      this.sliderTimer = (currentTime / duration) * 100;
 
-      this.$store.commit('editCurrentTime', currentTime)
+      this.$store.commit("editCurrentTime", currentTime);
       // console.log(this.sliderTimer);
     },
     // 更新位置
-    sliderChange (val) {
+    sliderChange(val) {
       // 更新的时间位置等于  新位置的百分比 * 总的时间长度
-      this.$refs.audio.currentTime = val / 100 * this.$refs.audio.duration
+      this.$refs.audio.currentTime = (val / 100) * this.$refs.audio.duration;
     },
     // 下一首
-    nextMusic () {
+    nextMusic() {
       // console.log('next');
-      // 是不是最后一首 
+      // 是不是最后一首
       if (this.musicList.length - 1 == this.currentIndex) {
-        // 判断数组中是否还有歌 如果有 就跳到第一首 这个就是列表循环播放   我实现不了。。 
+        // 判断数组中是否还有歌 如果有 就跳到第一首 这个就是列表循环播放   我实现不了。。
         // 是否播放完成
         if (this.$refs.audio.ended) {
           // 播放完成又点击 重新播放
-          return this.musicLoad()
+          return this.musicLoad();
         } else {
-          return
+          return;
         }
-        this.musicStatus = true
-        return this.$message.info('正在播放中')
+        this.musicStatus = true;
+        return this.$message.info("正在播放中");
       }
-      this.currentIndex += 1
-      this.init()
+      this.currentIndex += 1;
+      this.init();
     },
     // 上一首
-    preMusic () {
-      if (this.currentIndex === 0) return this.$message.info('这是第一首了')
-      this.currentIndex -= 1
-      this.init()
+    preMusic() {
+      if (this.currentIndex === 0) return this.$message.info("这是第一首了");
+      this.currentIndex -= 1;
+      this.init();
     },
     // 播放结束的时候
-    musicEnded () {
+    musicEnded() {
       // 最后一首就不自动播放了
       if (this.musicList.length - 1 == this.currentIndex) {
         // 那就吧左下角隐藏
-        return this.showTop = false
+        return (this.showTop = false);
       }
-      this.nextMusic()
+      this.nextMusic();
     },
     // 显示左下角歌曲信息
-    showTopHandle (info) {
-      this.userinfo = info
-      this.showTop = true
+    showTopHandle(info) {
+      this.userinfo = info;
+      this.showTop = true;
     },
     // 控制禁音
-    soundHandle () {
-      this.musicSound = !this.musicSound
+    soundHandle() {
+      this.musicSound = !this.musicSound;
       if (this.musicSound) {
-        this.volume = 0
+        this.volume = 0;
       } else {
-        this.volume = 50
+        this.volume = 50;
       }
     },
     // 重置一下播放器信息
-    resetInfo () {
-      this.sliderTimer = 0
+    resetInfo() {
+      this.sliderTimer = 0;
       this.playList = {
         src: ""
-      }
-      this.musicList = []
-      this.currentTime = '00:00'
-      this.duration = '00:00'
-      this.showTop = false
+      };
+      this.musicList = [];
+      this.currentTime = "00:00";
+      this.duration = "00:00";
+      this.showTop = false;
     },
     // 播放控制
-    init () {
-      this.getSongUrl(this.musicList[this.currentIndex].id)
-      this.showTopHandle(this.musicList[this.currentIndex])
+    init() {
+      this.getMusicUrl(this.musicList[this.currentIndex]);
+      this.showTopHandle(this.musicList[this.currentIndex]);
     },
     // 显示歌词面板
-    showLyricBox () {
-      this.$store.commit('editshowLyric', true)
+    showLyricBox() {
+      this.$store.commit("editshowLyric", true);
     }
   },
-  mounted () {
-    this.$bus.$on('playMusic', (index, list) => {
+  mounted() {
+    this.$bus.$on("playMusic", (index, list) => {
       // 对传递过来的list 克隆一下
-      let cloneList = []
-      deepClone(cloneList, list)
-      this.currentIndex = index
-      this.musicList = cloneList
-      this.init()
-    })
+      let cloneList = [];
+      deepClone(cloneList, list);
+      this.currentIndex = index;
+      this.musicList = cloneList;
+      this.init();
+    });
     // todos: 搜索一首歌的时候 播放是把这歌插入到当前播放列表的中 位置是当前播放的位置
-    this.$bus.$on('pushPlayMusic', (item) => {
+    this.$bus.$on("pushPlayMusic", item => {
       if (this.musicList.length === 0) {
-        this.musicList.push(item)
-        this.init()
+        this.musicList.push(item);
+        this.init();
       } else {
         // 需要判断歌曲是否在当前数组中
         let index = this.musicList.findIndex(value => {
-          return item.id == value.id
-        })
+          return item.id == value.id;
+        });
         if (index !== -1) {
           this.currentIndex = index;
-          this.init()
-          return
+          this.init();
+          return;
         }
         this.currentIndex++;
-        this.musicList.splice(this.currentIndex, 0, item)
-        this.init()
+        this.musicList.splice(this.currentIndex, 0, item);
+        this.init();
       }
-    })
+    });
   },
-  beforeDestroy () {
+  beforeDestroy() {
     // 貌似这个组件会一直存在。。。
     // this.$bus.$off('playMusic')
     // this.$bus.$off('pushPlayMusic')
   },
   watch: {
     // 监听音量
-    volume: function (val) {
+    volume: function(val) {
       if (val == 0) {
-        this.musicSound = true
+        this.musicSound = true;
       } else {
-        this.musicSound = false
+        this.musicSound = false;
       }
-      this.$refs.audio.volume = val / 100
+      this.$refs.audio.volume = val / 100;
     },
     // 监听是否有数据
-    sliderTimer () {
+    sliderTimer() {
       if (this.musicList.length === 0) {
-        this.sliderDisabled = true
+        this.sliderDisabled = true;
       } else {
-        this.sliderDisabled = false
+        this.sliderDisabled = false;
       }
     },
     // 当state中的数据发生变化 就代表歌词面板变化 左下角反着来
-    showLyric: function (val) {
-      this.showTop = !val
+    showLyric: function(val) {
+      this.showTop = !val;
     }
   },
   components: {
@@ -341,14 +388,14 @@ export default {
   },
   computed: {
     // 变成计算属性
-    showLyric () {
-      return this.$store.state.showLyric
+    showLyric() {
+      return this.$store.state.showLyric;
     }
   }
-}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 i {
   cursor: pointer;
 }
@@ -494,3 +541,4 @@ i {
   }
 }
 </style>
+

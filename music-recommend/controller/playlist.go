@@ -152,3 +152,27 @@ func (pc *playlistController) GetPlaylistMusic(ctx *fasthttp.RequestCtx) {
 	}
 	WriterResp(ctx, NewRetData(successCode, success, retData).ToJson())
 }
+
+func (pc *playlistController) AddPlaylistForUser(ctx *fasthttp.RequestCtx) {
+	user, ok := haveAuthority(ctx)
+	if !ok {
+		return
+	}
+	if user == nil {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, "用户异常").ToJson())
+		return
+	}
+	name := str.BytesToString(ctx.FormValue("name"))
+	if name == "" {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, "歌单名不能为空").ToJson())
+		return
+	}
+	reqCtx := RequestContext(ctx)
+	defer DestroyContext(reqCtx)
+	err := service.PubPlaylistService.AddPlaylistForUserWithCache(reqCtx, name, user.Username)
+	if err != nil {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, err.Error()).ToJson())
+		return
+	}
+	WriterResp(ctx, NewRetDataForErrorAndMessage(successCode, success).ToJson())
+}
