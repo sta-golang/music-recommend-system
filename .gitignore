@@ -1,2 +1,5 @@
       .idea
-	  ./*/*.application.yaml
+	  ./*/*.yaml
+	  ./music-algorithm/*.yaml
+	  ./ml-music-data/*.yaml
+	  ./music-recommend/*.yaml
