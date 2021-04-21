@@ -32,7 +32,9 @@ const (
 	tableMusic         = "music"
 	MusicDefaultStatus = 0
 	// TODO: 原本的状态应该是1 目前先改成0  <08-04-21, FOUR SEASONS> //
-	MusicHasUrlMusicUrlStatus = 1
+	MusicHasMusicUrlStatus = 1
+	MusicNoneHasMusicUrlStatus = 2
+	MusicProcessStatus = 99
 	MusicCreatorNameDelimiter = "/"
 	insertSQLFmt              = "insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 )
@@ -63,14 +65,18 @@ func (md *musicMysql) doInsertMusic(db sqlx.Execer, music *Music) error {
 	return err
 }
 
-func (md *musicMysql) UpdateMusicStatusBranch(ctx context.Context, ids []string) error {
+func (md *musicMysql) UpdateMusicStatusBranch(ctx context.Context, ids []string, status int) error {
+	if len(ids) <= 0 {
+		return nil
+	}
 	sql := fmt.Sprintf("update %s set status = ? where id in(%s)", tableMusic, strings.Join(ids, ","))
-	_, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql)
+	_, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql,status)
 	if err != nil {
 		log.ErrorContext(ctx, err)
 	}
 	return err
 }
+
 
 func (md *musicMysql) InsertMusicAndCreatorMusic(music *Music) error {
 	err := newMysqlTransaction().Transaction(func(tx *sqlx.Tx) error {
@@ -138,7 +144,7 @@ func (md *musicMysql) SelectMusicForCreator(creatorID, pos, limit int) (musics [
 
 func (md *musicMysql) SelectMusicsWithPublishTime(ctx context.Context, pos, limit int) (musics []Music, err error) {
 	sql := fmt.Sprintf("select * from %s where status = ? order by publish_time desc limit ?, ?", tableMusic)
-	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, MusicHasUrlMusicUrlStatus, pos, limit)
+	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, MusicHasMusicUrlStatus, pos, limit)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -154,6 +160,25 @@ func (md *musicMysql) SelectMusics(pos, limit int) (musics []Music, err error) {
 		return nil, err
 	}
 	return
+}
+
+func (md *musicMysql) SelectMusicsByStatus(status, pos, limit int) (musics []Music, err error) {
+	sql := fmt.Sprintf("select * from %s where status = ? limit ?,?", tableMusic)
+	err = client(dbMusicRecommendNameTest).Select(&musics, sql,status, pos, limit)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return
+}
+
+func (md *musicMysql) ResetMusicProcess(ctx context.Context) error {
+	sql := fmt.Sprintf("update %s set status = ? where status = ?", tableMusic)
+	_, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql, MusicDefaultStatus, MusicProcessStatus)
+	if err != nil {
+		log.ErrorContext(ctx, err)
+	}
+	return err
 }
 
 func (md *musicMysql) FixMusicCreator(music *Music) error {

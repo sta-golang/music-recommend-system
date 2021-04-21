@@ -15,7 +15,12 @@ database:
   music_recommend_test:
     db_name: music_recommend_test
     username: testuser
-    password: qwe123456
+    password: qwe123456(建议别破坏数据)
     target: cdb-obyudb1e.bj.tencentcdb.com:10049
     driver_name: mysql
     args: charset=utf8&loc=Local
+
+cos:
+  url: https://sta-recommend-music-1257218153.cos.ap-chengdu.myqcloud.com
+  secretID: xxxx(自己使用自己的)
+  secretKey: xxxxx(自己使用自己的)

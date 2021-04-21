@@ -21,6 +21,13 @@ type Config struct {
 	MemoryConfig memory.Config        `yaml:"memory"`
 	EmailConfig  EmailConfig          `yaml:"email"`
 	DBConfigs    map[string]*DBConfig `yaml:"database"`
+	CosConfig    COSConfig            `yaml:"cos"`
+}
+
+type COSConfig struct {
+	URL string `yaml:"url"`
+	SecretID string `yaml:"secretID"`
+	SecretKey string `yaml:"secretKey"`
 }
 
 var cfg *Config

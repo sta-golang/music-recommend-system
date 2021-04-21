@@ -8,6 +8,7 @@ from lxml import etree
 from requests_html import HTMLSession
 import execjs,requests,random
 import base64,codecs
+import sys
 from Crypto.Cipher import AES
 
 def to_16(key):
@@ -84,6 +85,8 @@ class WanYiYun():
             music_list.append({'id': music_id, 'name': music_name})
         return music_list
 
+
+
     def get_params(self,id):
         encText=str({'ids': "[" + str(id) + "]", 'br': 128000, 'csrf_token': ""})
         return AES_encrypt(AES_encrypt(encText,self.g, self.iv), self.i, self.iv)
@@ -91,23 +94,30 @@ class WanYiYun():
     def get_encSecKey(self):
         return RSA_encrypt(self.i, self.b, self.c)
 
-    def download(self):
-        music_list=self.get_music_list()
+    def download(self,music_list):
+        sucess_list = []
         for music in music_list:
-            print(music)
-            music_id=music['id'][0].split('=')[1]
-            music_name=music['name'][0]
+            music_id=music.split('=')[0]
+            music_name=music.split('=')[1]
             formdata={'params':self.get_params(music_id),
                       'encSecKey':self.get_encSecKey()}
             response=requests.post(self.song_url, headers=self.headers, data=formdata)
+
             download_url=json.loads(response.content)["data"][0]["url"]
+            err_list = []
             if download_url:
                 try:
                     # 根据音乐url地址，用urllib.request.retrieve直接将远程数据下载到本地
-                    urllib.request.urlretrieve(download_url, 'd:/music/' + music_name+ '.mp3')
-                    print('Successfully Download:'+music_name+ '.mp3')
+                    urllib.request.urlretrieve(download_url, 'd:/music/' + music_name+ '-' + music_id + '.mp3')
+                    sucess_list.append(music_id)
                 except:
-                    print('Download wrong~')
+                    err_list.append(music_id)
+        return sucess_list
 if __name__ == '__main__':
+    arrStr = sys.argv[1]
+    data = json.loads(arrStr)
+
     wanyiyun=WanYiYun()
-    wanyiyun.download()
+    sucess_list = wanyiyun.download(data)
+    jsonStr = json.dumps(sucess_list)
+    print(jsonStr)

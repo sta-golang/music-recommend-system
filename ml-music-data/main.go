@@ -1,15 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/sta-golang/go-lib-utils/algorithm/data_structure/set"
 	"github.com/sta-golang/go-lib-utils/log"
 	"github.com/sta-golang/ml-music-data/data_load"
+	"github.com/sta-golang/ml-music-data/utils"
 	"github.com/sta-golang/music-recommend/common"
 	"github.com/sta-golang/music-recommend/config"
 	"github.com/sta-golang/music-recommend/db"
 	"github.com/sta-golang/music-recommend/model"
 	"runtime/debug"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -27,7 +30,76 @@ func main() {
 	//err := ProcessData()
 	//fmt.Println(err)
 	//myTest()
-	fmt.Println(ProcessTag())
+	//fmt.Println(ProcessTag())
+	fmt.Println(Download())
+}
+
+func Download() error {
+	ctx := context.Background()
+	if err := model.NewMusicMysql().ResetMusicProcess(ctx); err != nil {
+		return err
+	}
+	limit := 50
+	wg := sync.WaitGroup{}
+	wg.Add(2)
+	type chData struct {
+		musics []model.Music
+		notIDS []string
+	}
+	ch := make(chan *chData, 10)
+	upload := data_load.UPLoad{}
+	go func() {
+		defer wg.Done()
+		defer close(ch)
+
+		for {
+			dbMusics, err := model.NewMusicMysql().SelectMusicsByStatus(model.MusicDefaultStatus, 0, limit)
+			if err != nil {
+				log.Error(err)
+				continue
+			}
+			if len(dbMusics) <= 0 {
+				break
+			}
+			ids := make([]string, len(dbMusics))
+			for j := 0; j < len(dbMusics); j++ {
+				ids[j] = strconv.Itoa(dbMusics[j].ID)
+			}
+			err = model.NewMusicMysql().UpdateMusicStatusBranch(ctx, ids, model.MusicProcessStatus)
+			if err != nil {
+				log.Error(err)
+				return
+			}
+			musics, notIDs, err := upload.DownloadPy(dbMusics)
+			if err != nil {
+				log.Error(err)
+				continue
+			}
+			ch <- &chData{
+				musics: musics,
+				notIDS: notIDs,
+			}
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		for data := range ch {
+			for i := range data.musics {
+				err := upload.UploadMusic(ctx, &data.musics[i])
+				if err != nil {
+					log.Error(err)
+					continue
+				}
+			}
+			err := model.NewMusicMysql().UpdateMusicStatusBranch(ctx, data.notIDS, model.MusicNoneHasMusicUrlStatus)
+			if err != nil {
+				log.Error(err)
+				continue
+			}
+		}
+	}()
+	wg.Wait()
+	return nil
 }
 
 func ProcessTag() error {
@@ -230,4 +302,8 @@ func init() {
 		panic(err)
 	}
 	common.InitLog()
+	err = utils.InitCosClient(config.GlobalConfig().CosConfig)
+	if err != nil {
+		panic(err)
+	}
 }
