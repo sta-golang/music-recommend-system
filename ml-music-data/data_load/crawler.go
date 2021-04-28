@@ -359,7 +359,6 @@ func getCreatorMusicUrl(creatorID, offset int) string {
 	return fmt.Sprintf("/artist/songs?id=%d&offset=%d&limit=%d", creatorID, offset, creatorMusicLimit)
 }
 
-
 func (wc *WangYiYunCrawler) DoCrawlerAllCreatorList(creatorIDs []int) ([]model.Creator, error) {
 	if len(creatorIDs) <= 0 {
 		return nil, nil

@@ -3,6 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+	"runtime/debug"
+	"strconv"
+	"sync"
+	"time"
+
 	"github.com/sta-golang/go-lib-utils/algorithm/data_structure/set"
 	"github.com/sta-golang/go-lib-utils/log"
 	"github.com/sta-golang/ml-music-data/data_load"
@@ -11,10 +17,6 @@ import (
 	"github.com/sta-golang/music-recommend/config"
 	"github.com/sta-golang/music-recommend/db"
 	"github.com/sta-golang/music-recommend/model"
-	"runtime/debug"
-	"strconv"
-	"sync"
-	"time"
 )
 
 const (
@@ -31,7 +33,23 @@ func main() {
 	//fmt.Println(err)
 	//myTest()
 	//fmt.Println(ProcessTag())
-	fmt.Println(Download())
+	//fmt.Println(Download())
+	music, err := model.NewMusicMysql().SelectByID(85580)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(music)
+	fmt.Println(WriterMusic2Vec())
+}
+
+func WriterMusic2Vec() error {
+	file, err := os.Create("song2Vec.txt")
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	ad := data_load.NewAlgData(file)
+	return ad.WriterMusic2Vec()
 }
 
 func Download() error {
@@ -118,7 +136,7 @@ func ProcessTag() error {
 		}
 	}()
 	cnt := 0
-	for i := 0 ; i < len(ids); i++ {
+	for i := 0; i < len(ids); i++ {
 		id := ids[i]
 		results, err := crawler.CrawlerPlaylistsDetail(id)
 		if err != nil {
@@ -132,7 +150,7 @@ func ProcessTag() error {
 			return err
 		}
 		cnt++
-		log.ConsoleLogger.Infof("LoadPlaylistForTag finish %.2f%%",100*float64(cnt)/float64(len(ids)))
+		log.ConsoleLogger.Infof("LoadPlaylistForTag finish %.2f%%", 100*float64(cnt)/float64(len(ids)))
 	}
 
 	return nil
@@ -141,7 +159,7 @@ func ProcessTag() error {
 func myTest() {
 	str := "hello world5"
 	index := len(str)
-	fmt.Println(str[:index - 1])
+	fmt.Println(str[:index-1])
 }
 
 func fix() {
@@ -190,7 +208,7 @@ func ProcessCreatorAndMusic() error {
 	//	log.Error(err)
 	//	return err
 	//}
-	creators, err := model.NewCreatorMysql().SelectCreatorsForStatus(0,0, 99999)
+	creators, err := model.NewCreatorMysql().SelectCreatorsForStatus(0, 0, 99999)
 	if err != nil {
 		log.Error(err)
 		return err
