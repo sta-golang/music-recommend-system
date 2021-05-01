@@ -139,6 +139,27 @@ func DestroyContext(ctx context.Context) {
 	ctx = nil
 }
 
+func getSessionUser(ctx *fasthttp.RequestCtx) *model.User {
+	token := str.BytesToString(ctx.Request.Header.Peek(tokenStr))
+	if token == "" {
+		return nil
+	}
+	auth, ok, err := verify.NewJWTService().VerifyAuth(token)
+	if err != nil {
+		return nil
+	}
+	if !ok {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, tokenTimeOutErrMessage).ToJson())
+		return nil
+	}
+	info, exist := service.PubUserService.MeInfo(auth)
+	if !exist {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, common.UserEmailNotLogin.Error()).ToJson())
+		return nil
+	}
+	return info
+}
+
 func haveAuthority(ctx *fasthttp.RequestCtx) (*model.User, bool) {
 	token := str.BytesToString(ctx.Request.Header.Peek(tokenStr))
 	if token == "" {

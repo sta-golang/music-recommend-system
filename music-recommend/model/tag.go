@@ -1,7 +1,9 @@
 package model
 
 import (
+	"context"
 	"fmt"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/sta-golang/go-lib-utils/log"
 	tm "github.com/sta-golang/go-lib-utils/time"
@@ -43,6 +45,15 @@ func (t *tagMysql) doInsert(db sqlx.Execer, tag *Tag) error {
 		log.Error(err)
 	}
 	return err
+}
+
+func (t *tagMysql) SelectAll(ctx context.Context) (tags []Tag, err error) {
+	sql := fmt.Sprintf("select * from %s", tableTag)
+	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &tags, sql)
+	if err != nil {
+		log.ErrorContext(ctx, err)
+	}
+	return
 }
 
 func (t *tagMysql) SelectTag(id int) (*Tag, error) {

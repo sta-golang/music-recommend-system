@@ -102,6 +102,7 @@
 <script>
 import { _getSongUrl, _getLyric } from "@/network/song";
 import { playlistTool } from "./playlist";
+import { _getSongsDetail } from "@/network/discover/discover";
 import { formatDate, deepClone } from "@/common/js/tool";
 import MusicPlayList from "./MusicPlayList";
 // 歌词
@@ -221,11 +222,13 @@ export default {
       // });
     },
     getMusicUrl(music) {
+      _getSongsDetail(music.id);
       const res = new playlistTool(music);
       if (res.src == this.playList.src) {
         // 再判断如果相同 那是不是结束了
         if (this.$refs.audio && this.$refs.audio.ended) {
           // 重新播放
+          _getSongsDetail(music.id);
           return this.musicLoad();
         }
         return this.$message.info("正在播放中");
@@ -541,4 +544,3 @@ i {
   }
 }
 </style>
-

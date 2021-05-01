@@ -1,30 +1,33 @@
 package model
 
 import (
+	"context"
 	"fmt"
+	"time"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/sta-golang/go-lib-utils/log"
 	tm "github.com/sta-golang/go-lib-utils/time"
-	"time"
 )
 
 type User struct {
-	ID int `json:"id" db:"id"`
-	Username string `json:"username" db:"username"`
-	Password string `json:"password" db:"password"`
-	Name string `json:"name" db:"name"`
-	Status int32 `json:"status" db:"status"`
-	ImageUrl string `json:"image_url" db:"image_url"`
-	CreateTime string `json:"create_time" db:"create_time"`
-	LastLoginTime string `json:"last_login_time" db:"last_login_time"`
-	LastMonthLoginNum int `json:"last_month_login_num" db:"last_month_login_num"`
-	LastStatTime string `json:"last_stat_time" db:"last_stat_time"`
-	UpdateTime string `json:"update_time" db:"update_time"`
+	ID                int    `json:"id" db:"id"`
+	Username          string `json:"username" db:"username"`
+	Password          string `json:"password" db:"password"`
+	Name              string `json:"name" db:"name"`
+	Status            int32  `json:"status" db:"status"`
+	ImageUrl          string `json:"image_url" db:"image_url"`
+	CreateTime        string `json:"create_time" db:"create_time"`
+	LastLoginTime     string `json:"last_login_time" db:"last_login_time"`
+	LastMonthLoginNum int    `json:"last_month_login_num" db:"last_month_login_num"`
+	LastStatTime      string `json:"last_stat_time" db:"last_stat_time"`
+	UpdateTime        string `json:"update_time" db:"update_time"`
 }
 
 const (
 	tableUser = "user"
 )
+
 type userMysql struct {
 }
 
@@ -39,7 +42,7 @@ func (um *userMysql) Insert(user *User) error {
 }
 
 func (um *userMysql) doInsert(db sqlx.Execer, user *User) error {
-	sql := fmt.Sprintf("insert into %s(username,password,name,status,image_url,create_time,last_login_time," +
+	sql := fmt.Sprintf("insert into %s(username,password,name,status,image_url,create_time,last_login_time,"+
 		"last_month_login_num,last_stat_time,update_time) values(?,?,?,?,?,?,?,?,?,?)", tableUser)
 	_, err := db.Exec(sql, user.Username, user.Password, user.Name, 0, user.ImageUrl, tm.GetNowDateTimeStr(),
 		tm.GetNowDateTimeStr(), 0, tm.GetNowDateTimeStr(), tm.GetNowDateTimeStr())
@@ -55,7 +58,7 @@ func (um *userMysql) Update(user *User) (bool, error) {
 
 func (um *userMysql) doUpdate(db sqlx.Execer, user *User) (bool, error) {
 	sql := fmt.Sprintf("update %s set name=?,image_url=?,status=?,update_time=? where id = ?", tableUser)
-	res, err := db.Exec(sql, user.Name,user.ImageUrl,user.Status,tm.GetNowDateTimeStr(), user.ID)
+	res, err := db.Exec(sql, user.Name, user.ImageUrl, user.Status, tm.GetNowDateTimeStr(), user.ID)
 	if err != nil {
 		log.Error(err)
 		return false, err
@@ -78,7 +81,7 @@ func (um *userMysql) StatLogin(user *User) error {
 }
 
 func (um *userMysql) ReSetStatistics(username string) (bool, error) {
-	sql := fmt.Sprintf("update %s set last_month_login_num=?,last_stat_time=?,last_login_time=?," +
+	sql := fmt.Sprintf("update %s set last_month_login_num=?,last_stat_time=?,last_login_time=?,"+
 		"update_time=? where username=? and last_stat_time <= ?", tableUser)
 	res, err := client(dbMusicRecommendNameTest).Exec(sql, 1, tm.GetNowDateTimeStr(), tm.GetNowDateTimeStr(),
 		tm.GetNowDateTimeStr(), username, tm.ParseDataTimeToStr(tm.GetNowTime().Add(-(time.Hour * 24 * 30))))
@@ -95,13 +98,22 @@ func (um *userMysql) ReSetStatistics(username string) (bool, error) {
 }
 
 func (um *userMysql) UserLogin(username string) error {
-	sql := fmt.Sprintf("update %s set last_month_login_num=last_month_login_num+1,last_login_time=?," +
+	sql := fmt.Sprintf("update %s set last_month_login_num=last_month_login_num+1,last_login_time=?,"+
 		"update_time=? where username=? ", tableUser)
 	_, err := client(dbMusicRecommendNameTest).Exec(sql, tm.GetNowDateTimeStr(), tm.GetNowDateTimeStr(), username)
 	if err != nil {
 		log.Error(err)
 	}
 	return err
+}
+
+func (um *userMysql) SelectUserAll(ctx context.Context, pos, limit int) (users []User, err error) {
+	sql := fmt.Sprintf("select id,username from %s limit ?,?", tableUser)
+	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &users, sql, pos, limit)
+	if err != nil {
+		log.ErrorContext(ctx, err)
+	}
+	return
 }
 
 func (um *userMysql) SelectUser(id int) (*User, error) {

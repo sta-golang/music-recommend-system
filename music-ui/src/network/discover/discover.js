@@ -110,9 +110,9 @@ export function _addPlaylist(name) {
 
 // 获取歌曲详情信息
 export function _getSongsDetail(id) {
-  const result = axios.get("/song/detail", {
+  const result = axios.get("/music/details", {
     params: {
-      ids: id
+      id: id
     }
   });
   return result;

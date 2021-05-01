@@ -1,13 +1,17 @@
 <template>
   <div class="NewSong">
     <ul>
-      <li v-for="(item,index) in newsonglist" @click="rowClick(index)" :key="item.id">
-        <div class="number">{{index +1}}</div>
-        <img :src="item.pic" alt="">
+      <li
+        v-for="(item, index) in newsonglist"
+        @click="rowClick(index)"
+        :key="item.id"
+      >
+        <div class="number">{{ index + 1 }}</div>
+        <img :src="item.pic" alt="" />
         <div class="desc">
-          <p>{{item.name}}</p>
+          <p>{{ item.name }}</p>
           <div class="author">
-            <p>{{item.song }}</p>
+            <p>{{ item.song }}</p>
           </div>
         </div>
       </li>
@@ -16,38 +20,41 @@
 </template>
 
 <script>
-import { _getPersonalizedNewsong, _getSongsDetail, songDetail } from '@/network/discover/discover'
+import {
+  _getPersonalizedNewsong,
+  _getSongsDetail,
+  songDetail
+} from "@/network/discover/discover";
 export default {
-  data () {
+  data() {
     return {
       newsonglist: []
-    }
+    };
   },
   methods: {
-    getNewsongList () {
+    getNewsongList() {
       _getPersonalizedNewsong().then(res => {
         for (let i of res.result) {
           _getSongsDetail(i.id).then(result => {
-            let song = new songDetail(result.songs)
-            this.newsonglist.push(song)
-          })
+            let song = new songDetail(result.songs);
+            this.newsonglist.push(song);
+          });
         }
-      })
+      });
     },
     // 点击了li
-    rowClick (index) {
+    rowClick(index) {
       // console.log(123);
-      this.$bus.$emit('playMusic', index, this.newsonglist)
-    },
-
+      this.$bus.$emit("playMusic", index, this.newsonglist);
+    }
   },
-  created () {
-    this.getNewsongList()
+  created() {
+    this.getNewsongList();
   }
-}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .NewSong {
   ul {
     margin-bottom: 110px;
