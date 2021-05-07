@@ -5,28 +5,7 @@
     infinite-scroll-immediate
     infinite-scroll-delay="1000"
   >
-    <div class="title">
-      <div class="area">
-        语种：
-        <span
-          v-for="(item, index) in area"
-          @click="areaClick(index)"
-          :key="item.value"
-          :class="areaIndex === index ? 'current' : ''"
-          >{{ item.name }}</span
-        >
-      </div>
-      <div class="type">
-        分类：
-        <span
-          v-for="(item, index) in type"
-          @click="typeClick(index)"
-          :key="item.value"
-          :class="typeIndex === index ? 'current' : ''"
-          >{{ item.name }}</span
-        >
-      </div>
-    </div>
+    <div class="title"></div>
     <div class="scroll">
       <artist :artistlist="artistlist"></artist>
     </div>

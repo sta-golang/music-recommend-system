@@ -1,66 +1,66 @@
 <template>
   <div class="Popularsonglist">
-    <div class="tags">
-      <span>热门标签:</span>
-      <div @click="tagClick(index)" :class="['tag-item',currentIndex==index ? 'current': '']" v-for="(item,index) in tags" :key="item.id">{{item.name}}</div>
-    </div>
     <div>
-      <musiclist @songListDetails='songListDetails' :RecommendedSongList='musicList'></musiclist>
+      <musiclist
+        @songListDetails="songListDetails"
+        :RecommendedSongList="musicList"
+      ></musiclist>
     </div>
   </div>
 </template>
 
 <script>
 // 列表组件
-import Musiclist from '@/components/centent/musiclist/Musiclist'
-import { _getHotPlaylist, _getTopHighquality } from '@/network/discover/discover'
+import Musiclist from "@/components/centent/musiclist/Musiclist";
+import {
+  _getHotPlaylist,
+  _getTopHighquality
+} from "@/network/discover/discover";
 export default {
-  data () {
+  data() {
     return {
       tags: [],
       currentIndex: 0,
       limit: 24,
       page: 1,
       musicList: []
-    }
+    };
   },
   methods: {
-    getHotPlaylist () {
+    getHotPlaylist() {
       _getHotPlaylist().then(result => {
-        this.tags = result.tags
-        console.log(result);
-        this.getMusicList()
-      })
+        this.musicList = result.data;
+      });
     },
     // 点击tag后修改并换list
-    tagClick (index) {
-      this.currentIndex = index
-      this.getMusicList()
+    tagClick(index) {
+      this.currentIndex = index;
+      this.getMusicList();
     },
     // 获取对应标签的list
-    getMusicList () {
+    getMusicList() {
       _getTopHighquality({
         cat: this.tags[this.currentIndex].name,
         limit: this.limit,
         time: new Date().getTime()
       }).then(result => {
-        this.musicList = result.playlists
-      })
+        this.musicList = result.playlists;
+      });
     },
-    songListDetails (id) {
-      this.$router.push({ path: '/home/musiclistdetail', query: { id } })
+    songListDetails(id) {
+      this.$router.push({ path: "/home/musiclistdetail", query: { id } });
     }
   },
-  created () {
-    this.getHotPlaylist()
+  created() {
+    this.getHotPlaylist();
   },
   components: {
     Musiclist
   }
-}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .Popularsonglist {
   .tags {
     display: flex;

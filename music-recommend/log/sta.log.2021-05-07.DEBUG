@@ -54,3 +54,13 @@
 [STA:Music-Data] 2021-05-07 23:30:49 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /recommend/list timing : 7 毫秒
 [STA:Music-Data] 2021-05-07 23:30:51 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /music/details timing : 0 毫秒
 [STA:Music-Data] 2021-05-07 23:34:47 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /music/details timing : 49 毫秒
+[STA:Music-Data] 2021-05-07 23:55:21 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /recommend/list timing : 2783 毫秒
+[STA:Music-Data] 2021-05-07 23:55:24 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /creator/list timing : 0 毫秒
+[STA:Music-Data] 2021-05-07 23:56:35 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /recommend/list timing : 5 毫秒
+[STA:Music-Data] 2021-05-07 23:56:37 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /creator/list timing : 0 毫秒
+[STA:Music-Data] 2021-05-07 23:56:40 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /creator/list timing : 0 毫秒
+[STA:Music-Data] 2021-05-07 23:56:44 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /recommend/list timing : 17 毫秒
+[STA:Music-Data] 2021-05-07 23:56:46 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /music/all timing : 285 毫秒
+[STA:Music-Data] 2021-05-07 23:57:02 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /recommend/list timing : 12 毫秒
+[STA:Music-Data] 2021-05-07 23:57:07 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /creator/list timing : 0 毫秒
+[STA:Music-Data] 2021-05-07 23:57:18 [DEBUG] /usr/local/sta-golang/music-recommend-system/music-recommend/controller/common.go:206 ==> controller : /creator/list timing : 0 毫秒

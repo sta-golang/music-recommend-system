@@ -15,8 +15,9 @@ const (
 	playlistUserKey   = "playlist_%s_all"
 	playlistDetailKey = "playlist_%d_de"
 	playlistMusicKey  = "playlist_%d_music"
+	playlistHotKey    = "playlist_hot"
 	defDescription    = "暂无介绍"
-	defImageUrl       = "https://gimg3.baidu.com/image_search/src=http%3A%2F%2Fwenhui.whb.cn%2Fu%2Fcms%2Fwww%2F201804%2F02165434mp7i.jpg&refer=http%3A%2F%2Fwenhui.whb.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1620922142&t=cb795fafc42b7438723435d40553cba3 "
+	defImageUrl       = "https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2821791056,2350161368&fm=26&gp=0.jpg"
 )
 
 type playlistService struct {
@@ -31,6 +32,46 @@ func (ps *playlistService) GetPlaylistForUser(ctx context.Context, username stri
 		return nil, common.ServerErr
 	}
 	return playlists, nil
+}
+
+func (ps *playlistService) GetHotPlaylist(ctx context.Context) ([]model.Playlist, error) {
+	playlists, err := model.NewPlaylistMysql().SelectForHotScore(ctx, 0, 50)
+	if err != nil {
+		log.ErrorContext(ctx, err)
+		return nil, common.ServerErr
+	}
+	return playlists, nil
+}
+
+func (ps *playlistService) GetHotPlaylistWithCache(ctx context.Context) ([]model.Playlist, error) {
+	key := fmt.Sprintf(playlistHotKey)
+	if val, ok := cache.PubCacheService.Get(key); ok {
+		if val == nil {
+			return nil, nil
+		}
+		return val.([]model.Playlist), nil
+	}
+	ret, err := common.SingleRunGroup.Do(key, func() (interface{}, error) {
+		retData, err := ps.GetHotPlaylist(ctx)
+		if err != nil {
+			return nil, err
+		}
+		if retData == nil {
+			cache.PubCacheService.Set(key, nil, cache.Hour, cache.One)
+			return nil, nil
+		}
+		cache.PubCacheService.Set(key, retData, cache.Hour*12, cache.Ten)
+		return retData, nil
+	})
+	if err != nil {
+		log.ErrorContext(ctx, err)
+		return nil, err
+	}
+	if ret == nil {
+		return nil, nil
+	}
+	return ret.([]model.Playlist), nil
+
 }
 
 func (ps *playlistService) GetPlaylistMusicWithCache(ctx context.Context, playlistID int) ([]model.Music, error) {

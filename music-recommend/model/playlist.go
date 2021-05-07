@@ -80,6 +80,16 @@ func (pm *playlistMysql) SelectForUser(ctx context.Context, username string) (pl
 	return
 }
 
+func (pm *playlistMysql) SelectForHotScore(ctx context.Context, pos, limit int) (playlists []Playlist, err error) {
+	sql := fmt.Sprintf("select id, name,username,image_url,hot_score from %s order by hot_score desc limit ?, ?", tablePlaylist)
+	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &playlists, sql, pos, limit)
+	if err != nil {
+		log.ErrorContext(ctx, err)
+		return nil, err
+	}
+	return
+}
+
 func (pm *playlistMysql) SelectMusicsForPlaylist(ctx context.Context, id, pos, limit int) (musics []Music, err error) {
 	sql := fmt.Sprintf("select * from %s where id in (select music_id from %s where playlist_id = ? order by id desc ) limit ?, ?", tableMusic, tablePlaylistMusic)
 	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, id, pos, limit)

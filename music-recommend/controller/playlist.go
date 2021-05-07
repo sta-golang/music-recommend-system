@@ -137,6 +137,17 @@ func (pc *playlistController) GetUserPlaylist(ctx *fasthttp.RequestCtx) {
 	WriterResp(ctx, NewRetData(successCode, success, playlists).ToJson())
 }
 
+func (pc *playlistController) GetPlaylistHot(ctx *fasthttp.RequestCtx) {
+	reqCtx := RequestContext(ctx)
+	defer DestroyContext(reqCtx)
+	playlists, err := service.PubPlaylistService.GetHotPlaylistWithCache(reqCtx)
+	if err != nil {
+		WriterResp(ctx, NewRetDataForErrorAndMessage(common.ServerCodecErr, serverSelectErrMessage).ToJson())
+		return
+	}
+	WriterResp(ctx, NewRetData(successCode, success, playlists).ToJson())
+}
+
 func (pc *playlistController) GetPlaylistMusic(ctx *fasthttp.RequestCtx) {
 	reqCtx := RequestContext(ctx)
 	defer DestroyContext(reqCtx)

@@ -1,10 +1,16 @@
 <template>
   <div class="musiclist">
     <ul>
-      <li v-for="item in RecommendedSongList" @click="songListDetails(item.id)" :key='item.id'>
-        <img :src="item.picUrl ?item.picUrl :item.coverImgUrl" alt="">
-        <p>{{item.name}}</p>
-        <div v-if="item.playCount" class="count"><i class="iconfont">&#xe6cf;</i>{{item.playCount}}</div>
+      <li
+        v-for="item in RecommendedSongList"
+        @click="songListDetails(item.id)"
+        :key="item.id"
+      >
+        <img :src="item.image_url" alt="" />
+        <p>{{ item.name }}</p>
+        <div v-if="item.playCount" class="count">
+          <i class="iconfont">&#xe6cf;</i>{{ item.playCount }}
+        </div>
       </li>
     </ul>
   </div>
@@ -13,21 +19,19 @@
 <script>
 export default {
   props: ["RecommendedSongList"],
-  data () {
-    return {
-    }
+  data() {
+    return {};
   },
   methods: {
-    songListDetails (id) {
-      this.$emit('songListDetails', id)
+    songListDetails(id) {
+      this.$emit("songListDetails", id);
     }
   },
-  created () {
-  }
-}
+  created() {}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .musiclist {
   ul {
     display: flex;
