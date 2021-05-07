@@ -25,10 +25,10 @@
             </div>
             <div class="songInfo">
               <div class="sognAlbum">
-                专辑：<span>{{ songDetailObj.album }}</span>
+                专辑：<span>{{ songDetailObj.title }}</span>
               </div>
               <div class="sognAlbum">
-                歌手：<span>{{ songDetailObj.song }}</span>
+                歌手：<span>{{ songDetailObj.creator_names }}</span>
               </div>
             </div>
             <lyric-list :lyric="lyric"></lyric-list>
@@ -79,20 +79,7 @@ export default {
       // console.log(this.lyric);
       // });
     },
-    getSongComment() {
-      _getSongComment({
-        id: this.songDetailObj.id,
-        offset: this.commentOffset,
-        limit: this.commentlimit
-      }).then(result => {
-        console.log(result);
-        if (this.hotCommentList.length === 0) {
-          this.hotCommentList = result.hotComments;
-        }
-        this.commentList.push(...result.comments);
-        this.commentOffset += this.commentlimit;
-      });
-    },
+    getSongComment() {},
     scrollLoad() {
       this.getSongComment();
     }
@@ -241,4 +228,3 @@ i {
   }
 }
 </style>
-

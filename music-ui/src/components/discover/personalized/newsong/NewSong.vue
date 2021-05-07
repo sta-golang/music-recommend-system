@@ -7,11 +7,11 @@
         :key="item.id"
       >
         <div class="number">{{ index + 1 }}</div>
-        <img :src="item.pic" alt="" />
+        <img :src="item.image_url" alt="" />
         <div class="desc">
           <p>{{ item.name }}</p>
           <div class="author">
-            <p>{{ item.song }}</p>
+            <p>{{ item.creator_names }}</p>
           </div>
         </div>
       </li>
@@ -21,9 +21,8 @@
 
 <script>
 import {
-  _getPersonalizedNewsong,
-  _getSongsDetail,
-  songDetail
+  _getRecommendedList,
+  _getSongsDetail
 } from "@/network/discover/discover";
 export default {
   data() {
@@ -33,12 +32,9 @@ export default {
   },
   methods: {
     getNewsongList() {
-      _getPersonalizedNewsong().then(res => {
-        for (let i of res.result) {
-          _getSongsDetail(i.id).then(result => {
-            let song = new songDetail(result.songs);
-            this.newsonglist.push(song);
-          });
+      _getRecommendedList().then(res => {
+        for (let i of res.data.result) {
+          this.newsonglist.push(i.music);
         }
       });
     },

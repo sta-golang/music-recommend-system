@@ -2,25 +2,88 @@ package profile
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/sta-golang/go-lib-utils/async/dag"
 	"github.com/sta-golang/go-lib-utils/log"
+	"github.com/sta-golang/music-recommend/common"
 	"github.com/sta-golang/music-recommend/feed/profile/plugin"
 	"github.com/sta-golang/music-recommend/model"
+	"github.com/sta-golang/music-recommend/service/cache"
 )
 
-func init() {
-	dag.Config().SetPool()
-}
+const (
+	dbProfileCacheKey = "dbProfile_%s"
+)
 
 type ProfileParams struct {
 	Username string
-	Plugins  map[string]ProfilePlugin
+	Plugins  map[string]model.PluginParams
 }
 
-type ProfilePlugin struct {
-	PluginName   string
-	PluginParams string
+var defaultPlugins = map[string]model.PluginParams{
+	"musicClick": {PluginName: "musicClick", PluginParam: ""},
+	"tagScore":   {PluginName: "tagScore", PluginParam: ""},
+}
+
+func DefaultParams(username string) ProfileParams {
+	return ProfileParams{
+		Username: username,
+		Plugins:  defaultPlugins,
+	}
+}
+
+func NewParams(username string, plugins map[string]model.PluginParams) ProfileParams {
+	return ProfileParams{
+		Username: username,
+		Plugins:  plugins,
+	}
+}
+
+func GetDBUserProfile(ctx context.Context, username string) (*model.DBProfile, error) {
+	dbProfile, err := model.NewPeofileMysql().SelectByUsername(ctx, username)
+	if err != nil {
+		log.ErrorContext(ctx, err)
+		return nil, err
+	}
+	return dbProfile, nil
+}
+
+func SetProfileWithCache(profile *model.DBProfile) {
+	if profile == nil {
+		return
+	}
+	key := fmt.Sprintf(dbProfileCacheKey, profile.Username)
+	cache.PubCacheService.Set(key, profile, cache.Hour*12, cache.Nine)
+}
+
+func GetDBUserProfileWithCache(ctx context.Context, username string) (*model.DBProfile, error) {
+	key := fmt.Sprintf(dbProfileCacheKey, username)
+	if val, ok := cache.PubCacheService.Get(key); ok {
+		if val == nil {
+			return nil, nil
+		}
+		return val.(*model.DBProfile), nil
+	}
+	ret, err := common.SingleRunGroup.Do(key, func() (interface{}, error) {
+		ret, err := GetDBUserProfile(ctx, username)
+		if err != nil {
+			return nil, err
+		}
+		if ret == nil {
+			cache.PubCacheService.Set(key, ret, cache.Hour, cache.One)
+			return nil, nil
+		}
+		cache.PubCacheService.Set(key, ret, cache.Hour*12, cache.Nine)
+		return ret, nil
+	})
+	if err != nil {
+		log.ErrorContext(ctx, err)
+	}
+	if ret == nil {
+		return nil, nil
+	}
+	return ret.(*model.DBProfile), nil
 }
 
 type Handler func(ctx context.Context, dbProfile *model.DBProfile, profile *model.Profile, params string) error
@@ -30,32 +93,48 @@ var pluginMap = map[string]Handler{
 	"tagScore":   plugin.TagScore,
 }
 
-func GetUserProfile(ctx context.Context, params ProfileParams) (*model.Profile, error) {
-	if params.Username == "" {
-		return nil, nil
+func GetDefaultProfile() *model.Profile {
+	return &model.Profile{
+		TagIDs: []string{"1", "2", "27", "3", "7"},
+		TagScore: map[string]float64{
+			"1":  1.0,
+			"2":  1.0,
+			"27": 1.0,
+			"3":  1.0,
+			"7":  1.0,
+		},
 	}
-	dbProfile, err := model.NewPeofileMysql().SelectByUsername(ctx, params.Username)
-	if err != nil {
-		log.ErrorContext(ctx, err)
-	}
-	if dbProfile == nil {
-		return nil, nil
-	}
-	profile := &model.Profile{}
-	graph := buildDag(ctx, &params, dbProfile, profile)
-	graph.Do(ctx, false)
-	graph.DestoryAsync()
-	return nil, nil
 }
 
-func buildDag(ctx context.Context, params *ProfileParams, dbProfile *model.DBProfile, profile *model.Profile) *dag.DagTasks {
+func FeedUserProfile(request *model.FeedRequest) error {
+	if request.Username == "" || request.AnyUser {
+		request.UserProfile = GetDefaultProfile()
+		return nil
+	}
+	dbProfile, err := GetDBUserProfileWithCache(request.Ctx, request.Username)
+	if err != nil {
+		log.ErrorContext(request.Ctx, err)
+	}
+	if dbProfile == nil {
+		request.UserProfile = GetDefaultProfile()
+		return nil
+	}
+	profile := &model.Profile{}
+	graph := buildDag(request.Ctx, request.UserProfilePlugins, dbProfile, profile)
+	graph.Do(request.Ctx, false)
+	request.UserProfile = profile
+	graph.DestoryAsync()
+	return nil
+}
+
+func buildDag(ctx context.Context, plugins map[string]model.PluginParams, dbProfile *model.DBProfile, profile *model.Profile) *dag.DagTasks {
 	rootTask := dag.NewTask("root", func(ctx context.Context, helper dag.TaskHelper) (interface{}, error) {
 		return nil, nil
 	})
-	for pluginName, pluginParam := range params.Plugins {
+	for pluginName, pluginParam := range plugins {
 		if handler, ok := pluginMap[pluginName]; ok {
 			rootTask.AddSubTask(dag.NewTask(pluginName, func(ctx context.Context, helper dag.TaskHelper) (interface{}, error) {
-				err := handler(ctx, dbProfile, profile, pluginParam.PluginParams)
+				err := handler(ctx, dbProfile, profile, pluginParam.PluginParam)
 				if err != nil {
 					log.ErrorContextf(ctx, "[cmd = %s] PluginName : %s err : %v", "Profile", pluginName, err)
 				}

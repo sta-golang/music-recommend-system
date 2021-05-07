@@ -2,6 +2,7 @@ package common
 
 const (
 	PublicName = "sta音乐推荐系统"
+	AnyUser    = "anyUser"
 )
 
 func MinInt(a, b int) int {

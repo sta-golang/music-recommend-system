@@ -3,13 +3,13 @@
     <div class="musicplay">
       <div class="play-top" v-show="showTop">
         <div class="image">
-          <img :src="userinfo.pic" alt="" />
+          <img :src="userinfo.image_url" alt="" />
           <i class="iconfont imageIconfont" @click="showLyricBox">&#xe625;</i>
         </div>
         <div class="userinfo">
           <div class="info">
             <div class="title">{{ userinfo.name }}</div>
-            <div class="nickname">{{ userinfo.song }}</div>
+            <div class="nickname">{{ userinfo.creator_names }}</div>
           </div>
           <div class="warp">
             <i class="iconfont">&#xe60a;</i>

@@ -47,6 +47,8 @@ func (mc *musicController) GetAllMusics(ctx *fasthttp.RequestCtx) {
 // GetMusic 获取音乐
 func (mc *musicController) GetMusic(ctx *fasthttp.RequestCtx) {
 	args := ctx.QueryArgs()
+	reqCtx := RequestContext(ctx)
+	defer DestroyContext(reqCtx)
 	id := args.GetUintOrZero("id")
 	if id == 0 {
 		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
@@ -57,5 +59,7 @@ func (mc *musicController) GetMusic(ctx *fasthttp.RequestCtx) {
 		WriterResp(ctx, NewRetDataForErrAndMessage(sErr, serverSelectErrMessage).ToJson())
 		return
 	}
+	user := getSessionUser(ctx)
+	service.PubUserMusicService.StatMusicForUser(reqCtx, user, id)
 	WriterResp(ctx, NewRetData(successCode, success, music).ToJson())
 }

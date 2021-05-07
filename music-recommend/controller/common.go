@@ -35,20 +35,22 @@ const (
 	sendCodeMessage        = "发送验证码成功！\n如果没有收到请查看垃圾邮件"
 	tokenStr               = "sta-token"
 	emailFormErr           = "邮箱格式错误"
+	sessionIDStr           = "sessionID"
 
-	playlistUser     = "/playlist/user"
-	plsylistDetail   = "/playlist/detail"
-	playlistMusic    = "/playlist/music"
-	playlistAdd      = "/playlist/add"
-	creatorDetailUrl = "/creator/detail"
-	creatorList      = "/creator/list"
-	musicDetails     = "/music/details"
-	creatorMusic     = "/creator/music"
-	userRegister     = "/user/register"
-	userLogin        = "/user/login"
-	userCode         = "/user/code"
-	userInfo         = "/user/me"
-	musicAll         = "/music/all"
+	playlistUser       = "/playlist/user"
+	plsylistDetail     = "/playlist/detail"
+	playlistMusic      = "/playlist/music"
+	playlistAdd        = "/playlist/add"
+	creatorDetailUrl   = "/creator/detail"
+	creatorList        = "/creator/list"
+	musicDetails       = "/music/details"
+	creatorMusic       = "/creator/music"
+	userRegister       = "/user/register"
+	userLogin          = "/user/login"
+	userCode           = "/user/code"
+	userInfo           = "/user/me"
+	musicAll           = "/music/all"
+	recommendMusicList = "/recommend/list"
 )
 
 /**
@@ -112,20 +114,34 @@ func WriterResp(ctx *fasthttp.RequestCtx, bys []byte) {
 	}
 }
 
-func RequestContext(ReqCtx *fasthttp.RequestCtx) context.Context {
+func RequestContext(reqCtx *fasthttp.RequestCtx) context.Context {
 	keyMap := contextKeyMapPool.Get().(map[string]string)
 	keyMap["requestID"] = common.UUID()
-	keyMap["scene"] = str.BytesToString(ReqCtx.Path())
-	ipBys, _ := ReqCtx.RemoteIP().MarshalText()
+	keyMap["scene"] = str.BytesToString(reqCtx.Path())
+	ipBys, _ := reqCtx.RemoteIP().MarshalText()
 	keyMap["ipAddr"] = str.BytesToString(ipBys)
 	keyMap["user"] = ""
-	token := str.BytesToString(ReqCtx.Request.Header.Peek(tokenStr))
+	token := str.BytesToString(reqCtx.Request.Header.Peek(tokenStr))
 	if token != "" {
 		auth, _, _ := verify.NewJWTService().VerifyAuth(token)
 		if auth != "" {
 			keyMap["user"] = auth
 		}
 	}
+	return log.LogContextKeyMap(nil, keyMap)
+}
+
+func GetSessionID(reqCtx *fasthttp.RequestCtx) string {
+	return str.BytesToString(reqCtx.Request.Header.Peek(sessionIDStr))
+}
+
+func RequestContextAndUser(reqCtx *fasthttp.RequestCtx, username string) context.Context {
+	keyMap := contextKeyMapPool.Get().(map[string]string)
+	keyMap["requestID"] = common.UUID()
+	keyMap["scene"] = str.BytesToString(reqCtx.Path())
+	ipBys, _ := reqCtx.RemoteIP().MarshalText()
+	keyMap["ipAddr"] = str.BytesToString(ipBys)
+	keyMap["user"] = username
 	return log.LogContextKeyMap(nil, keyMap)
 }
 
@@ -149,12 +165,10 @@ func getSessionUser(ctx *fasthttp.RequestCtx) *model.User {
 		return nil
 	}
 	if !ok {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, tokenTimeOutErrMessage).ToJson())
 		return nil
 	}
 	info, exist := service.PubUserService.MeInfo(auth)
 	if !exist {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, common.UserEmailNotLogin.Error()).ToJson())
 		return nil
 	}
 	return info

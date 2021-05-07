@@ -120,11 +120,21 @@ create table `profile` (
 	`id` int unsigned not null AUTO_INCREMENT COMMENT '自增id',
     `status` int(11) not null DEFAULT 0 COMMENT '状态',
     `username` varchar(255) not null COMMENT '用戶名',
-	`music_click` TEXT not noull COMMENT '用户点击序列',
+	`music_click` TEXT not null COMMENT '用户点击序列',
 	`tag_score` TEXT not null COMMENT '用户点击序列',
 	`extra` TEXT not null COMMENT '其他',
     `create_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '创建时间',
     `update_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '更新时间',
-	KEY `key_user` (`username`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf9mb4 COMMENT='用户画像'; 
+    PRIMARY KEY (`id`),
+	UNIQUE KEY `key_user` (`username`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户画像'; 
 
+create table `tag_music` (
+	`id` int unsigned not null AUTO_INCREMENT COMMENT '自增id',
+	`tag_id` int unsigned not null  COMMENT '标签id',
+	`musics` TEXT not null COMMENT '此标签下的所有音乐id',
+    `create_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '创建时间',
+    `update_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+	UNIQUE KEY `key_tag` (`tag_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='标签音乐';  

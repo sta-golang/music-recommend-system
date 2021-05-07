@@ -1,0 +1,34 @@
+log:
+  file_dir: ./log
+  file_name: sta
+  day_age: 15
+  log_level: 1 # 1为 INFO 0为DEBUG
+  pre_fix: "[STA:Music-Data]"
+  alone_writer:
+    - DEBUG
+    - INFO
+    - ERROR
+    - FATAL
+  re_open: 180
+
+memory:
+  shards: 4
+  gc_interval: 600
+  max_Key: 100000
+  set_Chan_Size: 512
+
+email:
+  host: smtp.qq.com
+  port: 465
+  email: 63237777@qq.com
+  pwd: zruiuphuossvbhhc
+
+database:
+  music_recommend_test:
+    db_name: music_recommend_test
+    username: testuser
+    password: qwe123456
+    target: cdb-obyudb1e.bj.tencentcdb.com:10049
+    driver_name: mysql
+    args: charset=utf8&loc=Local&timeout=3s
+

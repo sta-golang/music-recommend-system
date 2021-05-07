@@ -32,11 +32,12 @@ const (
 	tableMusic         = "music"
 	MusicDefaultStatus = 0
 	// TODO: 原本的状态应该是1 目前先改成0  <08-04-21, FOUR SEASONS> //
-	MusicHasMusicUrlStatus = 1
+	MusicHasMusicUrlStatus     = 1
 	MusicNoneHasMusicUrlStatus = 2
-	MusicProcessStatus = 99
-	MusicCreatorNameDelimiter = "/"
-	insertSQLFmt              = "insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+	MusicProcessStatus         = 99
+	MusicCreatorNameDelimiter  = "/"
+	MusicTagDelimiter          = "+"
+	insertSQLFmt               = "insert ignore into %s values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
 )
 
 type musicMysql struct {
@@ -70,13 +71,12 @@ func (md *musicMysql) UpdateMusicStatusBranch(ctx context.Context, ids []string,
 		return nil
 	}
 	sql := fmt.Sprintf("update %s set status = ? where id in(%s)", tableMusic, strings.Join(ids, ","))
-	_, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql,status)
+	_, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql, status)
 	if err != nil {
 		log.ErrorContext(ctx, err)
 	}
 	return err
 }
-
 
 func (md *musicMysql) InsertMusicAndCreatorMusic(music *Music) error {
 	err := newMysqlTransaction().Transaction(func(tx *sqlx.Tx) error {
@@ -133,8 +133,8 @@ func (md *musicMysql) UpdateMusicHotSource(id int, incr int32) error {
 
 func (md *musicMysql) SelectMusicForCreator(creatorID, pos, limit int) (musics []Music, err error) {
 	sql := fmt.Sprintf("select * from %s where id in "+
-		"(select music_id from %s where creator_id = ?) limit ?,?", tableMusic, tableCreatorToMusic)
-	err = client(dbMusicRecommendNameTest).Select(&musics, sql, creatorID, pos, limit)
+		"(select music_id from %s where creator_id = ?) and status = ? limit ?,?", tableMusic, tableCreatorToMusic)
+	err = client(dbMusicRecommendNameTest).Select(&musics, sql, creatorID, MusicHasMusicUrlStatus, pos, limit)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -161,10 +161,9 @@ func (md *musicMysql) SelectMusics(pos, limit int) (musics []Music, err error) {
 	}
 	return
 }
-
-func (md *musicMysql) SelectMusicsByStatus(status, pos, limit int) (musics []Music, err error) {
-	sql := fmt.Sprintf("select * from %s where status = ? limit ?,?", tableMusic)
-	err = client(dbMusicRecommendNameTest).Select(&musics, sql,status, pos, limit)
+func (md *musicMysql) SelectMusicsWithContent(pos, limit int) (musics []Music, err error) {
+	sql := fmt.Sprintf("select id,status,hot_score,tag_ids from %s order by id limit ?,?", tableMusic)
+	err = client(dbMusicRecommendNameTest).Select(&musics, sql, pos, limit)
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -172,6 +171,28 @@ func (md *musicMysql) SelectMusicsByStatus(status, pos, limit int) (musics []Mus
 	return
 }
 
+func (md *musicMysql) SelectMusicsByStatus(status, pos, limit int) (musics []Music, err error) {
+	sql := fmt.Sprintf("select * from %s where status = ? limit ?,?", tableMusic)
+	err = client(dbMusicRecommendNameTest).Select(&musics, sql, status, pos, limit)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return
+}
+
+func (md *musicMysql) SelectMusicsByIDS(ctx context.Context, ids []string) (musics []Music, err error) {
+	if len(ids) <= 0 {
+		return nil, nil
+	}
+	sql := fmt.Sprintf("select * from %s where id in(%s) and status = ?", tableMusic, strings.Join(ids, ","))
+	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, StatusLoadMusicFinish)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+	return
+}
 func (md *musicMysql) ResetMusicProcess(ctx context.Context) error {
 	sql := fmt.Sprintf("update %s set status = ? where status = ?", tableMusic)
 	_, err := client(dbMusicRecommendNameTest).ExecContext(ctx, sql, MusicDefaultStatus, MusicProcessStatus)
