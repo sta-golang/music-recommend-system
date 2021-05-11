@@ -76,4 +76,5 @@ func init() {
 	email.InitEmailService()
 	task.InitTask()
 	log.ConsoleLogger.Info(config.GlobalConfig())
+
 }

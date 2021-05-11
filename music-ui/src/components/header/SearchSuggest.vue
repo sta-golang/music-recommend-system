@@ -1,43 +1,54 @@
 <template>
   <div class="searchSuggest">
-    <div class="searchtext" @click="search()">搜“<span>{{content}}</span>”相关的结果 > </div>
+    <div class="searchtext" @click="search()">
+      搜“<span>{{ content }}</span
+      >”相关的结果 >
+    </div>
     <dl v-if="suggestList.songs">
-      <dt><i class="iconfont">&#xe63f;</i>单曲
-      </dt>
-      <dd @click="songsClickHandle(item)" v-for="item in suggestList.songs" :key="item.id">
-        <span class="name">{{item.name}}</span>
-        <span class="alias" v-for="(item2,index2) in item.alias" :key="index2">{{item2}}</span>
-        <span v-for="(nameItem) in item.artists" :key="nameItem.name">- {{nameItem.name}}</span>
+      <dt><i class="iconfont">&#xe63f;</i>单曲</dt>
+      <dd
+        @click="songsClickHandle(item)"
+        v-for="item in suggestList.songs"
+        :key="item.id"
+      >
+        <span class="name">{{ item.name | sliceSplit }}</span>
+        <span
+          class="alias"
+          v-for="(item2, index2) in item.alias"
+          :key="index2"
+          >{{ item2 }}</span
+        >
+        <span v-for="nameItem in item.artists" :key="nameItem.name"
+          >- {{ nameItem.name }}</span
+        >
       </dd>
     </dl>
     <dl v-if="suggestList.artists">
       <dt><i class="iconfont">&#xe604;</i>歌手</dt>
-      <dd @click="artistsClickHandle(item)" v-for="item in suggestList.artists" :key="item.id">
-        <span class="name">{{item.name}}</span>
-        <span class="alias" v-for="(item2,index2) in item.alias" :key="index2">{{item2}}</span>
-        <span v-for="(nameItem) in item.artists" :key="nameItem.name">- {{nameItem.name}}</span>
-      </dd>
-    </dl>
-    <dl v-if="suggestList.albums">
-      <dt><i class="iconfont">&#xe622;</i>专辑</dt>
-      <dd v-for="item in suggestList.albums" :key="item.id">
-        <span class="name">{{item.name}}</span>
-        <span>- {{item.artist.name}}</span>
-      </dd>
-    </dl>
-    <dl v-if="suggestList.playlists">
-      <dt><i class="iconfont">&#xe83e;</i>歌单</dt>
-      <dd @click="playlistsClickHandle(item)" v-for="item in suggestList.playlists" :key="item.id">
-        <span class="name">{{item.name}}</span>
+      <dd
+        @click="artistsClickHandle(item)"
+        v-for="item in suggestList.creators"
+        :key="item.id"
+      >
+        <span class="name">{{ item.name }}</span>
+        <span
+          class="alias"
+          v-for="(item2, index2) in item.alias"
+          :key="index2"
+          >{{ item2 }}</span
+        >
+        <span v-for="nameItem in item.artists" :key="nameItem.name"
+          >- {{ nameItem.name }}</span
+        >
       </dd>
     </dl>
   </div>
 </template>
 
 <script>
-import { _getSongsDetail, songDetail } from '@/network/discover/discover'
+import { _getSongsDetail, songDetail } from "@/network/discover/discover";
 export default {
-  // 只有点击了单曲才是播放 
+  // 只有点击了单曲才是播放
   // 其他都是跳转到对应的界面
   props: {
     suggestList: {
@@ -47,50 +58,63 @@ export default {
       type: String
     }
   },
+  filters: {
+    sliceSplit(value) {
+      if (!value) {
+        return "";
+      }
+      if (value.length > 30) {
+        return value.slice(0, 31) + "...";
+      }
+      return value;
+    }
+  },
   methods: {
     // 点击单曲
-    songsClickHandle (item) {
-      // 需要获取歌曲详情 
+    songsClickHandle(item) {
+      // 需要获取歌曲详情
       console.log(item);
       _getSongsDetail(item.id).then(res => {
-        let song = new songDetail(res.songs)
-        this.$bus.$emit('pushPlayMusic', song)
-      })
+        let song = new songDetail(res.data);
+        console.log(song);
+        console.log("song");
+        this.$bus.$emit("pushPlayMusic", song);
+      });
     },
     // 点击歌手
-    artistsClickHandle (item) {
+    artistsClickHandle(item) {
       this.$router.push({
-        path: '/home/artistalbum',
+        path: "/home/artistalbum",
         query: {
           id: item.id
         }
-      })
+      });
     },
-    playlistsClickHandle (item) {
+    playlistsClickHandle(item) {
       this.$router.push({
-        path: '/home/musiclistdetail',
+        path: "/home/musiclistdetail",
         query: {
           id: item.id
         }
-      })
+      });
     },
     // 点击搜索
-    search () {
+    search() {
       this.$router.push({
-        path: '/home/searchlist',
+        path: "/home/searchlist",
         query: {
           content: this.content
         }
-      })
+      });
     }
   },
-  created () {
+  created() {
     console.log(this.suggestList);
   }
-}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .searchSuggest {
   width: 300px;
   background-color: #f5f5f7;

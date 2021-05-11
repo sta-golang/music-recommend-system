@@ -107,6 +107,7 @@ func (pc *playlistController) GetPlaylistDetail(ctx *fasthttp.RequestCtx) {
 	}
 	if playlist == nil {
 		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusNotFound, common.NotFoundMessage).ToJson())
+		return
 	}
 	user, _ := service.PubUserService.QueryUserWithCache(playlist.Username)
 	if user == nil {

@@ -17,10 +17,6 @@
       >
       </el-input>
       <!-- 弹出搜索框 -->
-      <search-box
-        v-show="focusFlag"
-        :searchHotList="searchHotList"
-      ></search-box>
 
       <search-suggest
         :content="searchValue"
@@ -355,7 +351,7 @@ export default {
     getSearchSuggest(keywords) {
       return new Promise((resolve, reject) => {
         _getSearchSuggest(keywords).then(res => {
-          this.suggestList = res.result;
+          this.suggestList = res.data;
           console.log(this.suggestList);
           resolve();
         });

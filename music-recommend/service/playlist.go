@@ -305,6 +305,7 @@ func (ps *playlistService) GetPlaylistDetailWithCache(ctx context.Context, id in
 			cache.PubCacheService.Set(key, nil, cache.Hour, cache.One)
 			return nil, fmt.Errorf(common.NotFoundMessage)
 		}
+		cache.PubCacheService.Set(key, ret, cache.Hour*5, cache.Eight)
 		return ret, nil
 	})
 	if err != nil {

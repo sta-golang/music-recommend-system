@@ -2,7 +2,6 @@
   <div class="searchBox">
     <!-- <transition name="slide-fade"> -->
     <div class="searchlist" style="overflow-y:auto;">
-      <div class="title">热搜榜</div>
       <div class="tablelist">
         <table cellpadding="0">
           <tr
@@ -128,4 +127,3 @@ export default {
   border-bottom: 7px solid #fff;
 }
 </style>
-
