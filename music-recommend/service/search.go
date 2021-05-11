@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"sort"
 	"strconv"
 
@@ -10,6 +11,12 @@ import (
 	"github.com/sta-golang/go-lib-utils/log"
 	"github.com/sta-golang/music-recommend/common"
 	"github.com/sta-golang/music-recommend/model"
+)
+
+const (
+	searchKeyworld  = "searchKeyworld_%s"
+	searchMusic     = "searchMusic_%s"
+	maxSearchConunt = 100
 )
 
 type searchService struct {
@@ -22,9 +29,18 @@ var PubSearchService = &searchService{}
 // 然后搜索名字完全一样的两首歌曲 然后搜索像的三首歌曲
 // 然后通过前三个作者拿到它们的热门歌曲的 1：3 2：1 3：1
 func (ss *searchService) SearchKeyworld(ctx context.Context, keyworld string) (*model.SearchResult, error) {
-	graph := ss.buildDag(ctx, keyworld)
-	graph.Do(ctx, false)
-	ret, err := graph.GetRootTask().GetRet()
+	ret, err := common.SingleRunGroup.Do(fmt.Sprintf(searchKeyworld, keyworld), func() (interface{}, error) {
+		graph := ss.buildDag(ctx, keyworld)
+		graph.Do(ctx, false)
+		ret, err := graph.GetRootTask().GetRet()
+		if err != nil {
+			return nil, err
+		}
+		if ret == nil {
+			return nil, nil
+		}
+		return ret, nil
+	})
 	if err != nil {
 		log.ErrorContext(ctx, err)
 		return nil, err
@@ -33,6 +49,43 @@ func (ss *searchService) SearchKeyworld(ctx context.Context, keyworld string) (*
 		return nil, nil
 	}
 	return ret.(*model.SearchResult), nil
+}
+
+func (ss *searchService) SearchMusics(ctx context.Context, keyworld string) ([]model.Music, error) {
+	ret, err := common.SingleRunGroup.Do(fmt.Sprintf(searchMusic, keyworld), func() (interface{}, error) {
+		var ret []model.Music
+		musics, err := model.NewSearchMysql().SearchForMusics(ctx, keyworld, 0, 3)
+		if err != nil {
+			return nil, err
+		}
+		var mSet *set.StringSet
+		if len(musics) > 0 {
+			mSet = set.NewStringSet(len(musics) * 2)
+			for i := range musics {
+				mSet.Add(strconv.Itoa(musics[i].ID))
+				ret = append(ret, musics[i])
+			}
+		}
+		musics, err = model.NewSearchMysql().SearchForMusicsLike(ctx, keyworld, 0, maxSearchConunt)
+		if err != nil {
+			return nil, err
+		}
+		for i := range musics {
+			if mSet.Contains(strconv.Itoa(musics[i].ID)) {
+				continue
+			}
+			ret = append(ret, musics[i])
+		}
+		return ret, nil
+	})
+	if err != nil {
+		log.ErrorContext(ctx, err)
+		return nil, err
+	}
+	if ret == nil {
+		return nil, nil
+	}
+	return ret.([]model.Music), nil
 }
 
 func (ss *searchService) buildDag(ctx context.Context, keyworld string) *dag.DagTasks {

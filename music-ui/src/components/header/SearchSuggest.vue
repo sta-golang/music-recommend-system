@@ -27,7 +27,7 @@
       <dt><i class="iconfont">&#xe604;</i>歌手</dt>
       <dd
         @click="artistsClickHandle(item)"
-        v-for="item in suggestList.creators"
+        v-for="item in suggestList.artists"
         :key="item.id"
       >
         <span class="name">{{ item.name }}</span>
@@ -40,6 +40,23 @@
         <span v-for="nameItem in item.artists" :key="nameItem.name"
           >- {{ nameItem.name }}</span
         >
+      </dd>
+    </dl>
+    <dl v-if="suggestList.albums">
+      <dt><i class="iconfont">&#xe622;</i>专辑</dt>
+      <dd v-for="item in suggestList.albums" :key="item.id">
+        <span class="name">{{ item.name }}</span>
+        <span>- {{ item.artist.name }}</span>
+      </dd>
+    </dl>
+    <dl v-if="suggestList.playlists">
+      <dt><i class="iconfont">&#xe83e;</i>歌单</dt>
+      <dd
+        @click="playlistsClickHandle(item)"
+        v-for="item in suggestList.playlists"
+        :key="item.id"
+      >
+        <span class="name">{{ item.name }}</span>
       </dd>
     </dl>
   </div>

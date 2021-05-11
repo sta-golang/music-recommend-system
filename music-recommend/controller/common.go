@@ -53,6 +53,7 @@ const (
 	musicAll           = "/music/all"
 	recommendMusicList = "/recommend/list"
 	searchKeyWorld     = "/search/suggest"
+	searchMusics       = "/search"
 )
 
 /**

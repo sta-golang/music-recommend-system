@@ -10,7 +10,7 @@ import (
 
 type SearchResult struct {
 	Musics   []Music   `json:"songs"`
-	Creators []Creator `json:"creators"`
+	Creators []Creator `json:"artists"`
 }
 
 type searchMysql struct {
@@ -43,8 +43,8 @@ func (sm *searchMysql) SearchForCreatorLike(ctx context.Context, keyword string,
 }
 
 func (sm *searchMysql) SearchForMusics(ctx context.Context, keyword string, pos, limit int) (musics []Music, err error) {
-	sql := fmt.Sprintf("select * from %s where name = ? limit ?,?", tableMusic)
-	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, keyword, pos, limit)
+	sql := fmt.Sprintf("select * from %s where name = ? and status = ? limit ?,?", tableMusic)
+	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, keyword, StatusLoadMusicFinish, pos, limit)
 	if err != nil {
 		log.ErrorContext(ctx, err)
 		return nil, err
@@ -53,8 +53,8 @@ func (sm *searchMysql) SearchForMusics(ctx context.Context, keyword string, pos,
 }
 
 func (sm *searchMysql) SearchForMusicsLike(ctx context.Context, keyword string, pos, limit int) (musics []Music, err error) {
-	sql := fmt.Sprintf("select * from %s where name like '%%%s%%' limit ?, ?", tableMusic, keyword)
-	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, pos, limit)
+	sql := fmt.Sprintf("select * from %s where status = ? and name like '%%%s%%' limit ?, ?", tableMusic, keyword)
+	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &musics, sql, StatusLoadMusicFinish, pos, limit)
 	if err != nil {
 		log.ErrorContext(ctx, err)
 		return nil, err

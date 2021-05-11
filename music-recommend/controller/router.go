@@ -34,6 +34,7 @@ func GlobalRouter() *fasthttprouter.Router {
 	router.GET(playlistHot, TimeController(playlistHot, NewPlaylistController().GetPlaylistHot))
 	router.GET("/search/hot/detail", NewSearchController().SearchHot)
 	router.GET(searchKeyWorld, TimeController(searchKeyWorld, NewSearchController().SearchKeyWorld))
+	router.GET(searchMusics, TimeController(searchMusics, NewSearchController().SearchMusics))
 	return router
 }
 

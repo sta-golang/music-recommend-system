@@ -2,7 +2,7 @@
   <div class="header">
     <div class="logo cursorPointer" @click="$router.push('/home/discover')">
       <img src="@/common/img/logo.jpg" alt="" />
-      <p>网易云音乐</p>
+      <p>世界树音乐</p>
       <i class="el-icon-arrow-left cursorPointer" @click="backRouter"></i>
     </div>
     <div class="search">
@@ -395,7 +395,7 @@ export default {
   width: 100%;
   display: flex;
   height: 50px;
-  background-color: #c62f2f;
+  background-color: #87ceeb;
   align-items: center;
   .logo {
     width: 190px;
@@ -483,7 +483,7 @@ export default {
     display: block;
     width: 220px;
     height: 45px;
-    background-color: #ff0000;
+    background-color: #dda0dd;
     border: 0;
     outline: none;
     cursor: pointer;

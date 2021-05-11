@@ -1,132 +1,131 @@
 html,
 body,
-#app{
-  margin: 0 !important;
-  padding: 0 !important;
-  height: 100%;
-  /* overflow-y:hidden; */
+#app {
+	margin: 0 !important;
+	padding: 0 !important;
+	height: 100%;
+	/* overflow-y:hidden; */
 }
 img {
-  -webkit-user-drag: none;
+	-webkit-user-drag: none;
 }
-*{
-  -webkit-touch-callout:none; /*系统默认菜单被禁用*/
-  -webkit-user-select:none; /*webkit浏览器*/
-  -khtml-user-select:none; /*早期浏览器*/
-  -moz-user-select:none;/*火狐*/
-  -ms-user-select:none; /*IE10*/
-  user-select:none;
-  outline:none;
+* {
+	-webkit-touch-callout: none; /*系统默认菜单被禁用*/
+	-webkit-user-select: none; /*webkit浏览器*/
+	-khtml-user-select: none; /*早期浏览器*/
+	-moz-user-select: none; /*火狐*/
+	-ms-user-select: none; /*IE10*/
+	user-select: none;
+	outline: none;
 }
-dd{
-  margin: 0;
+dd {
+	margin: 0;
 }
 .el-tabs__item:focus.is-active.is-focus:not(:active) {
-  -webkit-box-shadow: none !important;
-  box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
 }
 @font-face {
-  font-family: 'iconfont';
-  src: url('../font_h9qrbrrobad/iconfont.eot');
-  src: url('../font_h9qrbrrobad/iconfont.eot?#iefix') format('embedded-opentype'),
-      url('../font_h9qrbrrobad/iconfont.woff2') format('woff2'),
-      url('../font_h9qrbrrobad/iconfont.woff') format('woff'),
-      url('../font_h9qrbrrobad/iconfont.ttf') format('truetype'),
-      url('../font_h9qrbrrobad/iconfont.svg#iconfont') format('svg');
+	font-family: "iconfont";
+	src: url("../font_h9qrbrrobad/iconfont.eot");
+	src: url("../font_h9qrbrrobad/iconfont.eot?#iefix") format("embedded-opentype"),
+		url("../font_h9qrbrrobad/iconfont.woff2") format("woff2"),
+		url("../font_h9qrbrrobad/iconfont.woff") format("woff"),
+		url("../font_h9qrbrrobad/iconfont.ttf") format("truetype"),
+		url("../font_h9qrbrrobad/iconfont.svg#iconfont") format("svg");
 }
 .iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	font-family: "iconfont" !important;
+	font-size: 16px;
+	font-style: normal;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 input {
-  outline:none !important; 
-    /**修改颜色*/ 
-    outline-style:none !important; 
+	outline: none !important;
+	/**修改颜色*/
+	outline-style: none !important;
 }
 header {
-  height: 50px !important;
+	height: 50px !important;
 }
-.search_input { 
-  border-radius: 20px !important;
-  height: 30px;
+.search_input {
+	border-radius: 20px !important;
+	height: 30px;
 }
-.cursorPointer{
-  cursor: pointer;
+.cursorPointer {
+	cursor: pointer;
 }
 .el-container {
-  height: 100vh;
+	height: 100vh;
 }
 .el-aside {
-  background-color: #f5f5f7;
+	background-color: #f5f5f7;
 }
 .el-main {
-  background-color: #fafafa;
-  padding: 10px 20px ;
-} 
+	background-color: #fafafa;
+	padding: 10px 20px;
+}
 /* tabs */
 .el-tabs__nav-scroll {
-  display: flex;
-  justify-content: center;
+	display: flex;
+	justify-content: center;
 }
 .el-tabs__active-bar {
-  background-color: #c62f2f !important;
+	background-color: #87cefa !important;
 }
 .el-tabs__item.is-active {
-  color: #c62f2f !important;
+	color: #87cefa !important;
 }
-.is-top:hover { 
-  color: #c62f2f !important;
+.is-top:hover {
+	color: #87cefa !important;
 }
 /* tabs end */
 
 .el-slider__button {
-  width: 10px;
-  height: 10px;
-  border: 2px solid  #c62f2f;
-  background-color: #fff;
-  color: #c62f2f; 
+	width: 10px;
+	height: 10px;
+	border: 2px solid #c62f2f;
+	background-color: #fff;
+	color: #c62f2f;
 }
-.el-slider__bar { 
-  background-color: #c62f2f;
+.el-slider__bar {
+	background-color: #c62f2f;
 }
-.el-loading-text{
-  color: #c62f2f !important;
+.el-loading-text {
+	color: #c62f2f !important;
 }
-.el-loading-spinner .path{
-  stroke:#c62f2f;
+.el-loading-spinner .path {
+	stroke: #c62f2f;
 }
 .el-tabs__content {
-  width: 1045px;
-  margin:0 auto ;
+	width: 1045px;
+	margin: 0 auto;
 }
 
 /* .el-table .el-row-gehangbianse {
   background-color: red !important;
 } */
- 
 
-.el-table--enable-row-hover .el-table__body tr:hover>td{
-  background-color: #e3e3e3 !important;
+.el-table--enable-row-hover .el-table__body tr:hover > td {
+	background-color: #e3e3e3 !important;
 }
-.el-table--enable-row-hover .el-table__body .pink td{ 
-  background-color: #ccc !important;
-  color: #c62f2f;
+.el-table--enable-row-hover .el-table__body .pink td {
+	background-color: #ccc !important;
+	color: #c62f2f;
 }
-.el-slider__button-wrapper  .el-slider__button:hover{
-  cursor: pointer !important;
+.el-slider__button-wrapper .el-slider__button:hover {
+	cursor: pointer !important;
 }
 .el-slider__button-wrapper {
-  cursor: pointer !important;
+	cursor: pointer !important;
 }
 .el-slider__runway.disabled {
-  cursor: pointer !important;
+	cursor: pointer !important;
 }
 .el-slider__button {
-  cursor: pointer !important;
+	cursor: pointer !important;
 }
-.el-drawer__wrapper{ 
-  z-index: 149 !important;
-} 
+.el-drawer__wrapper {
+	z-index: 149 !important;
+}
