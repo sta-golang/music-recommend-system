@@ -35,6 +35,7 @@ var pluginMap = map[string]Handler{
 type Handler func(*model.FeedRequest, string) (map[int]float64, error)
 
 func FeedRank(request *model.FeedRequest) error {
+	log.InfoContext(request.Ctx, "Rank")
 	if len(request.RecallResults) <= 0 {
 		return nil
 	}

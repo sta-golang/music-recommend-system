@@ -11,6 +11,6 @@ import (
 func InitLog() {
 	log.ConsoleLogger = log.NewConsoleLog(log.DEBUG, "[STA:Music-Recommend-Console]")
 	conf := &config.GlobalConfig().LogConfig
-	logger := log.NewFileLogAndAsync(conf, time.Second*3)
+	logger := log.NewFileLogAndAsync(conf, time.Millisecond*500)
 	log.SetGlobalLogger(logger)
 }

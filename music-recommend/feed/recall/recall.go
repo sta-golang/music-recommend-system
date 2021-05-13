@@ -40,6 +40,7 @@ func DefaultRecallPlugin() map[string]model.PluginParams {
 }
 
 func FeedRecall(request *model.FeedRequest) error {
+	log.InfoContext(request.Ctx, "Recall")
 	if request.UserProfile == nil {
 		return nil
 	}

@@ -31,6 +31,7 @@ var PubSearchService = &searchService{}
 func (ss *searchService) SearchKeyworld(ctx context.Context, keyworld string) (*model.SearchResult, error) {
 	ret, err := common.SingleRunGroup.Do(fmt.Sprintf(searchKeyworld, keyworld), func() (interface{}, error) {
 		graph := ss.buildDag(ctx, keyworld)
+		defer graph.DestoryAsync()
 		graph.Do(ctx, false)
 		ret, err := graph.GetRootTask().GetRet()
 		if err != nil {

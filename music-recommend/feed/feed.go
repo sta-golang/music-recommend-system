@@ -2,23 +2,20 @@ package feed
 
 import (
 	"fmt"
+	"time"
 
-	_ "github.com/sta-golang/go-lib-utils/async/dag"
 	"github.com/sta-golang/go-lib-utils/log"
 	"github.com/sta-golang/music-recommend/feed/profile"
 	"github.com/sta-golang/music-recommend/feed/rank"
 	"github.com/sta-golang/music-recommend/feed/recall"
 	"github.com/sta-golang/music-recommend/feed/rerank"
 	"github.com/sta-golang/music-recommend/model"
+	"github.com/sta-golang/music-recommend/service"
 )
 
 var (
 	requestNilErr = fmt.Errorf("request not be nil")
 )
-
-func init() {
-	//dag.Config().SetPool()
-}
 
 func FeedList(request *model.FeedRequest) error {
 	if request == nil {
@@ -32,23 +29,31 @@ func FeedList(request *model.FeedRequest) error {
 		log.ErrorContext(request.Ctx, err)
 		return err
 	}
-	log.InfoContextf(request.Ctx, "UserProfile")
+	log.InfoContextf(request.Ctx, "UserProfile end")
 	err = recall.FeedRecall(request)
 	if err != nil {
 		log.ErrorContext(request.Ctx, err)
 		return err
 	}
-	log.InfoContextf(request.Ctx, "Recall")
+	log.InfoContextf(request.Ctx, "Recall end")
 	err = rank.FeedRank(request)
 	if err != nil {
 		log.ErrorContext(request.Ctx, err)
 		return err
 	}
-	log.InfoContextf(request.Ctx, "Rank")
+	log.InfoContextf(request.Ctx, "Rank end")
 	err = rerank.FeedRerank(request)
 	if err != nil {
 		log.ErrorContext(request.Ctx, err)
 		return err
 	}
+	log.InfoContextf(request.Ctx, "Rerank end")
+	go func() {
+		err := service.PubUserReadService.AddUserRead(request.Ctx, request.Username, request.FeedResults, request.AnyUser)
+		if err != nil {
+			log.ErrorContext(request.Ctx, err)
+		}
+	}()
+	time.Sleep(time.Millisecond * 30)
 	return nil
 }

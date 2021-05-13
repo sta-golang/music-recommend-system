@@ -1,6 +1,10 @@
 package model
 
-import "context"
+import (
+	"context"
+
+	"github.com/sta-golang/go-lib-utils/algorithm/data_structure/set"
+)
 
 type FeedRequest struct {
 	Ctx context.Context
@@ -8,6 +12,7 @@ type FeedRequest struct {
 	AnyUser            bool
 	Username           string
 	User               *User
+	UserRead           *set.StringSet
 	UserProfilePlugins map[string]PluginParams
 	UserProfile        *Profile
 	RecallPlugins      map[string]PluginParams

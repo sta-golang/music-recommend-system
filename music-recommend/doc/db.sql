@@ -138,3 +138,14 @@ create table `tag_music` (
     PRIMARY KEY (`id`),
 	UNIQUE KEY `key_tag` (`tag_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='标签音乐';  
+
+create table `user_read` (
+	`id` int unsigned not null AUTO_INCREMENT COMMENT '自增id',
+    `status` int(11) not null DEFAULT 0 COMMENT '状态',
+    `username` varchar(255) not null COMMENT '用戶名',
+	`music_read` TEXT not null COMMENT '用户点击序列',
+    `create_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '创建时间',
+    `update_time` timestamp NOT NULL DEFAULT '1970-01-01 08:00:01' COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+	UNIQUE KEY `key_user` (`username`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户已读';  

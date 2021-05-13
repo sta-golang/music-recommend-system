@@ -73,6 +73,7 @@ func init() {
 	}
 	cache.InitCache()
 	common.InitLog()
+	common.InitDag()
 	email.InitEmailService()
 	task.InitTask()
 	log.ConsoleLogger.Info(config.GlobalConfig())

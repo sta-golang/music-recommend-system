@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"strconv"
+
 	"github.com/sta-golang/go-lib-utils/algorithm/data_structure/set"
 	"github.com/sta-golang/music-recommend/model"
 )
@@ -20,8 +22,9 @@ func NewFilterChain(filters ...Filter) *filterChain {
 	return ret
 }
 
-func NewExistFilterChain(existSet *set.HashSet) *filterChain {
-	return NewFilterChain(ItemBaseFilter(), ItemNotExist(existSet), ItemMusicStatusHasMusicUrl())
+func NewExistFilterChain(existSet, userRead *set.StringSet) *filterChain {
+	return NewFilterChain(ItemBaseFilter(), ItemNotExist(existSet), ItemMusicStatusHasMusicUrl(),
+		ItemUserRead(userRead))
 }
 
 func (fc *filterChain) DoFilter(item *model.Item) bool {
@@ -36,6 +39,21 @@ func (fc *filterChain) DoFilter(item *model.Item) bool {
 	return true
 }
 
+func ItemUserRead(userRead *set.StringSet) Filter {
+	return func(item *model.Item) bool {
+		if item == nil {
+			return false
+		}
+		if userRead == nil {
+			return true
+		}
+		if userRead.Contains(strconv.Itoa(item.Music.ID)) {
+			return false
+		}
+		return true
+	}
+}
+
 func ItemMusicStatusHasMusicUrl() Filter {
 	return func(item *model.Item) bool {
 		if item == nil {
@@ -48,7 +66,7 @@ func ItemMusicStatusHasMusicUrl() Filter {
 	}
 }
 
-func ItemNotExist(existSet *set.HashSet) Filter {
+func ItemNotExist(existSet *set.StringSet) Filter {
 	return func(item *model.Item) bool {
 		if item == nil {
 			return false
@@ -56,7 +74,7 @@ func ItemNotExist(existSet *set.HashSet) Filter {
 		if item.Music.ID <= 0 {
 			return false
 		}
-		if existSet.Contains(item.Music.ID) {
+		if existSet.Contains(strconv.Itoa(item.Music.ID)) {
 			return false
 		}
 		return true

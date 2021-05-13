@@ -40,14 +40,7 @@ export default {
   methods: {
     // 获取推荐歌单列表
     async getRecommendedSongList() {
-      _getRecommendedSongList(this.limit).then(result => {
-        if (result.name && result.name === "Error") {
-          return this.$message.error("请求错误");
-        }
-        if (result.code !== 200) return this.$message.error(result.msg);
-        // console.log(result);
-        this.RecommendedSongList = result.result;
-      });
+      _getRecommendedSongList(this.limit).then(result => {});
     },
     // 点击歌单后进入到详情歌单页面
     songListDetails(id) {
@@ -78,4 +71,3 @@ export default {
   }
 }
 </style>
-

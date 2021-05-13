@@ -86,7 +86,7 @@ func GetDBUserProfileWithCache(ctx context.Context, username string) (*model.DBP
 	return ret.(*model.DBProfile), nil
 }
 
-type Handler func(ctx context.Context, dbProfile *model.DBProfile, profile *model.Profile, params string) error
+type Handler func(request *model.FeedRequest, dbProfile *model.DBProfile, params string) error
 
 var pluginMap = map[string]Handler{
 	"musicClick": plugin.MusicClick,
@@ -107,34 +107,37 @@ func GetDefaultProfile() *model.Profile {
 }
 
 func FeedUserProfile(request *model.FeedRequest) error {
-	if request.Username == "" || request.AnyUser {
+	log.InfoContext(request.Ctx, "Profile")
+	if request.Username == "" {
+		return fmt.Errorf("用户出现异常")
+	}
+	if request.AnyUser {
 		request.UserProfile = GetDefaultProfile()
 		return nil
 	}
-	dbProfile, err := GetDBUserProfileWithCache(request.Ctx, request.Username)
-	if err != nil {
-		log.ErrorContext(request.Ctx, err)
+	request.UserProfile = &model.Profile{}
+	var dbProfile *model.DBProfile
+	var err error
+	if !request.AnyUser {
+		dbProfile, err = GetDBUserProfileWithCache(request.Ctx, request.Username)
+		if err != nil {
+			log.ErrorContext(request.Ctx, err)
+		}
 	}
-	if dbProfile == nil {
-		request.UserProfile = GetDefaultProfile()
-		return nil
-	}
-	profile := &model.Profile{}
-	graph := buildDag(request.Ctx, request.UserProfilePlugins, dbProfile, profile)
+	graph := buildDag(request, request.UserProfilePlugins, dbProfile)
 	graph.Do(request.Ctx, false)
-	request.UserProfile = profile
 	graph.DestoryAsync()
 	return nil
 }
 
-func buildDag(ctx context.Context, plugins map[string]model.PluginParams, dbProfile *model.DBProfile, profile *model.Profile) *dag.DagTasks {
+func buildDag(request *model.FeedRequest, plugins map[string]model.PluginParams, dbProfile *model.DBProfile) *dag.DagTasks {
 	rootTask := dag.NewTask("root", func(ctx context.Context, helper dag.TaskHelper) (interface{}, error) {
 		return nil, nil
 	})
 	for pluginName, pluginParam := range plugins {
 		if handler, ok := pluginMap[pluginName]; ok {
 			rootTask.AddSubTask(dag.NewTask(pluginName, func(ctx context.Context, helper dag.TaskHelper) (interface{}, error) {
-				err := handler(ctx, dbProfile, profile, pluginParam.PluginParam)
+				err := handler(request, dbProfile, pluginParam.PluginParam)
 				if err != nil {
 					log.ErrorContextf(ctx, "[cmd = %s] PluginName : %s err : %v", "Profile", pluginName, err)
 				}
@@ -142,7 +145,7 @@ func buildDag(ctx context.Context, plugins map[string]model.PluginParams, dbProf
 			}))
 
 		} else {
-			log.ErrorContextf(ctx, "[cmd = %s] PluginName : %s not found", "Profile", pluginName)
+			log.ErrorContextf(request.Ctx, "[cmd = %s] PluginName : %s not found", "Profile", pluginName)
 		}
 	}
 	return dag.NewDag(rootTask)

@@ -32,7 +32,17 @@ export default {
   },
   methods: {
     getNewsongList() {
+      console.log(localStorage.getItem("sessionID"));
+      if (localStorage.getItem("sessionID") !== "") {
+        this.$http.defaults.headers.common["sessionID"] = localStorage.getItem(
+          "sessionID"
+        );
+      }
       _getRecommendedList().then(res => {
+        if (res.data.sessionID !== "") {
+          console.log(res.data.sessionID);
+          localStorage.setItem("sessionID", res.data.sessionID);
+        }
         for (let i of res.data.result) {
           this.newsonglist.push(i.music);
         }
