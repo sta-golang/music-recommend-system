@@ -108,6 +108,16 @@ export function _addPlaylist(name) {
   return result;
 }
 
+export function _addMusicToPlaylist(obj) {
+  const result = axios.post("/playlist/add/music", obj);
+  return result;
+}
+
+export function _deleteMusicToPlaylist(obj) {
+  const result = axios.post("playlist/delete/music", obj);
+  return result;
+}
+
 // 获取歌曲详情信息
 export function _getSongsDetail(id) {
   const result = axios.get("/music/details", {

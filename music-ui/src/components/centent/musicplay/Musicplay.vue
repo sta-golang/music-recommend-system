@@ -1,5 +1,34 @@
 <template>
   <div>
+    <div>
+      <el-dialog title="添加歌单" :visible.sync="dialogTableVisible">
+        <el-table :data="userPlaylist" border style="width: 100%">
+          <el-table-column prop="name" label="歌单名字" width="240">
+          </el-table-column>
+          <el-table-column
+            prop="create_time"
+            label="创建时间"
+            width="240"
+          ></el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button
+                size="mini"
+                width="100"
+                @click="playlistDeatil(scope.$index)"
+                >查看歌单详情</el-button
+              >
+              <el-button
+                size="mini"
+                type="danger"
+                @click="addMusicToPlayList(scope.$index)"
+                >添加至歌单</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
+    </div>
     <div class="musicplay">
       <div class="play-top" v-show="showTop">
         <div class="image">
@@ -12,7 +41,7 @@
             <div class="nickname">{{ userinfo.creator_names }}</div>
           </div>
           <div class="warp">
-            <i class="iconfont">&#xe60a;</i>
+            <i class="iconfont" @click="likeMusic(userinfo.id)">&#xe60a;</i>
             <i class="iconfont">&#xe65d;</i>
           </div>
         </div>
@@ -102,7 +131,10 @@
 <script>
 import { _getSongUrl, _getLyric } from "@/network/song";
 import { playlistTool } from "./playlist";
-import { _getSongsDetail } from "@/network/discover/discover";
+import {
+  _getSongsDetail,
+  _addMusicToPlaylist
+} from "@/network/discover/discover";
 import { formatDate, deepClone } from "@/common/js/tool";
 import MusicPlayList from "./MusicPlayList";
 // 歌词
@@ -113,6 +145,7 @@ export default {
       playList: {
         src: ""
       },
+      userPlaylist: this.$store.state.songList,
       musicList: [],
       currentIndex: 0,
       // 当前播放位置
@@ -130,6 +163,8 @@ export default {
         id: "",
         song: ""
       },
+      dialogTableVisible: false,
+
       // 当前是播放还是暂停
       musicStatus: true,
       // 是否禁音
@@ -146,6 +181,17 @@ export default {
   methods: {
     audioError() {
       // this.$message.error('没有音频')
+    },
+    likeMusic(musicID) {
+      console.log("musicId" + musicID);
+      if (this.$store.state.user.name == null) {
+        this.$message.error("请先登录");
+        return;
+      }
+      this.userPlaylist = this.$store.state.songList;
+      console.log(this.userPlaylist);
+      this.dialogTableVisible = true;
+      console.log("like music");
     },
     // 开始播放
     musicPlaying() {
@@ -172,9 +218,30 @@ export default {
         }
       });
     },
+    playlistDeatil(index) {
+      var id = this.userPlaylist[index].id;
+      console.log("id = " + id);
+      this.$router.push({ path: "/home/musiclistdetail", query: { id } });
+    },
     // 重新播放
     musicLoad() {
       this.$refs.audio.load();
+    },
+    addMusicToPlayList(playListIndex) {
+      var playlistID = this.userPlaylist[playListIndex].id;
+      console.log(this.currentIndex);
+      console.log(this.musicList[this.currentIndex]);
+      var param = {
+        pid: playlistID,
+        mid: this.musicList[this.currentIndex].id
+      };
+      _addMusicToPlaylist(param).then(result => {
+        if (result.code !== 0) {
+          this.$message.error(result.message);
+          return;
+        }
+        this.$message.success("添加成功");
+      });
     },
     // 渐变声音
     musicGradients(type) {

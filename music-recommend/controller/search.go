@@ -26,7 +26,7 @@ func (sc *SearchController) SearchKeyWorld(ctx *fasthttp.RequestCtx) {
 	defer DestroyContext(reqCtx)
 	ret, err := service.PubSearchService.SearchKeyworld(reqCtx, keyword)
 	if err != nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, serverSelectErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, serverSelectErrMessage).ToJson())
 		return
 	}
 	WriterResp(ctx, NewRetData(successCode, success, ret).ToJson())
@@ -42,7 +42,7 @@ func (sc *SearchController) SearchMusics(ctx *fasthttp.RequestCtx) {
 	defer DestroyContext(reqCtx)
 	ret, err := service.PubSearchService.SearchMusics(reqCtx, keyword)
 	if err != nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, serverSelectErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, serverSelectErrMessage).ToJson())
 		return
 	}
 	WriterResp(ctx, NewRetData(successCode, success, ret).ToJson())

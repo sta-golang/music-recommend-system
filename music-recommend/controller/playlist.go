@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/sta-golang/go-lib-utils/codec"
+	"github.com/sta-golang/go-lib-utils/log"
 	"github.com/sta-golang/go-lib-utils/str"
 	"github.com/sta-golang/music-recommend/common"
 	"github.com/sta-golang/music-recommend/controller/dto"
@@ -95,18 +96,18 @@ func (pc *playlistController) TestPlaylistMusicAPI(ctx *fasthttp.RequestCtx) {
 func (pc *playlistController) GetPlaylistDetail(ctx *fasthttp.RequestCtx) {
 	id := ctx.QueryArgs().GetUintOrZero("id")
 	if id == 0 {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
 		return
 	}
 	reqCtx := RequestContext(ctx)
 	defer DestroyContext(reqCtx)
 	playlist, err := service.PubPlaylistService.GetPlaylistDetailWithCache(reqCtx, id)
 	if err != nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, err.Error()).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, err.Error()).ToJson())
 		return
 	}
 	if playlist == nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusNotFound, common.NotFoundMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusNotFound, common.NotFoundMessage).ToJson())
 		return
 	}
 	user, _ := service.PubUserService.QueryUserWithCache(playlist.Username)
@@ -132,7 +133,7 @@ func (pc *playlistController) GetUserPlaylist(ctx *fasthttp.RequestCtx) {
 	username := str.BytesToString(ctx.FormValue("username"))
 	playlists, err := service.PubPlaylistService.GetPlaylistForUser(reqCtx, username)
 	if err != nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(common.ServerCodecErr, serverSelectErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(common.ServerCodecErr, serverSelectErrMessage).ToJson())
 		return
 	}
 	WriterResp(ctx, NewRetData(successCode, success, playlists).ToJson())
@@ -143,7 +144,7 @@ func (pc *playlistController) GetPlaylistHot(ctx *fasthttp.RequestCtx) {
 	defer DestroyContext(reqCtx)
 	playlists, err := service.PubPlaylistService.GetHotPlaylistWithCache(reqCtx)
 	if err != nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(common.ServerCodecErr, serverSelectErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(common.ServerCodecErr, serverSelectErrMessage).ToJson())
 		return
 	}
 	WriterResp(ctx, NewRetData(successCode, success, playlists).ToJson())
@@ -154,15 +155,81 @@ func (pc *playlistController) GetPlaylistMusic(ctx *fasthttp.RequestCtx) {
 	defer DestroyContext(reqCtx)
 	id := ctx.QueryArgs().GetUintOrZero("id")
 	if id == 0 {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
 		return
 	}
 	retData, err := service.PubPlaylistService.GetPlaylistMusicWithCache(reqCtx, id)
 	if err != nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, err.Error()).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, err.Error()).ToJson())
 		return
 	}
 	WriterResp(ctx, NewRetData(successCode, success, retData).ToJson())
+}
+
+func (pc *playlistController) DeleteMusicForPlaylist(ctx *fasthttp.RequestCtx) {
+	user, ok := haveAuthority(ctx)
+	if !ok {
+		return
+	}
+	if user == nil {
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, "用户异常").ToJson())
+		return
+	}
+	var param = struct {
+		Pid int `json:"pid"`
+		Mid int `json:"mid"`
+	}{}
+	err := codec.API.JsonAPI.Unmarshal(ctx.PostBody(), &param)
+	if err != nil {
+		log.Error(err)
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, postDataErrMessage).ToJson())
+		return
+	}
+	if param.Pid <= 0 || param.Mid <= 0 {
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
+		return
+	}
+	reqCtx := RequestContext(ctx)
+	defer DestroyContext(reqCtx)
+	err = service.PubPlaylistService.DeleteMusicForPlaylist(reqCtx, param.Mid, param.Pid, user.Username)
+	if err != nil {
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, err.Error()).ToJson())
+		return
+	}
+	WriterResp(ctx, NewRetDataForCodeAndMessage(successCode, success).ToJson())
+}
+
+func (pc *playlistController) AddMusicToPlaylist(ctx *fasthttp.RequestCtx) {
+	user, ok := haveAuthority(ctx)
+	if !ok {
+		return
+	}
+	if user == nil {
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, "用户异常").ToJson())
+		return
+	}
+	var param = struct {
+		Pid int `json:"pid"`
+		Mid int `json:"mid"`
+	}{}
+	err := codec.API.JsonAPI.Unmarshal(ctx.PostBody(), &param)
+	if err != nil {
+		log.Error(err)
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, postDataErrMessage).ToJson())
+		return
+	}
+	if param.Pid <= 0 || param.Mid <= 0 {
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
+		return
+	}
+	reqCtx := RequestContext(ctx)
+	defer DestroyContext(reqCtx)
+	err = service.PubPlaylistService.AddMusicToPlaylist(reqCtx, param.Mid, param.Pid, user.Username)
+	if err != nil {
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, err.Error()).ToJson())
+		return
+	}
+	WriterResp(ctx, NewRetDataForCodeAndMessage(successCode, success).ToJson())
 }
 
 func (pc *playlistController) AddPlaylistForUser(ctx *fasthttp.RequestCtx) {
@@ -171,20 +238,20 @@ func (pc *playlistController) AddPlaylistForUser(ctx *fasthttp.RequestCtx) {
 		return
 	}
 	if user == nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, "用户异常").ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, "用户异常").ToJson())
 		return
 	}
 	name := str.BytesToString(ctx.FormValue("name"))
 	if name == "" {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, "歌单名不能为空").ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, "歌单名不能为空").ToJson())
 		return
 	}
 	reqCtx := RequestContext(ctx)
 	defer DestroyContext(reqCtx)
 	err := service.PubPlaylistService.AddPlaylistForUserWithCache(reqCtx, name, user.Username)
 	if err != nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, err.Error()).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, err.Error()).ToJson())
 		return
 	}
-	WriterResp(ctx, NewRetDataForErrorAndMessage(successCode, success).ToJson())
+	WriterResp(ctx, NewRetDataForCodeAndMessage(successCode, success).ToJson())
 }

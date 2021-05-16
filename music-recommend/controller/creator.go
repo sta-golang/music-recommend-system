@@ -23,12 +23,12 @@ func NewCreatorController() *creatorController {
 func (cc *creatorController) GetCreator(ctx *fasthttp.RequestCtx) {
 	idStr := ctx.FormValue("id")
 	if idStr == nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
 		return
 	}
 	id, err := strconv.Atoi(str.BytesToString(idStr))
 	if err != nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
 		return
 	}
 	detail, sErr := service.PubCreatorService.GetCreatorDetail(id)

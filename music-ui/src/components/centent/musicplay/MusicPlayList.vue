@@ -3,61 +3,79 @@
     <div class="head">
       <div class="title">
         <div>
-          <span :class="[current=='playlist'?'current':'']" @click="current='playlist'">播放列表</span>
-          <span :class="[current=='historical'?'current':'']" @click="current='historical'">历史记录</span>
+          <span
+            :class="[current == 'playlist' ? 'current' : '']"
+            @click="current = 'playlist'"
+            >播放列表</span
+          >
+          <span
+            :class="[current == 'historical' ? 'current' : '']"
+            @click="current = 'historical'"
+            >历史记录</span
+          >
         </div>
         <i class="close iconfont" @click="closeHandle">&#xe66a;</i>
       </div>
       <div class="warp">
-        <div class="sum">共{{sum}}首</div>
-        <div class="clearAll" @click="clearAll()"><i class="iconfont">&#xe606;</i> 清空</div>
+        <div class="sum">共{{ sum }}首</div>
+        <div class="clearAll" @click="clearAll()">
+          <i class="iconfont">&#xe606;</i> 清空
+        </div>
       </div>
     </div>
 
-    <div class="playlist" v-if="current=='playlist'">
-
-      <table-list @rowClick='rowClick' :hiddenOperation='false' :hiddenIndex='false' :tracklist='musicList' :hiddenTableHeader='false' :hiddenAlbum='false' :hiddenSinger='true' :currentIndex='currentIndex'></table-list>
+    <div class="playlist" v-if="current == 'playlist'">
+      <table-list
+        @rowClick="rowClick"
+        :hiddenOperation="false"
+        :hiddenIndex="false"
+        :tracklist="musicList"
+        :hiddenTableHeader="false"
+        :hiddenAlbum="false"
+        :hiddenSinger="true"
+        :currentIndex="currentIndex"
+      ></table-list>
     </div>
     <div class="historical" v-else>历史记录</div>
   </div>
 </template>
 
 <script>
-import TableList from '../musiclist/TableList'
+import TableList from "../musiclist/TableList";
 export default {
-  props: ["currentIndex", 'musicList'],
-  data () {
+  props: ["currentIndex", "musicList"],
+  data() {
     return {
       // 当前选中的
-      current: 'playlist',
-    }
+      current: "playlist"
+    };
   },
   methods: {
-    closeHandle () {
-      this.$parent.isShowMusicplaylist = false
+    closeHandle() {
+      this.$parent.isShowMusicplaylist = false;
     },
-    async clearAll () {
+    async clearAll() {
       // 调用父组件的渐变声音
-      await this.$parent.musicGradients('down')
-      this.$parent.$refs.audio.pause()
-      await this.$parent.resetInfo()
+      await this.$parent.musicGradients("down");
+      this.$parent.$refs.audio.pause();
+      await this.$parent.resetInfo();
     },
-    rowClick (index, list) {
-      this.$bus.$emit('playMusic', index, list)
+    rowClick(index, list) {
+      this.$bus.$emit("playMusic", index, list);
     }
   },
   computed: {
-    sum () {
-      return this.musicList.length
+    sum() {
+      return this.musicList.length;
     }
   },
   components: {
     TableList
   }
-}
+};
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .MusicPlayList {
   position: absolute;
   bottom: 50px;
@@ -122,3 +140,4 @@ export default {
   }
 }
 </style>
+

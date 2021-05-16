@@ -37,23 +37,25 @@ const (
 	emailFormErr           = "邮箱格式错误"
 	sessionIDStr           = "sessionID"
 
-	playlistUser       = "/playlist/user"
-	plsylistDetail     = "/playlist/detail"
-	playlistMusic      = "/playlist/music"
-	playlistAdd        = "/playlist/add"
-	playlistHot        = "/playlist/hot"
-	creatorDetailUrl   = "/creator/detail"
-	creatorList        = "/creator/list"
-	musicDetails       = "/music/details"
-	creatorMusic       = "/creator/music"
-	userRegister       = "/user/register"
-	userLogin          = "/user/login"
-	userCode           = "/user/code"
-	userInfo           = "/user/me"
-	musicAll           = "/music/all"
-	recommendMusicList = "/recommend/list"
-	searchKeyWorld     = "/search/suggest"
-	searchMusics       = "/search"
+	playlistUser           = "/playlist/user"
+	plsylistDetail         = "/playlist/detail"
+	playlistMusic          = "/playlist/music"
+	playlistAdd            = "/playlist/add"
+	playlistAddForMusic    = "/playlist/add/music"
+	playlistDeleteForMusic = "/playlist/delete/music"
+	playlistHot            = "/playlist/hot"
+	creatorDetailUrl       = "/creator/detail"
+	creatorList            = "/creator/list"
+	musicDetails           = "/music/details"
+	creatorMusic           = "/creator/music"
+	userRegister           = "/user/register"
+	userLogin              = "/user/login"
+	userCode               = "/user/code"
+	userInfo               = "/user/me"
+	musicAll               = "/music/all"
+	recommendMusicList     = "/recommend/list"
+	searchKeyWorld         = "/search/suggest"
+	searchMusics           = "/search"
 )
 
 /**
@@ -89,7 +91,7 @@ func NewRetDataForErr(err *er.Error) *RetData {
 	}
 }
 
-func NewRetDataForErrorAndMessage(code int, message string) *RetData {
+func NewRetDataForCodeAndMessage(code int, message string) *RetData {
 	return &RetData{
 		Code:    code,
 		Message: message,
@@ -180,21 +182,21 @@ func getSessionUser(ctx *fasthttp.RequestCtx) *model.User {
 func haveAuthority(ctx *fasthttp.RequestCtx) (*model.User, bool) {
 	token := str.BytesToString(ctx.Request.Header.Peek(tokenStr))
 	if token == "" {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, forbiddenErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusForbidden, forbiddenErrMessage).ToJson())
 		return nil, false
 	}
 	auth, ok, err := verify.NewJWTService().VerifyAuth(token)
 	if err != nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, err.Error()).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusForbidden, err.Error()).ToJson())
 		return nil, false
 	}
 	if !ok {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, tokenTimeOutErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusForbidden, tokenTimeOutErrMessage).ToJson())
 		return nil, false
 	}
 	info, exist := service.PubUserService.MeInfo(auth)
 	if !exist {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusForbidden, common.UserEmailNotLogin.Error()).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusForbidden, common.UserEmailNotLogin.Error()).ToJson())
 		return nil, false
 	}
 	return info, true

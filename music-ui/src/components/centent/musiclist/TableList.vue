@@ -28,7 +28,7 @@
     >
       <el-table-column type="index" v-if="hiddenIndex"> </el-table-column>
       <el-table-column v-if="hiddenOperation" label="操作" width="70px">
-        <template>
+        <template slot-scope="scope">
           <i class="iconfont">&#xe60a;</i>
           <i class="iconfont">&#xe723;</i>
         </template>
@@ -172,4 +172,3 @@ export default {
   background-color: red;
 }
 </style>
-

@@ -220,6 +220,13 @@ export default {
           }
         })
         .then(res => {
+          if (res.code !== 0) {
+            this.$message.info(res.message);
+            localStorage.removeItem(this.$tokenStr);
+            return;
+          }
+          this.$globalLoginState = true;
+          console.log(this.$globalLoginState);
           this.loginImgSrc = res.data["image_url"];
           this.loginState = res.data["name"];
           this.userFormDialogVisible = false;
@@ -254,6 +261,13 @@ export default {
           "发送成功，请留意邮箱，若未收到邮件请查看垃圾邮件"
         );
       });
+    },
+    meInfo() {
+      var tmp = localStorage.getItem(this.$tokenStr);
+      if (tmp !== null) {
+        this.$http.defaults.headers.common[this.$tokenStr] = tmp;
+        this.getUserInfo(localStorage.getItem(this.$tokenStr));
+      }
     },
 
     // 登录功能
@@ -363,6 +377,7 @@ export default {
     SearchSuggest
   },
   created() {
+    this.meInfo();
     this.getSearchHot();
   },
   watch: {

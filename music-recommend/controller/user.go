@@ -34,7 +34,7 @@ func (uc *userController) MeInfo(ctx *fasthttp.RequestCtx) {
 func (uc *userController) SendCode(ctx *fasthttp.RequestCtx) {
 	username := str.BytesToString(ctx.FormValue("username"))
 	if username == "" || len(username) > 25 || len(username) < 6 || !service.PubUserService.IsEmailFmt(username) {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, emailFormErr).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, emailFormErr).ToJson())
 		return
 	}
 
@@ -43,7 +43,7 @@ func (uc *userController) SendCode(ctx *fasthttp.RequestCtx) {
 		return
 	}
 	if sErr := service.PubUserService.SendCodeForUser(username); sErr != nil {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusInternalServerError, sErr.String()).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusInternalServerError, sErr.String()).ToJson())
 		return
 	}
 	cache.PubCacheService.Set(username, true, 61, cache.Two)
@@ -55,7 +55,7 @@ func (uc *userController) Login(ctx *fasthttp.RequestCtx) {
 	err := codec.API.JsonAPI.Unmarshal(ctx.PostBody(), &lUser)
 	if err != nil {
 		log.Error(err)
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, postDataErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, postDataErrMessage).ToJson())
 		return
 	}
 	username := lUser.Username
@@ -63,13 +63,13 @@ func (uc *userController) Login(ctx *fasthttp.RequestCtx) {
 	readme := lUser.Readme
 	if username == "" || password == "" || len(username) > 25 || len(password) > 25 ||
 		len(username) < 6 || len(password) < 6 {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
 		return
 	}
 	token, sErr := service.PubUserService.Login(username, password, readme)
 	if sErr != nil {
 		log.Error(sErr)
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, sErr.String()).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, sErr.String()).ToJson())
 		return
 	}
 	ret := map[string]string{tokenStr: token}
@@ -81,18 +81,18 @@ func (uc *userController) Register(ctx *fasthttp.RequestCtx) {
 	err := codec.API.JsonAPI.Unmarshal(ctx.PostBody(), &rUser)
 	if err != nil {
 		log.Error(err)
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, postDataErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, postDataErrMessage).ToJson())
 		return
 	}
 	if rUser.User.Username == "" || rUser.User.Password == "" || len(rUser.User.Username) > 25 || rUser.Code == "" ||
 		len(rUser.User.Password) > 25 || len(rUser.User.Username) < 6 || len(rUser.User.Password) < 6 {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
 		return
 	}
 	sErr := service.PubUserService.Register(&rUser.User, rUser.Code)
 	if sErr != nil {
 		log.Error(sErr)
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, sErr.String()).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, sErr.String()).ToJson())
 		return
 	}
 	WriterResp(ctx, NewRetData(successCode, success, nil).ToJson())

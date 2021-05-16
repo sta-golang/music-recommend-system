@@ -22,7 +22,7 @@ func (mc *musicController) CreatorMusics(ctx *fasthttp.RequestCtx) {
 	args := ctx.QueryArgs()
 	id := args.GetUintOrZero("id")
 	if id == 0 {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
 		return
 	}
 	page := args.GetUintOrZero("page")
@@ -51,7 +51,7 @@ func (mc *musicController) GetMusic(ctx *fasthttp.RequestCtx) {
 	defer DestroyContext(reqCtx)
 	id := args.GetUintOrZero("id")
 	if id == 0 {
-		WriterResp(ctx, NewRetDataForErrorAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
+		WriterResp(ctx, NewRetDataForCodeAndMessage(http.StatusBadRequest, paramsErrMessage).ToJson())
 		return
 	}
 	music, sErr := service.PubMusicService.GetMusic(id)

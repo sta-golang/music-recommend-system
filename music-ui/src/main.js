@@ -11,6 +11,7 @@ import axios from "axios";
 Vue.config.productionTip = false;
 Vue.prototype.$bus = new Vue();
 Vue.prototype.$tokenStr = "sta-token";
+Vue.prototype.$globalLoginState = false;
 Vue.prototype.$http = axios;
 axios.defaults.headers.common[Vue.prototype.$tokenStr] = store.state.token;
 

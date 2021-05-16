@@ -71,7 +71,7 @@ func (pm *playlistMysql) Update(ctx context.Context, p *Playlist) error {
 }
 
 func (pm *playlistMysql) SelectForUser(ctx context.Context, username string) (playlists []Playlist, err error) {
-	sql := fmt.Sprintf("select id, name,username from %s where username = ? order by id desc", tablePlaylist)
+	sql := fmt.Sprintf("select id, name,username,create_time,update_time from %s where username = ? order by id desc", tablePlaylist)
 	err = client(dbMusicRecommendNameTest).SelectContext(ctx, &playlists, sql, username)
 	if err != nil {
 		log.ErrorContext(ctx, err)

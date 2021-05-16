@@ -35,7 +35,7 @@ import DetailBaseInfo from "./childrenComps/DetailBaseInfo";
 // 歌单切换按钮
 import DetailBtns from "./childrenComps/DetailBtns";
 // 歌单列表
-import TableList from "@/components/centent/musiclist/TableList";
+import TableList from "@/components/centent/musiclist/playlistMusicList";
 // 歌单评论
 import CommentList from "./childrenComps/CommentList";
 // 歌单收藏者
