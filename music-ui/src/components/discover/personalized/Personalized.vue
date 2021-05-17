@@ -39,9 +39,7 @@ export default {
   },
   methods: {
     // 获取推荐歌单列表
-    async getRecommendedSongList() {
-      _getRecommendedSongList(this.limit).then(result => {});
-    },
+    async getRecommendedSongList() {},
     // 点击歌单后进入到详情歌单页面
     songListDetails(id) {
       console.log(id);

@@ -8,12 +8,6 @@
       >
         <i class="iconfont">&#xe680;</i>发现音乐
       </dd>
-      <dd
-        :class="['cursorPointer', current == 'allmv' ? 'current' : '']"
-        @click="toPath('allmv')"
-      >
-        <i class="iconfont">&#xe6c4;</i>全部MV
-      </dd>
       <!-- <dd class="cursorPointer" @click="toPath('allmv')"><i class="iconfont">&#xe670;</i>直播</dd> -->
       <!-- <dd class="cursorPointer" @click="toPath('allmv')"><i class="iconfont">&#xe614;</i>视频</dd> -->
       <!-- <dd class="cursorPointer" @click="toPath('allmv')"><i class="iconfont">&#xe61a;</i>朋友</dd> -->
